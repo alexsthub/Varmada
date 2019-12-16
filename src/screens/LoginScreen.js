@@ -1,19 +1,36 @@
 import React from 'react';
 import {
-  ImageBackground, 
+  ImageBackground,
   Image,
-  StyleSheet, 
-  View, 
+  StyleSheet,
+  View,
   Text,
   TouchableOpacity,
   ScrollView,
-  Keyboard
+  Keyboard,
 } from 'react-native';
 
+import FloatingInput from '../components/general/FloatingInput';
+
 export default class LoginScreen extends React.Component {
+  constructor(props) {
+    super(props);
+    this.state = {phone: '', password: ''};
+  }
+
   render() {
     return (
-      <Text>Hello</Text>
+      <View>
+        <Text>Hello</Text>
+
+        <FloatingInput
+          ref={r => (this.phone = r)}
+          value={this.state.phone}
+          label={'Phone'}
+          onChangeText={text => this.setState({phone: text})}
+          blurOnSubmit={false}
+        />
+      </View>
     );
   }
 }
