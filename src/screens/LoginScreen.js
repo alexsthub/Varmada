@@ -21,8 +21,6 @@ export default class LoginScreen extends React.Component {
   render() {
     return (
       <View>
-        <Text>Hello</Text>
-
         <FloatingInput
           ref={r => (this.phone = r)}
           value={this.state.phone}
@@ -34,3 +32,9 @@ export default class LoginScreen extends React.Component {
     );
   }
 }
+
+const styles = StyleSheet.create({
+  test: {
+    
+  }
+});

@@ -2,6 +2,7 @@ import React from 'react';
 import {StyleSheet, Text, TextInput, View, TouchableOpacity, Animated} from 'react-native';
 import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome';
 import {faEye, faEyeSlash} from '@fortawesome/free-solid-svg-icons';
+import PropTypes from 'prop-types';
 
 export default class FloatingInput extends React.Component {
 
@@ -119,3 +120,11 @@ const styles = StyleSheet.create({
     paddingRight: 5
   }
 });
+
+FloatingInput.propTypes = {
+
+};
+
+FloatingInput.defaultProps = {
+  
+}
