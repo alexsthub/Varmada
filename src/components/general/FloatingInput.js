@@ -53,7 +53,7 @@ export default class FloatingInput extends React.Component {
   render() {
     const interpolateColor = this.state.fadeValue.interpolate({
       inputRange: [0, 150],
-      outputRange: ['rgba(220,220,220, 0.4)', 'rgba(255,255,255,1)'],
+      outputRange: ['rgba(92,99,110,0.7)', 'rgba(255,255,255,1)'],
     });
     const animatedBackground = {backgroundColor: interpolateColor};
 
@@ -66,7 +66,7 @@ export default class FloatingInput extends React.Component {
       <Animated.View style={[styles.field, animatedBackground]}>
         <Animated.View style={[styles.label, animatedTop]}>
           <Text
-            style={{fontSize: !this.state.active ? 16 : 14, color: !this.state.active ? 'white' : '#83a4d4',}}>{this.props.label}</Text>
+            style={{fontSize: !this.state.active ? this.props.labelSizeBlur : this.props.labelSizeFocus, color: !this.state.active ? this.props.labelColorBlur : this.props.labelColorFocus}}>{this.props.label}</Text>
         </Animated.View>
         <TextInput
           ref={r => (this.ref = r)}
@@ -91,7 +91,6 @@ export default class FloatingInput extends React.Component {
 
 const styles = StyleSheet.create({
   field: {
-    borderRadius: 5,
     height: 56,
     flexDirection: 'row'
   },
@@ -122,9 +121,23 @@ const styles = StyleSheet.create({
 });
 
 FloatingInput.propTypes = {
-
+  value: PropTypes.string,
+  label: PropTypes.string,
+  onChangeText: PropTypes.func,
+  blurOnSubmit: PropTypes.bool,
+  labelSizeBlur: PropTypes.number,
+  labelSizeFocus: PropTypes.number,
+  labelColorBlur: PropTypes.string,
+  labelColorFocus: PropTypes.string,
 };
 
 FloatingInput.defaultProps = {
-  
-}
+  value: '',
+  label: 'Default Label',
+  onChangeText: () => {},
+  blurOnSubmit: false,
+  labelSizeBlur: 16,
+  labelSizeFocus: 14,
+  labelColorBlur: '#000000',
+  labelColorFocus: '#83a4d4',
+};
