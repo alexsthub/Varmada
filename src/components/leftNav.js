@@ -1,8 +1,7 @@
 import PropTypes from 'prop-types';
 import React, {Component} from 'react';
-import styles from './LeftNav.style';
 import {NavigationActions} from 'react-navigation';
-import {ScrollView, Text, View} from 'react-native';
+import {StyleSheet, ScrollView, Text, View} from 'react-native';
 
 class LeftNav extends Component {
   navigateToScreen = route => () => {

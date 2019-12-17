@@ -1,35 +1,57 @@
 import React from 'react';
+import {TouchableOpacity, Dimensions} from 'react-native';
 import {createAppContainer} from 'react-navigation';
+import {createDrawerNavigator} from 'react-navigation-drawer';
+
 import {createStackNavigator} from 'react-navigation-stack';
-import IOSIcon from 'react-native-vector-icons/Ionicons';
 import LoginScreen from '../screens/LoginScreen';
 import MainScreen from '../screens/MainScreen';
-import {TouchableOpacity} from 'react-native';
+import LeftNav from '../components/leftNav';
 
-const AppNavigator = createStackNavigator(
+const WIDTH = Dimensions.get('window').width;
+
+const DrawerConfig = {
+  drawerWidth: WIDTH * 0.83,
+  contentComponent: ({navigation}) => {
+    return <LeftNav navigation={navigation} />;
+  },
+};
+
+const DrawerNavigator = createDrawerNavigator(
   {
-    LoginScreen: {
-      screen: LoginScreen,
-      navigationOptions: {header: null},
-    },
-    MainScreen: {
+    Home: {
       screen: MainScreen,
-      navigationOptions: ({navigation}) => ({
-        title: 'Main',
-        headerLeft: (
-          <TouchableOpacity onPress={() => navigation.navigate('DrawerOpen')}>
-            <IOSIcon name="ios-menu" size={30} />
-          </TouchableOpacity>
-        ),
-        headerStyle: {paddingRight: 10, paddingLeft: 15},
-      }),
+    },
+    Settings: {
+      screen: LoginScreen,
     },
   },
-  {
-    initialRouteName: 'MainScreen',
-  },
+  DrawerConfig,
 );
 
-const AppContainer = createAppContainer(AppNavigator);
+export default createAppContainer(DrawerNavigator);
 
-export default AppContainer;
+// const AppNavigator = createStackNavigator(
+//   {
+//     LoginScreen: {
+//       screen: LoginScreen,
+//       navigationOptions: {header: null},
+//     },
+//     MainScreen: {
+//       screen: MainScreen,
+//       navigationOptions: ({navigation}) => ({
+//         title: 'Main',
+//         headerLeft: (
+//           <TouchableOpacity onPress={() => navigation.navigate('DrawerOpen')}>
+//             <IOSIcon name="ios-menu" size={30} />
+//           </TouchableOpacity>
+//         ),
+//         headerStyle: {paddingRight: 10, paddingLeft: 15},
+//       }),
+//     },
+//   },
+//   {
+//     initialRouteName: 'MainScreen',
+//   },
+// );
+// const AppContainer = createAppContainer(AppNavigator);
