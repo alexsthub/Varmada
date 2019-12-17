@@ -43,6 +43,10 @@ export default class LoginScreen extends React.Component {
     console.log('Trying to Login');
   };
 
+  handleSignup = () => {
+    this.props.navigation.navigate('SignupScreen');
+  }
+
   render() {
     const logoContainer = !this.state.keyboardOpen ? 
       <View style={styles.logoContainer}>
@@ -80,6 +84,7 @@ export default class LoginScreen extends React.Component {
               ref={r => (this.phone = r)}
               value={this.state.phone}
               label={'Phone'}
+              keyboardType={'numeric'}
               labelColorBlur={'#FFFFFF'}
               onChangeText={text => this.setState({phone: text})}
               blurOnSubmit={false}
@@ -118,13 +123,14 @@ export default class LoginScreen extends React.Component {
         </ScrollView>
 
         <View style={styles.signUpContainer}>
-          <TouchableOpacity onPress={() => console.log('ahh')}>
+          <TouchableOpacity onPress={this.handleSignup}>
             <Text style={{color: 'white'}}>
               Don't Have An Account?{' '}
               <Text style={{color: 'white'}}>Sign Up</Text>
             </Text>
           </TouchableOpacity>
         </View>
+        
       </ImageBackground>
     );
   }
