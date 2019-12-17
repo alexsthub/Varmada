@@ -13,8 +13,6 @@ import {
 import FloatingInput from '../components/general/FloatingInput';
 import CustomButton from '../components/general/CustomButton';
 
-// TODO: Display only phone, password, login, and signup when keyboard is open
-// https://stackoverflow.com/questions/51606099/how-to-detect-when-keyboard-is-opened-or-closed-in-react-native
 export default class LoginScreen extends React.Component {
   constructor(props) {
     super(props);
@@ -25,20 +23,46 @@ export default class LoginScreen extends React.Component {
     this.keyboardDidShowListener = Keyboard.addListener('keyboardDidShow', this.keyboardDidShow);
     this.keyboardDidHideListener = Keyboard.addListener('keyboardDidHide', this.keyboardDidHide);
   }
-  
+
+  // TODO: This doesn't work. Throwing warnings
+  componentWillUnmount() {
+    if (this.keyboardDidShowListener || this.keyboardDidHideListener) {
+      Keyboard.removeAllListeners('keyboardDidShow');
+    }
+  }
+
   keyboardDidShow = () => {
     this.setState({keyboardOpen: true});
-  }
+  };
 
   keyboardDidHide = () => {
     this.setState({keyboardOpen: false});
-  }
+  };
 
   handleLogin = () => {
     console.log('Trying to Login');
   };
 
   render() {
+    const logoContainer = !this.state.keyboardOpen ? 
+      <View style={styles.logoContainer}>
+        <View style={styles.logo}/>
+      </View> : null;
+
+    const orText = !this.state.keyboardOpen ? 
+     <View style={{alignItems: 'center', marginVertical: 10}}>
+        <Text style={{fontSize: 24, color: '#FFFFFF'}}>--OR--</Text>
+      </View> : null
+
+    // TODO: Google image is pretty messed up.
+    const googleSignIn = !this.state.keyboardOpen ?
+      <TouchableOpacity style={{alignItems: 'center'}}>
+        <Image 
+          style={{height: 53, overflow: 'hidden'}} 
+          source={require('../assets/googleSigninButton.png')}
+          resizeMode={'contain'}/>
+      </TouchableOpacity> : null
+
     return (
       <ImageBackground
         source={require('../assets/loginGradient.jpg')}
@@ -46,9 +70,10 @@ export default class LoginScreen extends React.Component {
         <ScrollView
           showsVerticalScrollIndicator={false}
           keyboardShouldPersistTaps={'never'}>
-
           <View style={styles.container}>
-            {/* TODO: Add Image */}
+
+            {logoContainer}
+
             <View style={{marginTop: 80}}></View>
 
             <FloatingInput
@@ -86,10 +111,9 @@ export default class LoginScreen extends React.Component {
               <Text style={styles.clickableText}>Forgot Password?</Text>
             </TouchableOpacity>
 
-            <View style={{alignItems: 'center', marginVertical: 10}}>
-              <Text style={{fontSize: 24, color: '#FFFFFF'}}>--OR--</Text>
-            </View>
-            
+            {orText}
+            {googleSignIn}
+
           </View>
         </ScrollView>
 
@@ -114,6 +138,16 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     marginHorizontal: 40,
+  },
+  logoContainer: {
+    alignItems: 'center',
+    marginTop: 40
+  },
+  logo: {
+    width: 120,
+    height: 120,
+    borderRadius: 60,
+    backgroundColor: 'gray'
   },
   inputDivider: {
     marginVertical: 10,
