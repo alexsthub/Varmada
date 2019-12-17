@@ -66,7 +66,8 @@ export default class FloatingInput extends React.Component {
       <Animated.View style={[styles.field, animatedBackground]}>
         <Animated.View style={[styles.label, animatedTop]}>
           <Text
-            style={{fontSize: !this.state.active ? this.props.labelSizeBlur : this.props.labelSizeFocus, color: !this.state.active ? this.props.labelColorBlur : this.props.labelColorFocus}}>{this.props.label}</Text>
+            style={{fontSize: !this.state.active ? this.props.labelSizeBlur : this.props.labelSizeFocus, color: !this.state.active ? this.props.labelColorBlur : this.props.labelColorFocus}}>
+              {this.props.label}</Text>
         </Animated.View>
         <TextInput
           ref={r => (this.ref = r)}
@@ -92,7 +93,7 @@ export default class FloatingInput extends React.Component {
 const styles = StyleSheet.create({
   field: {
     height: 56,
-    flexDirection: 'row'
+    flexDirection: 'row',
   },
   input: {
     flex: 8,
