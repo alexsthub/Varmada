@@ -13,6 +13,7 @@ import CustomButton from '../components/general/CustomButton';
 import Header from '../components/general/Header';
 
 // TODO: Handle the absolute bottom
+// TODO: Do a check if all textvalues are valid, otherwise show error above
 export default class SignupScreen extends React.Component {
   constructor(props) {
     super(props);
@@ -49,7 +50,6 @@ export default class SignupScreen extends React.Component {
               label={'First Name'}
               labelColorBlur={'#FFFFFF'}
               onChangeText={text => this.setState({firstName: text})}
-              blurOnSubmit={false}
               onSubmitEditing={() => this.lastName.getInnerRef().focus()}
             />
 
@@ -61,7 +61,6 @@ export default class SignupScreen extends React.Component {
               label={'Last Name'}
               labelColorBlur={'#FFFFFF'}
               onChangeText={text => this.setState({lastName: text})}
-              blurOnSubmit={false}
               onSubmitEditing={() => this.phone.getInnerRef().focus()}
             />
 
@@ -73,7 +72,6 @@ export default class SignupScreen extends React.Component {
               label={'Phone Number'}
               labelColorBlur={'#FFFFFF'}
               onChangeText={text => this.setState({phone: text})}
-              blurOnSubmit={false}
               onSubmitEditing={() => this.password.getInnerRef().focus()}
             />
 
@@ -85,7 +83,6 @@ export default class SignupScreen extends React.Component {
               label={'Password'}
               labelColorBlur={'#FFFFFF'}
               onChangeText={text => this.setState({password: text})}
-              blurOnSubmit={false}
               onSubmitEditing={this.handleSignup}
             />
 

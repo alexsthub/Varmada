@@ -4,6 +4,8 @@ import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome';
 import {faEye, faEyeSlash} from '@fortawesome/free-solid-svg-icons';
 import PropTypes from 'prop-types';
 
+// TODO: Option for icons to the left
+// TODO: Option for error that will put a View above and put a red border everywhere. Ideally change box shadow color too
 export default class FloatingInput extends React.Component {
 
   constructor(props) {
@@ -64,7 +66,13 @@ export default class FloatingInput extends React.Component {
     const animatedTop = {top: interpolateTop};
     return (
       <Animated.View style={[styles.field, animatedBackground]}>
-        <Animated.View style={[styles.label, animatedTop]}>
+
+        {this.props.icon ? 
+        <View style={{justifyContent: 'center', marginLeft: 10}}>
+          <FontAwesomeIcon icon={this.props.icon}/>
+       </View> : null}
+        
+        <Animated.View style={[styles.label, animatedTop, {left: this.props.icon ? 40: 16}]}>
           <Text
             style={{fontSize: !this.state.active ? this.props.labelSizeBlur : this.props.labelSizeFocus, color: !this.state.active ? this.props.labelColorBlur : this.props.labelColorFocus}}>
               {this.props.label}</Text>
@@ -111,7 +119,6 @@ const styles = StyleSheet.create({
   },
   label: {
     position: 'absolute',
-    left: 16,
   },
   iconContainer: {
     flex: 1,

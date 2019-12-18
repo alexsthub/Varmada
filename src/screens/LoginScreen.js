@@ -12,6 +12,8 @@ import {
 
 import FloatingInput from '../components/general/FloatingInput';
 import CustomButton from '../components/general/CustomButton';
+import {faPhone, faLock} from '@fortawesome/free-solid-svg-icons';
+
 
 export default class LoginScreen extends React.Component {
   constructor(props) {
@@ -26,8 +28,11 @@ export default class LoginScreen extends React.Component {
 
   // TODO: This doesn't work. Throwing warnings
   componentWillUnmount() {
-    if (this.keyboardDidShowListener || this.keyboardDidHideListener) {
-      Keyboard.removeAllListeners('keyboardDidShow');
+    if (this.keyboardDidShowListener) {
+      this.keyboardDidShowListener.remove();
+    }
+    if (this.keyboardDidHideListener) {
+      this.keyboardDidHideListener.remove();
     }
   }
 
@@ -88,6 +93,7 @@ export default class LoginScreen extends React.Component {
               labelColorBlur={'#FFFFFF'}
               onChangeText={text => this.setState({phone: text})}
               blurOnSubmit={false}
+              icon={faPhone}
               onSubmitEditing={() => this.password.getInnerRef().focus()}
             />
 
@@ -100,6 +106,7 @@ export default class LoginScreen extends React.Component {
               labelColorBlur={'#FFFFFF'}
               onChangeText={text => this.setState({password: text})}
               blurOnSubmit={false}
+              icon={faLock}
               onSubmitEditing={this.handleLogin}
             />
 
