@@ -5,15 +5,18 @@ import {
   View,
   Text,
   ScrollView,
-  TouchableWithoutFeedback
+  TouchableWithoutFeedback,
+  Platform
 } from 'react-native';
 
+import SmsListener from 'react-native-android-sms-listener';
 import Header from '../components/general/Header';
 import DigitInput from '../components/login/DigitInput';
 import CustomButton from '../components/general/CustomButton';
 
-// TODO: Can probably get rid of the editable thing if it is wrapped in touchable without feedback
+// TODO: Can probably get rid of the editable thing if it is wrapped in touchable without feedback? Fix it?
 // TODO: Add send another code absolute positioning
+// TODO: Make the modal component
 export default class ValidateScreen extends React.Component {
   number_cells = 6;
   constructor(props) {
@@ -32,9 +35,52 @@ export default class ValidateScreen extends React.Component {
     return editableArray;
   }
 
-  // TODO: Add SMS Listener here
   componentDidMount() {
-  
+    if (Platform.OS === 'android') {
+      this.requestReadSmsPermission();
+      this.subscription = SmsListener.addListener(message => {
+        console.info(message);
+        // TODO: Parse the message and set the state, then call on the submit function
+        this.setState({codes: ['1', '2', '3', '4', '5', '6']}, () => console.log('call function here'));
+      });
+    }
+  }
+
+  componentWillUnmount() {
+    if (this.subscription) {
+      this.subscription.remove();
+    }
+  }
+
+  async requestReadSmsPermission() {
+    try {
+      var granted = await PermissionsAndroid.request(
+        PermissionsAndroid.PERMISSIONS.READ_SMS,
+        {
+          title: 'Auto Verification OTP',
+          message: 'need access to read sms, to verify OTP',
+        },
+      );
+      if (granted === PermissionsAndroid.RESULTS.GRANTED) {
+        console.log('sms read permissions granted', granted);
+        granted = await PermissionsAndroid.request(
+          PermissionsAndroid.PERMISSIONS.RECEIVE_SMS,
+          {
+            title: 'Receive SMS',
+            message: 'Need access to receive sms, to verify OTP',
+          },
+        );
+        if (granted === PermissionsAndroid.RESULTS.GRANTED) {
+          console.log('RECEIVE_SMS permissions granted', granted);
+        } else {
+          console.log('RECEIVE_SMS permissions denied');
+        }
+      } else {
+        console.log('sms read permissions denied');
+      }
+    } catch (err) {
+      console.log(err);
+    }
   }
 
   selectCursorLocation = (index) => {
@@ -46,10 +92,9 @@ export default class ValidateScreen extends React.Component {
     }
   }
 
-  // TODO: This is not showing the keyboard :(
+  // TODO: This is not showing the keyboard when you click on any other one.
   focusOnCurrent = () => {
     const code = 'code' + this.state.editable.indexOf(true);
-    console.log(code);
     this.refs[code].focus();
   }
 
