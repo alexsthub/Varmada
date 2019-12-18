@@ -65,35 +65,46 @@ export default class FloatingInput extends React.Component {
     });
     const animatedTop = {top: interpolateTop};
     return (
-      <Animated.View style={[styles.field, animatedBackground]}>
 
-        {this.props.icon ? 
-        <View style={{justifyContent: 'center', marginLeft: 10}}>
-          <FontAwesomeIcon icon={this.props.icon}/>
-       </View> : null}
-        
-        <Animated.View style={[styles.label, animatedTop, {left: this.props.icon ? 40: 16}]}>
-          <Text
-            style={{fontSize: !this.state.active ? this.props.labelSizeBlur : this.props.labelSizeFocus, color: !this.state.active ? this.props.labelColorBlur : this.props.labelColorFocus}}>
-              {this.props.label}</Text>
+      <View>
+
+        {this.props.error ? 
+        <View style={styles.error}>
+          <Text style={styles.errorText}>{this.props.error}</Text>
+        </View> : null
+        }
+
+        <Animated.View style={[styles.field, this.props.error ? styles.errorField : null, animatedBackground]}>
+
+          {this.props.icon ? 
+          <View style={{justifyContent: 'center', marginLeft: 10}}>
+            <FontAwesomeIcon icon={this.props.icon}/>
+        </View> : null}
+          
+          <Animated.View style={[styles.label, animatedTop, {left: this.props.icon ? 40: 16}]}>
+            <Text
+              style={{fontSize: !this.state.active ? this.props.labelSizeBlur : this.props.labelSizeFocus, color: !this.state.active ? this.props.labelColorBlur : this.props.labelColorFocus}}>
+                {this.props.label}</Text>
+          </Animated.View>
+          <TextInput
+            ref={r => (this.ref = r)}
+            style={[styles.input, this.state.active ? styles.activeInput : null]}
+            value={this.props.value}
+            keyboardType={this.props.keyboardType}
+            onChangeText={this.props.onChangeText}
+            onFocus={this.handleFocus}
+            onBlur={this.handleBlur}
+            blurOnSubmit={this.props.blurOnSubmit}
+            secureTextEntry={this.state.secureTextEntry}
+            {...this.props}
+          />
+          {this.props.label === 'Password' ? 
+          <TouchableOpacity onPress={this.toggleSecureText} style={styles.iconContainer}>
+            <FontAwesomeIcon icon={this.state.secureTextEntry ? faEyeSlash : faEye}/>
+          </TouchableOpacity> : null}
         </Animated.View>
-        <TextInput
-          ref={r => (this.ref = r)}
-          style={[styles.input, this.state.active ? styles.activeInput : null]}
-          value={this.props.value}
-          keyboardType={this.props.keyboardType}
-          onChangeText={this.props.onChangeText}
-          onFocus={this.handleFocus}
-          onBlur={this.handleBlur}
-          blurOnSubmit={this.props.blurOnSubmit}
-          secureTextEntry={this.state.secureTextEntry}
-          {...this.props}
-        />
-        {this.props.label === 'Password' ? 
-        <TouchableOpacity onPress={this.toggleSecureText} style={styles.iconContainer}>
-          <FontAwesomeIcon icon={this.state.secureTextEntry ? faEyeSlash : faEye}/>
-        </TouchableOpacity> : null}
-      </Animated.View>
+      </View>
+
     );
   }
 }
@@ -125,6 +136,21 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
     paddingRight: 5
+  },
+  errorField: {
+    borderColor: '#B52323',
+    borderLeftWidth: 1,
+    borderRightWidth: 1,
+    borderBottomWidth: 1
+  },
+  error: {
+    borderWidth: 1,
+    borderColor: '#B52323',
+    paddingVertical: 5,
+    paddingLeft: 5,
+  },
+  errorText: {
+    color: '#B52323'
   }
 });
 

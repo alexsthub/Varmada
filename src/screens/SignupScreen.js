@@ -43,7 +43,6 @@ export default class SignupScreen extends React.Component {
 
             <View style={styles.inputDivider}></View>
 
-            {/* TODO: Add textfields and button here */}
             <FloatingInput
               ref={r => (this.firstName = r)}
               value={this.state.phone}
@@ -51,6 +50,7 @@ export default class SignupScreen extends React.Component {
               labelColorBlur={'#FFFFFF'}
               onChangeText={text => this.setState({firstName: text})}
               onSubmitEditing={() => this.lastName.getInnerRef().focus()}
+              error={'*This textfield is fucking empty'}
             />
 
             <View style={styles.inputDivider}></View>
