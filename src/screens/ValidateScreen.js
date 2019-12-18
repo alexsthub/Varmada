@@ -6,6 +6,7 @@ import {
   Text,
   ScrollView,
   TouchableWithoutFeedback,
+  TouchableOpacity,
   Platform
 } from 'react-native';
 
@@ -15,7 +16,6 @@ import DigitInput from '../components/login/DigitInput';
 import CustomButton from '../components/general/CustomButton';
 
 // TODO: Can probably get rid of the editable thing if it is wrapped in touchable without feedback? Fix it?
-// TODO: Add send another code absolute positioning
 // TODO: Make the modal component
 export default class ValidateScreen extends React.Component {
   number_cells = 6;
@@ -146,6 +146,10 @@ export default class ValidateScreen extends React.Component {
     console.log('Sign me up!');
   }
 
+  handleResend = () => {
+    console.log('Resend code!');
+  }
+
   render() {
     let codeInputs = [];
     for (let i = 0; i < this.number_cells; i++) {
@@ -200,6 +204,12 @@ export default class ValidateScreen extends React.Component {
 
           </View>
         </ScrollView>
+
+        <TouchableOpacity style={{position: 'absolute', bottom: 10, left: 10}} onPress={this.handleResend}>
+          <Text style={{textAlign: 'center',color: '#007bff',fontStyle: 'italic',fontSize: 16}}>
+            Didn't Get Your Code? Click Here To Resend</Text>
+        </TouchableOpacity>
+
       </ImageBackground>
     );
   }
