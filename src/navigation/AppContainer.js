@@ -3,6 +3,7 @@ import {createStackNavigator} from 'react-navigation-stack';
 
 import LoginScreen from '../screens/LoginScreen';
 import SignupScreen from '../screens/SignupScreen';
+import ValidateScreen from '../screens/ValidateScreen';
 
 const AppNavigator = createStackNavigator(
   {
@@ -12,6 +13,10 @@ const AppNavigator = createStackNavigator(
     },
     SignupScreen: {
       screen: SignupScreen,
+      navigationOptions: {headerTransparent: true}
+    },
+    ValidateScreen: {
+      screen: ValidateScreen,
       navigationOptions: {headerTransparent: true}
     }
   },

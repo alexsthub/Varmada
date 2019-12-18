@@ -12,6 +12,7 @@ import FloatingInput from '../components/general/FloatingInput';
 import CustomButton from '../components/general/CustomButton';
 import Header from '../components/general/Header';
 
+// TODO: Handle the absolute bottom
 export default class SignupScreen extends React.Component {
   constructor(props) {
     super(props);
@@ -23,7 +24,7 @@ export default class SignupScreen extends React.Component {
   };
 
   handleSignup = () => {
-    console.log('yup');
+    this.props.navigation.navigate('ValidateScreen', {phone: this.state.phone});
   }
 
   render() {
@@ -90,12 +91,27 @@ export default class SignupScreen extends React.Component {
 
             <View style={styles.inputDivider}></View>
 
+            <View style={styles.noticeContainer}>
+              <Text>By clicking Sign Up, you agree to Varmada's{' '}</Text>
+              <TouchableOpacity>
+                <Text style={styles.highlightText}>Terms of Service</Text>
+              </TouchableOpacity>
+              <Text> and acknowledge Varmada's </Text>
+              <TouchableOpacity>
+                <Text style={styles.highlightText}>Privacy Policy</Text>
+              </TouchableOpacity>
+            </View>
+
+            <View style={styles.inputDivider}></View>
+
             <CustomButton
               text={'Sign Up'}
               onPress={this.handleSignup}
               textStyle={{color: '#000000'}}
               buttonStyle={{elevation: 10}}
             />
+
+            <View style={styles.inputDivider}></View>
 
           </View>
         </ScrollView>
@@ -132,4 +148,13 @@ const styles = StyleSheet.create({
   inputDivider: {
     marginVertical: 10,
   },
+  noticeContainer: {
+    flexDirection: 'row',
+    flexWrap: 'wrap'
+  },
+  highlightText: {
+    color: '#007bff',
+    fontWeight: 'bold',
+    textDecorationLine: 'underline',
+  }
 });
