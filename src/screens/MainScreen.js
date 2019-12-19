@@ -15,7 +15,6 @@ export default class MainScreen extends React.Component {
     return (
       <View style={{flex: 1}}>
         <LeftNavButton navigation={this.props.navigation} />
-        <Text>Hi </Text>
       </View>
     );
   }

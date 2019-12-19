@@ -1,14 +1,15 @@
 import React from 'react';
-import {
-  StyleSheet,
-  ScrollView,
-  Text,
-  View,
-} from 'react-native';
+import {StyleSheet, ScrollView, Text, View} from 'react-native';
 import PropTypes from 'prop-types';
 import {NavigationActions} from 'react-navigation';
 
-import {faHome, faArchive, faMapMarkerAlt, faWallet, faUserCog} from '@fortawesome/free-solid-svg-icons';
+import {
+  faHome,
+  faArchive,
+  faMapMarkerAlt,
+  faWallet,
+  faUserCog,
+} from '@fortawesome/free-solid-svg-icons';
 
 import NavOption from './navOption';
 
@@ -56,7 +57,16 @@ class LeftNav extends React.Component {
           />
         </ScrollView>
         <View style={styles.footerContainer}>
-          <Text>Support</Text>
+          <NavOption
+            containerStyle={styles.footerOptions}
+            onPress={() => {}}
+            text={'Legal'}
+          />
+          <NavOption
+            containerStyle={styles.footerOptions}
+            onPress={() => {}}
+            text={'Support'}
+          />
         </View>
       </View>
     );
@@ -79,14 +89,19 @@ const styles = StyleSheet.create({
     backgroundColor: 'lightgrey',
   },
   sectionHeadingStyle: {
-    paddingVertical: 10,
+    paddingVertical: 15,
     paddingLeft: 15,
-    alignItems: 'center'
+    alignItems: 'center',
   },
   footerContainer: {
-    padding: 20,
+    paddingVertical: 10,
     backgroundColor: 'lightgrey',
   },
+  footerOptions: {
+    paddingVertical: 15,
+    paddingLeft: 15,
+    alignItems: 'center'
+  }
 });
 
 export default LeftNav;

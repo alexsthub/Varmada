@@ -48,7 +48,10 @@ const AppNavigator = createStackNavigator(
       screen: ValidateScreen,
       navigationOptions: {headerTransparent: true}
     },
-    MainDrawer
+    MainDrawer: {
+      screen: MainDrawer,
+      navigationOptions: {header: null}
+    }
   },
   {
     initialRouteName: 'LoginScreen',
