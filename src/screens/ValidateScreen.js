@@ -232,15 +232,10 @@ export default class ValidateScreen extends React.Component {
         </ScrollView>
 
         <TouchableOpacity
-          style={{position: 'absolute', bottom: 10, left: 10}}
+          style={styles.signUpContainer}
           onPress={this.handleResend}>
           <Text
-            style={{
-              textAlign: 'center',
-              color: '#007bff',
-              fontStyle: 'italic',
-              fontSize: 16,
-            }}>
+            style={styles.highlightText}>
             Didn't Get Your Code? Click Here To Resend
           </Text>
         </TouchableOpacity>

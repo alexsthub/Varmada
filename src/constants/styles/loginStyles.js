@@ -44,11 +44,6 @@ const styles = StyleSheet.create({
     textDecorationLine: 'underline',
   },
   // ValidateScreen Unique
-  highlightText: {
-    color: '#007bff',
-    fontWeight: 'bold',
-    textDecorationLine: 'underline',
-  },
   digitContainer: {
     flexDirection: 'row',
     justifyContent: 'center',
