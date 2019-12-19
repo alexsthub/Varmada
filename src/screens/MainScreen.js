@@ -1,6 +1,6 @@
 import React from 'react';
 import {StyleSheet, View, Text} from 'react-native';
-import LeftNavButton from '../components/leftNavButton';
+import LeftNavButton from '../components/leftNav/leftNavButton';
 
 export default class MainScreen extends React.Component {
   constructor(props) {

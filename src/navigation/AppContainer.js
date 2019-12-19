@@ -10,12 +10,12 @@ import SignupScreen from '../screens/SignupScreen';
 import ValidateScreen from '../screens/ValidateScreen';
 
 import MainScreen from '../screens/MainScreen';
-import LeftNav from '../components/leftNav';
+import LeftNav from '../components/leftNav/leftNav';
 
 const WIDTH = Dimensions.get('window').width;
 
 const DrawerConfig = {
-  drawerWidth: WIDTH * 0.83,
+  drawerWidth: WIDTH * 0.50,
   contentComponent: ({navigation}) => {
     return <LeftNav navigation={navigation} />;
   },
