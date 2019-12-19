@@ -12,7 +12,9 @@ import {
 } from '@fortawesome/free-solid-svg-icons';
 
 import NavOption from './navOption';
+import ProfileImage from '../general/ProfileImage';
 
+// TODO: Add header (Welcome + Picture Component)
 class LeftNav extends React.Component {
   navigateToScreen = route => () => {
     const navigateAction = NavigationActions.navigate({
@@ -25,6 +27,16 @@ class LeftNav extends React.Component {
     return (
       <View style={styles.container}>
         <ScrollView>
+
+          <View style={styles.navHeader}>
+            <Text style={{textAlign: 'center', fontSize: 18}}>Welcome, Alex</Text>
+            <ProfileImage 
+              borderWidth={1}
+              size={100}
+              backgroundColor={'gray'}
+              onPress={() => console.log('pressed image')}/>
+          </View>
+          
           <NavOption
             containerStyle={styles.sectionHeadingStyle}
             onPress={this.navigateToScreen('Home')}
@@ -82,6 +94,11 @@ const styles = StyleSheet.create({
     paddingTop: 20,
     flex: 1,
   },
+  navHeader: {
+    alignItems: 'center',
+    marginTop: 10,
+    marginBottom: 20
+  },  
   navItemStyle: {
     padding: 10,
   },
