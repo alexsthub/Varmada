@@ -21,6 +21,7 @@ export default class ProfileImage extends React.Component {
             width: this.props.size,
             borderRadius: this.props.size / 2,
             borderWidth: 1,
+            borderColor: 'black',
             backgroundColor: this.props.backgroundColor
           }}
         />

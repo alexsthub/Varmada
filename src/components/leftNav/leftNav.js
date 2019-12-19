@@ -33,7 +33,7 @@ class LeftNav extends React.Component {
             <ProfileImage 
               borderWidth={1}
               size={100}
-              backgroundColor={'gray'}
+              backgroundColor={'#F7F7F7'}
               onPress={() => console.log('pressed image')}/>
           </View>
           
@@ -73,11 +73,13 @@ class LeftNav extends React.Component {
             containerStyle={styles.footerOptions}
             onPress={() => {}}
             text={'Legal'}
+            isFooter={true}
           />
           <NavOption
             containerStyle={styles.footerOptions}
             onPress={() => {}}
             text={'Support'}
+            isFooter={true}
           />
         </View>
       </View>
