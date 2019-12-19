@@ -44,6 +44,23 @@ export default class LoginScreen extends React.Component {
     this.setState({keyboardOpen: false});
   };
 
+  onChangePhone = (text) => {
+    let input = text.replace(/[(\-) ]/g,'');
+    const size = input.length;
+    if (input === '(') {
+      input = '';
+    } else if (size == 0) {
+      input = input;
+    } else if (size < 4) {
+      input = '(' + input;
+    } else if (size < 7) {
+      input = '(' + input.substring(0,3) + ') ' + input.substring(3,6);
+    } else {
+      input = '(' + input.substring(0,3) + ') ' + input.substring(3,6) + '-' + input.substring(6,10);
+    }
+    this.setState({phone: input});
+  }
+
   handleLogin = () => {
     console.log('Trying to Login');
   };
@@ -90,8 +107,9 @@ export default class LoginScreen extends React.Component {
               value={this.state.phone}
               label={'Phone'}
               keyboardType={'numeric'}
+              maxLength={14}
               labelColorBlur={'#FFFFFF'}
-              onChangeText={text => this.setState({phone: text})}
+              onChangeText={this.onChangePhone}
               blurOnSubmit={false}
               icon={faPhone}
               onSubmitEditing={() => this.password.getInnerRef().focus()}

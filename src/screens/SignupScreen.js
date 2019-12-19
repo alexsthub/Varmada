@@ -14,10 +14,29 @@ import Header from '../components/general/Header';
 
 // TODO: Go back to signin isn't actually at the bottom because of the goddamn scrollview.
 // TODO: Do a check if all textvalues are valid, otherwise show error above
+// TODO: Way to fix the laggy input change is to put an invisible textinput right on top and the main one will only show the value.
+// TODO: Country code for phones
 export default class SignupScreen extends React.Component {
   constructor(props) {
     super(props);
     this.state = {firstName: '', lastName: '', phone: '', password: ''};
+  }
+
+  onChangePhone = (text) => {
+    let input = text.replace(/[(\-) ]/g,'');
+    const size = input.length;
+    if (input === '(') {
+      input = '';
+    } else if (size == 0) {
+      input = input;
+    } else if (size < 4) {
+      input = '(' + input;
+    } else if (size < 7) {
+      input = '(' + input.substring(0,3) + ') ' + input.substring(3,6);
+    } else {
+      input = '(' + input.substring(0,3) + ') ' + input.substring(3,6) + '-' + input.substring(6,10);
+    }
+    this.setState({phone: input});
   }
 
   returnToSignin = () => {
@@ -47,7 +66,7 @@ export default class SignupScreen extends React.Component {
 
             <FloatingInput
               ref={r => (this.firstName = r)}
-              value={this.state.phone}
+              value={this.state.firstName}
               label={'First Name'}
               labelColorBlur={'#FFFFFF'}
               onChangeText={text => this.setState({firstName: text})}
@@ -59,7 +78,7 @@ export default class SignupScreen extends React.Component {
 
             <FloatingInput
               ref={r => (this.lastName = r)}
-              value={this.state.phone}
+              value={this.state.lastName}
               label={'Last Name'}
               labelColorBlur={'#FFFFFF'}
               onChangeText={text => this.setState({lastName: text})}
@@ -72,8 +91,10 @@ export default class SignupScreen extends React.Component {
               ref={r => (this.phone = r)}
               value={this.state.phone}
               label={'Phone Number'}
+              keyboardType={'numeric'}
+              maxLength={14}
               labelColorBlur={'#FFFFFF'}
-              onChangeText={text => this.setState({phone: text})}
+              onChangeText={this.onChangePhone}
               onSubmitEditing={() => this.password.getInnerRef().focus()}
             />
 
