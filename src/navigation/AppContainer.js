@@ -1,10 +1,14 @@
 import React from 'react';
-import {TouchableOpacity, Dimensions} from 'react-native';
+import {Dimensions} from 'react-native';
+
 import {createAppContainer} from 'react-navigation';
+import {createStackNavigator} from 'react-navigation-stack';
 import {createDrawerNavigator} from 'react-navigation-drawer';
 
-import {createStackNavigator} from 'react-navigation-stack';
 import LoginScreen from '../screens/LoginScreen';
+import SignupScreen from '../screens/SignupScreen';
+import ValidateScreen from '../screens/ValidateScreen';
+
 import MainScreen from '../screens/MainScreen';
 import LeftNav from '../components/leftNav';
 
@@ -17,41 +21,37 @@ const DrawerConfig = {
   },
 };
 
-const DrawerNavigator = createDrawerNavigator(
+const MainDrawer = createDrawerNavigator(
   {
     Home: {
       screen: MainScreen,
     },
     Settings: {
       screen: LoginScreen,
-    },
+      navigationOptions: {header:null}
+    }
   },
   DrawerConfig,
 );
 
-export default createAppContainer(DrawerNavigator);
-
-// const AppNavigator = createStackNavigator(
-//   {
-//     LoginScreen: {
-//       screen: LoginScreen,
-//       navigationOptions: {header: null},
-//     },
-//     MainScreen: {
-//       screen: MainScreen,
-//       navigationOptions: ({navigation}) => ({
-//         title: 'Main',
-//         headerLeft: (
-//           <TouchableOpacity onPress={() => navigation.navigate('DrawerOpen')}>
-//             <IOSIcon name="ios-menu" size={30} />
-//           </TouchableOpacity>
-//         ),
-//         headerStyle: {paddingRight: 10, paddingLeft: 15},
-//       }),
-//     },
-//   },
-//   {
-//     initialRouteName: 'MainScreen',
-//   },
-// );
-// const AppContainer = createAppContainer(AppNavigator);
+const AppNavigator = createStackNavigator(
+  {
+    LoginScreen: {
+      screen: LoginScreen,
+      navigationOptions: {header: null},
+    },
+    SignupScreen: {
+      screen: SignupScreen,
+      navigationOptions: {headerTransparent: true}
+    },
+    ValidateScreen: {
+      screen: ValidateScreen,
+      navigationOptions: {headerTransparent: true}
+    },
+    MainDrawer
+  },
+  {
+    initialRouteName: 'LoginScreen',
+  },
+);
+export default createAppContainer(AppNavigator);
