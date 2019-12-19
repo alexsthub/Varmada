@@ -1,7 +1,6 @@
 import React from 'react';
 import {
   ImageBackground,
-  StyleSheet,
   View,
   Text,
   ScrollView,
@@ -10,6 +9,7 @@ import {
   Platform,
   PermissionsAndroid
 } from 'react-native';
+import styles from '../constants/styles/loginStyles';
 
 import SmsListener from 'react-native-android-sms-listener';
 
@@ -205,7 +205,6 @@ export default class ValidateScreen extends React.Component {
               subHeaderText={'One last step'}
             />
 
-            {/* Sent to stuff */}
             <View style={{marginTop: 20}}>
               <View style={{}}>
                 <Text style={{fontWeight: 'bold', fontSize: 18}}>
@@ -250,23 +249,3 @@ export default class ValidateScreen extends React.Component {
   }
 }
 
-const styles = StyleSheet.create({
-  background: {
-    flexDirection: 'column',
-    flex: 1,
-  },
-  container: {
-    marginHorizontal: 45,
-    flex: 1,
-  },
-  highlightText: {
-    color: '#007bff',
-    fontWeight: 'bold',
-    textDecorationLine: 'underline',
-  },
-  digitContainer: {
-    flexDirection: 'row',
-    justifyContent: 'center',
-    marginTop: 40,
-  },
-});

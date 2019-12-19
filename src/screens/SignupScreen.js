@@ -1,12 +1,12 @@
 import React from 'react';
 import {
   ImageBackground,
-  StyleSheet,
   View,
   Text,
   ScrollView,
   TouchableOpacity,
 } from 'react-native';
+import styles from '../constants/styles/loginStyles';
 
 import FloatingInput from '../components/general/FloatingInput';
 import CustomButton from '../components/general/CustomButton';
@@ -20,11 +20,15 @@ export default class SignupScreen extends React.Component {
     this.state = {firstName: '', lastName: '', phone: '', password: ''};
   }
 
-  handleSignin = () => {
+  returnToSignin = () => {
     this.props.navigation.navigate('LoginScreen');
   };
 
+  // TODO: Better handling? If name.replace(stuff).length === 0
   handleSignup = () => {
+    if (this.state.firstName === '') {
+
+    }
     this.props.navigation.navigate('ValidateScreen', {phone: this.state.phone});
   }
 
@@ -115,7 +119,7 @@ export default class SignupScreen extends React.Component {
 
         {/* TODO: This needs to be fixed at the bottom of scrollview. */}
         <View style={styles.signUpContainer}>
-          <TouchableOpacity onPress={this.handleSignin}>
+          <TouchableOpacity onPress={this.returnToSignin}>
             <Text style={{color: 'white'}}>
               Already An Account? <Text style={{color: 'white'}}>Sign In</Text>
             </Text>
@@ -126,32 +130,3 @@ export default class SignupScreen extends React.Component {
   }
 }
 
-const styles = StyleSheet.create({
-  background: {
-    flexDirection: 'column',
-    flex: 1,
-  },
-  container: {
-    marginHorizontal: 45,
-    flex: 1,
-  },
-  signUpContainer: {
-    position: 'absolute',
-    bottom: 15,
-    right: 0,
-    left: 0,
-    alignItems: 'center',
-  },
-  inputDivider: {
-    marginVertical: 10,
-  },
-  noticeContainer: {
-    flexDirection: 'row',
-    flexWrap: 'wrap'
-  },
-  highlightText: {
-    color: '#007bff',
-    fontWeight: 'bold',
-    textDecorationLine: 'underline',
-  }
-});
