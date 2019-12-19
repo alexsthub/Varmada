@@ -12,7 +12,7 @@ import FloatingInput from '../components/general/FloatingInput';
 import CustomButton from '../components/general/CustomButton';
 import Header from '../components/general/Header';
 
-// TODO: Handle the absolute bottom
+// TODO: Go back to signin isn't actually at the bottom because of the goddamn scrollview.
 // TODO: Do a check if all textvalues are valid, otherwise show error above
 export default class SignupScreen extends React.Component {
   constructor(props) {
@@ -24,11 +24,9 @@ export default class SignupScreen extends React.Component {
     this.props.navigation.navigate('LoginScreen');
   };
 
-  // TODO: Better handling? If name.replace(stuff).length === 0
+  // TODO: Try to sign up and assign errors here
   handleSignup = () => {
-    if (this.state.firstName === '') {
 
-    }
     this.props.navigation.navigate('ValidateScreen', {phone: this.state.phone});
   }
 
@@ -114,17 +112,18 @@ export default class SignupScreen extends React.Component {
 
             <View style={styles.inputDivider}></View>
 
+            {/* TODO: This needs to be fixed at the bottom of scrollview. */}
+            <View style={{justifyContent: 'flex-end', alignItems: 'center', marginBottom: 15}}>
+              <TouchableOpacity onPress={this.returnToSignin}>
+                <Text style={{color: 'white'}}>
+                  Already An Account? <Text style={{color: 'white'}}>Sign In</Text>
+                </Text>
+              </TouchableOpacity>
+            </View>
+
           </View>
         </ScrollView>
 
-        {/* TODO: This needs to be fixed at the bottom of scrollview. */}
-        <View style={styles.signUpContainer}>
-          <TouchableOpacity onPress={this.returnToSignin}>
-            <Text style={{color: 'white'}}>
-              Already An Account? <Text style={{color: 'white'}}>Sign In</Text>
-            </Text>
-          </TouchableOpacity>
-        </View>
       </ImageBackground>
     );
   }
