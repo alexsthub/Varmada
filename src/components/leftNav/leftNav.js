@@ -28,7 +28,7 @@ class LeftNav extends React.Component {
       <View style={styles.container}>
         <ScrollView>
           <View style={styles.navHeader}>
-            <Text style={{textAlign: 'center', fontSize: 18}}>Alex</Text>
+            <Text style={{textAlign: 'center', fontSize: 24}}>Alex Tan</Text>
             <ProfileImage
               borderWidth={1}
               size={100}
