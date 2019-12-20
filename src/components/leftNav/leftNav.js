@@ -27,16 +27,16 @@ class LeftNav extends React.Component {
     return (
       <View style={styles.container}>
         <ScrollView>
-
           <View style={styles.navHeader}>
-            <Text style={{textAlign: 'center', fontSize: 18}}>Welcome, Alex</Text>
-            <ProfileImage 
+            <Text style={{textAlign: 'center', fontSize: 18}}>Alex</Text>
+            <ProfileImage
               borderWidth={1}
               size={100}
               backgroundColor={'#F7F7F7'}
-              onPress={() => console.log('pressed image')}/>
+              onPress={() => console.log('pressed image')}
+            />
           </View>
-          
+
           <NavOption
             containerStyle={styles.sectionHeadingStyle}
             onPress={this.navigateToScreen('Home')}
@@ -99,8 +99,8 @@ const styles = StyleSheet.create({
   navHeader: {
     alignItems: 'center',
     marginTop: 10,
-    marginBottom: 20
-  },  
+    marginBottom: 20,
+  },
   navItemStyle: {
     padding: 10,
   },
@@ -119,8 +119,8 @@ const styles = StyleSheet.create({
   footerOptions: {
     paddingVertical: 15,
     paddingLeft: 15,
-    alignItems: 'center'
-  }
+    alignItems: 'center',
+  },
 });
 
 export default LeftNav;

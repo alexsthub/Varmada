@@ -16,10 +16,22 @@ export default class MainScreen extends React.Component {
     this.props.navigation.navigate('PickUpScreen');
   };
 
+  //how do i space this text apart.
   render() {
     return (
       <View style={{flex: 1}}>
         <LeftNavButton navigation={this.props.navigation} />
+        <View style={{justifyContent: 'space-between'}}>
+          <Text style={{textAlign: 'center', fontSize: 30}}>Hi, Alex</Text>
+          <Text
+            style={{
+              textAlign: 'center',
+              fontSize: 20,
+            }}>
+            You don't have any pickups scheduled right now
+          </Text>
+        </View>
+
         <View style={{flex: 1, flexDirection: 'column-reverse'}}>
           <CustomButton
             text={'Request a pickup!'}
