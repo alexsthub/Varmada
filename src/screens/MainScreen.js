@@ -13,7 +13,7 @@ export default class MainScreen extends React.Component {
   };
   handlePickup = () => {
     console.log('Handling new pickup...');
-    this.props.navigation.navigate('PickUpScreen');
+    this.props.navigation.navigate('PickupScreen');
   };
 
   //how do i space this text apart.
