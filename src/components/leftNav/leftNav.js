@@ -14,8 +14,9 @@ import {
 import NavOption from './navOption';
 import ProfileImage from '../general/ProfileImage';
 
-// TODO: Add header (Welcome + Picture Component)
+// TODO: Show header at the top of each nav screen 
 class LeftNav extends React.Component {
+  
   navigateToScreen = route => () => {
     const navigateAction = NavigationActions.navigate({
       routeName: route,
@@ -24,6 +25,7 @@ class LeftNav extends React.Component {
   };
 
   render() {
+    const activeKey = this.props.activeItemKey;
     return (
       <View style={styles.container}>
         <ScrollView>
@@ -37,36 +39,43 @@ class LeftNav extends React.Component {
             />
           </View>
 
-          <NavOption
-            containerStyle={styles.sectionHeadingStyle}
-            onPress={this.navigateToScreen('Home')}
-            text={'Home'}
-            icon={faHome}
-          />
-          <NavOption
-            containerStyle={styles.sectionHeadingStyle}
-            onPress={this.navigateToScreen('Pickups')}
-            text={'My Pickups'}
-            icon={faArchive}
-          />
-          <NavOption
-            containerStyle={styles.sectionHeadingStyle}
-            onPress={this.navigateToScreen('MyAddresses')}
-            text={'My Addresses'}
-            icon={faMapMarkerAlt}
-          />
-          <NavOption
-            containerStyle={styles.sectionHeadingStyle}
-            onPress={this.navigateToScreen('PaymentMethods')}
-            text={'Payment Methods'}
-            icon={faWallet}
-          />
-          <NavOption
-            containerStyle={styles.sectionHeadingStyle}
-            onPress={this.navigateToScreen('AccountSettings')}
-            text={'Account Settings'}
-            icon={faUserCog}
-          />
+          <View style={{marginTop: 10}}>
+            <NavOption
+              containerStyle={styles.sectionHeadingStyle}
+              onPress={this.navigateToScreen('Home')}
+              text={'Home'}
+              icon={faHome}
+              active={activeKey === 'Home'}
+            />
+            <NavOption
+              containerStyle={styles.sectionHeadingStyle}
+              onPress={this.navigateToScreen('Pickups')}
+              text={'My Pickups'}
+              icon={faArchive}
+              active={activeKey === 'Pickups'}
+            />
+            <NavOption
+              containerStyle={styles.sectionHeadingStyle}
+              onPress={this.navigateToScreen('MyAddresses')}
+              text={'My Addresses'}
+              icon={faMapMarkerAlt}
+              active={activeKey === 'MyAddresses'}
+            />
+            <NavOption
+              containerStyle={styles.sectionHeadingStyle}
+              onPress={this.navigateToScreen('PaymentMethods')}
+              text={'Payment Methods'}
+              icon={faWallet}
+              active={activeKey === 'PaymentMethods'}
+            />
+            <NavOption
+              containerStyle={styles.sectionHeadingStyle}
+              onPress={this.navigateToScreen('AccountSettings')}
+              text={'Account Settings'}
+              icon={faUserCog}
+              active={activeKey === 'AccountSettings'}
+            />
+          </View>
         </ScrollView>
         <View style={styles.footerContainer}>
           <NavOption
