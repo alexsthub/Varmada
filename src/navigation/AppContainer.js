@@ -8,6 +8,7 @@ import {createDrawerNavigator} from 'react-navigation-drawer';
 import LoginScreen from '../screens/LoginScreen';
 import SignupScreen from '../screens/SignupScreen';
 import ValidateScreen from '../screens/ValidateScreen';
+import PickupScreen from '../screens/PickupScreen';
 
 import MainScreen from '../screens/MainScreen';
 import LeftNav from '../components/leftNav/leftNav';
@@ -15,7 +16,7 @@ import LeftNav from '../components/leftNav/leftNav';
 const WIDTH = Dimensions.get('window').width;
 
 const DrawerConfig = {
-  drawerWidth: WIDTH * 0.50,
+  drawerWidth: WIDTH * 0.5,
   contentComponent: ({navigation}) => {
     return <LeftNav navigation={navigation} />;
   },
@@ -28,8 +29,8 @@ const MainDrawer = createDrawerNavigator(
     },
     Settings: {
       screen: LoginScreen,
-      navigationOptions: {header:null}
-    }
+      navigationOptions: {header: null},
+    },
   },
   DrawerConfig,
 );
@@ -42,16 +43,20 @@ const AppNavigator = createStackNavigator(
     },
     SignupScreen: {
       screen: SignupScreen,
-      navigationOptions: {headerTransparent: true}
+      navigationOptions: {headerTransparent: true},
     },
     ValidateScreen: {
       screen: ValidateScreen,
-      navigationOptions: {headerTransparent: true}
+      navigationOptions: {headerTransparent: true},
     },
     MainDrawer: {
       screen: MainDrawer,
-      navigationOptions: {header: null}
-    }
+      navigationOptions: {header: null},
+    },
+    PickupScreen: {
+      screen: PickupScreen,
+      navigationOptions: {headerTransparent: true},
+    },
   },
   {
     initialRouteName: 'LoginScreen',

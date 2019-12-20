@@ -11,7 +11,7 @@ export default class ProfileImage extends React.Component {
 
   render() {
     return (
-      <TouchableOpacity 
+      <TouchableOpacity
         style={{elevation: 10, marginTop: 20}}
         onPress={this.props.onPress}>
         <Image
@@ -22,14 +22,18 @@ export default class ProfileImage extends React.Component {
             borderRadius: this.props.size / 2,
             borderWidth: 1,
             borderColor: 'black',
-            backgroundColor: this.props.backgroundColor
+            backgroundColor: this.props.backgroundColor,
           }}
         />
-        <View style={{position: 'absolute', right:0, bottom: 0, backgroundColor:"#F8B500", borderRadius: 50}}>
-          <Icon 
-            name={'pluscircleo'}
-            size={30}
-            style={{color: 'black'}}/>
+        <View
+          style={{
+            position: 'absolute',
+            right: 0,
+            bottom: 0,
+            backgroundColor: '#F8B500',
+            borderRadius: 50,
+          }}>
+          <Icon name={'pluscircleo'} size={30} style={{color: 'black'}} />
         </View>
       </TouchableOpacity>
     );
@@ -41,13 +45,11 @@ ProfileImage.propTypes = {
   borderWidth: PropTypes.number,
   backgroundColor: PropTypes.string,
   onPress: PropTypes.func,
-
-}
+};
 
 ProfileImage.defaultProps = {
   size: 100,
   borderWidth: 0,
   backgroundColor: 'white',
   onPress: () => {},
-
-}
+};
