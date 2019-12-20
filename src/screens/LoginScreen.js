@@ -63,6 +63,7 @@ export default class LoginScreen extends React.Component {
 
   handleLogin = () => {
     console.log('Trying to Login');
+    this.props.navigation.navigate('MainDrawer');
   };
 
   handleSignup = () => {
