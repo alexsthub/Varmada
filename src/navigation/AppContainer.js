@@ -9,6 +9,7 @@ import LoginScreen from '../screens/LoginScreen';
 import SignupScreen from '../screens/SignupScreen';
 import ValidateScreen from '../screens/ValidateScreen';
 import PickupScreen from '../screens/PickupScreen';
+import EditAccountScreen from '../screens/navscreens/EditAccountScreen';
 
 import MainScreen from '../screens/MainScreen';
 import LeftNav from '../components/leftNav/leftNav';
@@ -71,6 +72,10 @@ const AppNavigator = createStackNavigator(
       screen: PickupScreen,
       navigationOptions: {headerTransparent: true},
     },
+    EditAccountScreen: {
+      screen: EditAccountScreen,
+      navigationOptions: {title: 'Edit Profile Details'}
+    }
   },
   {
     initialRouteName: 'LoginScreen',

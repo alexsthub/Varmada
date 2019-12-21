@@ -31,12 +31,14 @@ class LeftNav extends React.Component {
         <ScrollView>
           <View style={styles.navHeader}>
             <Text style={{textAlign: 'center', fontSize: 24}}>Alex Tan</Text>
-            <ProfileImage
-              borderWidth={1}
-              size={100}
-              backgroundColor={'#F7F7F7'}
-              onPress={() => console.log('pressed image')}
-            />
+            <View style={{marginTop: 20}}>
+              <ProfileImage
+                borderWidth={1}
+                size={100}
+                backgroundColor={'#F7F7F7'}
+                onPress={() => console.log('pressed image')}
+              />
+            </View>
           </View>
 
           <View style={{marginTop: 10}}>
