@@ -14,7 +14,7 @@ import {
 import NavOption from './navOption';
 import ProfileImage from '../general/ProfileImage';
 
-// TODO: Show header at the top of each nav screen 
+// TODO: Make a Header Component that just rests on top
 class LeftNav extends React.Component {
   
   navigateToScreen = route => () => {

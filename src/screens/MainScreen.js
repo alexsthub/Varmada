@@ -12,7 +12,6 @@ export default class MainScreen extends React.Component {
     this.props.navigation.navigate('LoginScreen');
   };
   handlePickup = () => {
-    console.log('Handling new pickup...');
     this.props.navigation.navigate('PickupScreen');
   };
 

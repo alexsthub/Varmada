@@ -7,18 +7,9 @@ export default class LeftNavButton extends React.Component {
     return (
       <IOSIcon
         name="ios-menu"
-        size={30}
+        size={40}
         onPress={() => this.props.navigation.toggleDrawer()}
       />
     );
   }
 }
-
-const styles = StyleSheet.create({
-  menuIcon: {
-    zIndex: 9,
-    position: 'absolute',
-    top: 40,
-    left: 20,
-  },
-});
