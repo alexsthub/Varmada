@@ -14,7 +14,7 @@ import FloatingInput from '../components/general/FloatingInput';
 import CustomButton from '../components/general/CustomButton';
 import {faPhone, faLock} from '@fortawesome/free-solid-svg-icons';
 
-
+// TODO: Cannot click on login while keyboard is open. Scrollview takes priority. Keyboardshouldpersisttaps
 export default class LoginScreen extends React.Component {
   constructor(props) {
     super(props);

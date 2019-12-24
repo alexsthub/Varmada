@@ -1,5 +1,5 @@
 import React from 'react';
-import {StyleSheet, View, TouchableOpacity} from 'react-native';
+import {View} from 'react-native';
 
 import FloatingInput from '../../components/general/FloatingInput';
 import CustomButton from '../../components/general/CustomButton';
@@ -22,21 +22,27 @@ export default class EditFieldScreen extends React.Component {
     return (
       <View style={{marginTop: 100, flex: 1, marginHorizontal: 40}}>
         <FloatingInput
-          ref={r => (this.firstName = r)}
+          ref={r => (this.first = r)}
           value={this.state.firstName}
           label={'First Name'}
-          labelColorBlur={'#FFFFFF'}
+          labelColorBlur={'#000000'}
+          rgbaBackgroundColorBlur={'rgba(247,247,247,0.6)'}
+          rgbaBackgroundColorFocus={'rgba(230,230,230,1)'}
           onChangeText={(text) => this.setState({firstName: text})}
+          onSubmitEditing={() => this.last.getInnerRef().focus()}
         />
 
         <View style={{marginVertical: 10}} />
 
         <FloatingInput
-          ref={r => (this.firstName = r)}
+          ref={r => (this.last = r)}
           value={this.state.lastName}
           label={'Last Name'}
-          labelColorBlur={'#FFFFFF'}
+          labelColorBlur={'#000000'}
+          rgbaBackgroundColorBlur={'rgba(247,247,247,0.6)'}
+          rgbaBackgroundColorFocus={'rgba(230,230,230,1)'}
           onChangeText={(text) => this.setState({lastName: text})}
+          onSubmitEditing={this.handleSaveFields}
         />
 
         <View style={{marginTop: 30}} />

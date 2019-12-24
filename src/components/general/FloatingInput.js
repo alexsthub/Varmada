@@ -14,6 +14,8 @@ import PropTypes from 'prop-types';
 // TODO: Box shadows
 // TODO: Make it so the 'show password' icon doesn't always show just if label is password
 // TODO: Add X button to clear text
+
+// TODO: Fix label color
 export default class FloatingInput extends React.Component {
   constructor(props) {
     super(props);
@@ -34,6 +36,7 @@ export default class FloatingInput extends React.Component {
   }
 
   componentDidUpdate(prevProps, prevState) {
+    console.log(prevProps);
     if (!prevState.active && this.state.active) {
       this.focusAnimation();
     } else if (prevState.active && !this.state.active) {
@@ -68,7 +71,9 @@ export default class FloatingInput extends React.Component {
   };
 
   handleBlur = () => {
-    this.setState({active: false});
+    if (this.props.value === '') {
+      this.setState({active: false});
+    }
   };
 
   handleFocus = () => {
@@ -82,7 +87,7 @@ export default class FloatingInput extends React.Component {
   render() {
     const interpolateColor = this.state.fadeValue.interpolate({
       inputRange: [0, 150],
-      outputRange: ['rgba(92,99,110,0.7)', 'rgba(255,255,255,1)'],
+      outputRange: [this.props.rgbaBackgroundColorBlur, this.props.rgbaBackgroundColorFocus],
     });
     const animatedBackground = {backgroundColor: interpolateColor};
 
@@ -209,6 +214,8 @@ FloatingInput.propTypes = {
   labelSizeFocus: PropTypes.number,
   labelColorBlur: PropTypes.string,
   labelColorFocus: PropTypes.string,
+  rgbaBackgroundColorBlur: PropTypes.string,
+  rgbaBackgroundColorFocus: PropTypes.string,
 };
 
 FloatingInput.defaultProps = {
@@ -220,4 +227,6 @@ FloatingInput.defaultProps = {
   labelSizeFocus: 14,
   labelColorBlur: '#000000',
   labelColorFocus: '#83a4d4',
+  rgbaBackgroundColorBlur: 'rgba(92,99,110,0.7)',
+  rgbaBackgroundColorFocus: 'rgba(255,255,255,1)',
 };
