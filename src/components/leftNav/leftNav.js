@@ -29,6 +29,8 @@ class LeftNav extends React.Component {
     return (
       <View style={styles.container}>
         <ScrollView>
+
+
           <View style={styles.navHeader}>
             <Text style={{textAlign: 'center', fontSize: 24}}>Alex Tan</Text>
             <View style={{marginTop: 20}}>

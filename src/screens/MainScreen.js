@@ -3,6 +3,7 @@ import {StyleSheet, View, Text} from 'react-native';
 import CustomButton from '../components/general/CustomButton';
 import LeftNavButton from '../components/leftNav/leftNavButton';
 
+// TODO: Make the button bigger. CustomButton needs to be more flexible.
 export default class MainScreen extends React.Component {
   constructor(props) {
     super(props);
@@ -25,7 +26,7 @@ export default class MainScreen extends React.Component {
           <Text
             style={{
               textAlign: 'center',
-              fontSize: 20,
+              fontSize: 20, marginTop: 30
             }}>
             You don't have any pickups scheduled right now
           </Text>

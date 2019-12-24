@@ -4,8 +4,9 @@ import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome';
 import {faEye, faEyeSlash} from '@fortawesome/free-solid-svg-icons';
 import PropTypes from 'prop-types';
 
-// TODO: Option for icons to the left
-// TODO: Option for error that will put a View above and put a red border everywhere. Ideally change box shadow color too
+// TODO: Box shadows
+// TODO: Just be floated up already if this.props.value is not empty
+// TODO: Be able to set editable to false and make the press go to the field edit.
 export default class FloatingInput extends React.Component {
 
   constructor(props) {
@@ -16,6 +17,12 @@ export default class FloatingInput extends React.Component {
       fadeValue: new Animated.Value(0),
       labelSlideValue: new Animated.Value(150),
     };
+  }
+
+  componentDidMount() {
+    if (this.props.value != '') {
+      this.setState({active: true});
+    } 
   }
 
   getInnerRef = () => this.ref;

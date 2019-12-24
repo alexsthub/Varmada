@@ -9,7 +9,6 @@ import LoginScreen from '../screens/LoginScreen';
 import SignupScreen from '../screens/SignupScreen';
 import ValidateScreen from '../screens/ValidateScreen';
 import PickupScreen from '../screens/PickupScreen';
-import EditAccountScreen from '../screens/navscreens/EditAccountScreen';
 
 import MainScreen from '../screens/MainScreen';
 import LeftNav from '../components/leftNav/leftNav';
@@ -18,6 +17,8 @@ import MyPickupScreen from '../screens/navscreens/MyPickupScreen';
 import MyAddressScreen from '../screens/navscreens/MyAddressScreen';
 import PaymentMethodScreen from '../screens/navscreens/PaymentMethodScreen';
 import SettingsScreen from '../screens/navscreens/SettingsScreen';
+import EditAccountScreen from '../screens/navscreens/EditAccountScreen';
+import EditFieldScreen from '../screens/navscreens/EditFieldScreen';
 
 const WIDTH = Dimensions.get('window').width;
 
@@ -74,7 +75,11 @@ const AppNavigator = createStackNavigator(
     },
     EditAccountScreen: {
       screen: EditAccountScreen,
-      navigationOptions: {title: 'Edit Profile Details'}
+      navigationOptions: {title: 'Edit Profile'}
+    },
+    EditFieldScreen: {
+      screen: EditFieldScreen,
+      navigationOptions: {headerTransparent: true}
     }
   },
   {

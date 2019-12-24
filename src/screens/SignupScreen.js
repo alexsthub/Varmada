@@ -45,7 +45,6 @@ export default class SignupScreen extends React.Component {
 
   // TODO: Try to sign up and assign errors here
   handleSignup = () => {
-
     this.props.navigation.navigate('ValidateScreen', {phone: this.state.phone});
   }
 

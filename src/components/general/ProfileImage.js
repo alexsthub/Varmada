@@ -3,9 +3,17 @@ import {Image, TouchableOpacity, View} from 'react-native';
 import PropTypes from 'prop-types';
 import Icon from 'react-native-vector-icons/AntDesign';
 
-// TODO: Make this a little less shitty
+// TODO: Make this a little less shitty. Add icon is really bad
 export default class ProfileImage extends React.Component {
   render() {
+    let addSize;
+    if (this.props.size === 100) {
+      addSize = 30;
+    } else if (this.props.size === 50) {
+      addSize = 20;
+    } else {
+      addSize = 40
+    }
     return (
       <TouchableOpacity
         style={{elevation: 10}}
@@ -29,7 +37,7 @@ export default class ProfileImage extends React.Component {
             backgroundColor: '#F8B500',
             borderRadius: 50,
           }}>
-          <Icon name={'pluscircleo'} size={this.props.size === 100 ? 30 : 20} style={{color: 'black'}} />
+          <Icon name={'pluscircleo'} size={addSize} style={{color: 'black'}} />
         </View>
       </TouchableOpacity>
     );
