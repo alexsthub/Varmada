@@ -5,6 +5,12 @@ import FloatingInput from '../../components/general/FloatingInput';
 import CustomButton from '../../components/general/CustomButton';
 
 export default class EditFieldScreen extends React.Component {
+
+  handleSaveFields = () => {
+    // TODO: Save field
+    console.log('Saved!');
+  }
+
   render() {
     const firstName = this.props.navigation.getParam('fName', 'default');
     const lastName = this.props.navigation.getParam('lName', 'default');
@@ -32,7 +38,7 @@ export default class EditFieldScreen extends React.Component {
 
         <CustomButton
           text={'Save'}
-          onPress={() => {}}
+          onPress={this.handleSaveFields}
           textStyle={{color: '#000000'}}
           buttonStyle={{elevation: 10}}
         />

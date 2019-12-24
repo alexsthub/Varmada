@@ -1,5 +1,12 @@
 import React from 'react';
-import {StyleSheet, Text, TextInput, View, TouchableOpacity, Animated} from 'react-native';
+import {
+  StyleSheet,
+  Text,
+  TextInput,
+  View,
+  TouchableOpacity,
+  Animated,
+} from 'react-native';
 import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome';
 import {faEye, faEyeSlash} from '@fortawesome/free-solid-svg-icons';
 import PropTypes from 'prop-types';
@@ -8,7 +15,6 @@ import PropTypes from 'prop-types';
 // TODO: Just be floated up already if this.props.value is not empty
 // TODO: Be able to set editable to false and make the press go to the field edit.
 export default class FloatingInput extends React.Component {
-
   constructor(props) {
     super(props);
     this.state = {
@@ -19,15 +25,23 @@ export default class FloatingInput extends React.Component {
     };
   }
 
+  getInnerRef = () => this.ref;
+
   componentDidMount() {
     if (this.props.value != '') {
       this.setState({active: true});
-    } 
+    }
   }
 
-  getInnerRef = () => this.ref;
+  componentDidUpdate(prevProps, prevState) {
+    if (!prevState.active && this.state.active) {
+      this.focusAnimation();
+    } else if (prevState.active && !this.state.active) {
+      this.blurAnimation();
+    }
+  }
 
-  handleBlur = () => {
+  blurAnimation = () => {
     if (this.props.value.length === 0) {
       Animated.timing(this.state.fadeValue, {
         toValue: 0,
@@ -38,11 +52,10 @@ export default class FloatingInput extends React.Component {
         toValue: 150,
         duration: 150,
       }).start();
-      this.setState({active: false});
     }
   };
 
-  handleFocus = () => {
+  focusAnimation = () => {
     Animated.timing(this.state.fadeValue, {
       toValue: 150,
       duration: 300,
@@ -52,12 +65,19 @@ export default class FloatingInput extends React.Component {
       toValue: 0,
       duration: 150,
     }).start();
+  };
+
+  handleBlur = () => {
+    this.setState({active: false});
+  };
+
+  handleFocus = () => {
     this.setState({active: true});
   };
 
   toggleSecureText = () => {
-    this.setState({secureTextEntry : !this.state.secureTextEntry});
-  }
+    this.setState({secureTextEntry: !this.state.secureTextEntry});
+  };
 
   render() {
     const interpolateColor = this.state.fadeValue.interpolate({
@@ -72,30 +92,49 @@ export default class FloatingInput extends React.Component {
     });
     const animatedTop = {top: interpolateTop};
     return (
-
       <View>
+        {this.props.error ? (
+          <View style={styles.error}>
+            <Text style={styles.errorText}>{this.props.error}</Text>
+          </View>
+        ) : null}
 
-        {this.props.error ? 
-        <View style={styles.error}>
-          <Text style={styles.errorText}>{this.props.error}</Text>
-        </View> : null
-        }
+        <Animated.View
+          style={[
+            styles.field,
+            this.props.error ? styles.errorField : null,
+            animatedBackground,
+          ]}>
+          {this.props.icon ? (
+            <View style={{justifyContent: 'center', marginLeft: 10}}>
+              <FontAwesomeIcon icon={this.props.icon} />
+            </View>
+          ) : null}
 
-        <Animated.View style={[styles.field, this.props.error ? styles.errorField : null, animatedBackground]}>
-
-          {this.props.icon ? 
-          <View style={{justifyContent: 'center', marginLeft: 10}}>
-            <FontAwesomeIcon icon={this.props.icon}/>
-        </View> : null}
-          
-          <Animated.View style={[styles.label, animatedTop, {left: this.props.icon ? 40: 16}]}>
+          <Animated.View
+            style={[
+              styles.label,
+              animatedTop,
+              {left: this.props.icon ? 40 : 16},
+            ]}>
             <Text
-              style={{fontSize: !this.state.active ? this.props.labelSizeBlur : this.props.labelSizeFocus, color: !this.state.active ? this.props.labelColorBlur : this.props.labelColorFocus}}>
-                {this.props.label}</Text>
+              style={{
+                fontSize: !this.state.active
+                  ? this.props.labelSizeBlur
+                  : this.props.labelSizeFocus,
+                color: !this.state.active
+                  ? this.props.labelColorBlur
+                  : this.props.labelColorFocus,
+              }}>
+              {this.props.label}
+            </Text>
           </Animated.View>
           <TextInput
             ref={r => (this.ref = r)}
-            style={[styles.input, this.state.active ? styles.activeInput : null]}
+            style={[
+              styles.input,
+              this.state.active ? styles.activeInput : null,
+            ]}
             value={this.props.value}
             keyboardType={this.props.keyboardType}
             onChangeText={this.props.onChangeText}
@@ -105,13 +144,17 @@ export default class FloatingInput extends React.Component {
             secureTextEntry={this.state.secureTextEntry}
             {...this.props}
           />
-          {this.props.label === 'Password' ? 
-          <TouchableOpacity onPress={this.toggleSecureText} style={styles.iconContainer}>
-            <FontAwesomeIcon icon={this.state.secureTextEntry ? faEyeSlash : faEye}/>
-          </TouchableOpacity> : null}
+          {this.props.label === 'Password' ? (
+            <TouchableOpacity
+              onPress={this.toggleSecureText}
+              style={styles.iconContainer}>
+              <FontAwesomeIcon
+                icon={this.state.secureTextEntry ? faEyeSlash : faEye}
+              />
+            </TouchableOpacity>
+          ) : null}
         </Animated.View>
       </View>
-
     );
   }
 }
@@ -142,13 +185,13 @@ const styles = StyleSheet.create({
     flex: 1,
     alignItems: 'center',
     justifyContent: 'center',
-    paddingRight: 5
+    paddingRight: 5,
   },
   errorField: {
     borderColor: '#B52323',
     borderLeftWidth: 1,
     borderRightWidth: 1,
-    borderBottomWidth: 1
+    borderBottomWidth: 1,
   },
   error: {
     borderWidth: 1,
@@ -157,8 +200,8 @@ const styles = StyleSheet.create({
     paddingLeft: 5,
   },
   errorText: {
-    color: '#B52323'
-  }
+    color: '#B52323',
+  },
 });
 
 FloatingInput.propTypes = {
