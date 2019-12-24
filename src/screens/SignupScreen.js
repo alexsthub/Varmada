@@ -6,7 +6,7 @@ import {
   ScrollView,
   TouchableOpacity,
 } from 'react-native';
-import styles from '../constants/styles/loginStyles';
+import {LoginStyles} from '../constants/styles';
 
 import FloatingInput from '../components/general/FloatingInput';
 import CustomButton from '../components/general/CustomButton';
@@ -22,8 +22,8 @@ export default class SignupScreen extends React.Component {
     this.state = {firstName: '', lastName: '', phone: '', password: ''};
   }
 
-  onChangePhone = (text) => {
-    let input = text.replace(/[(\-) ]/g,'');
+  onChangePhone = text => {
+    let input = text.replace(/[(\-) ]/g, '');
     const size = input.length;
     if (input === '(') {
       input = '';
@@ -32,12 +32,18 @@ export default class SignupScreen extends React.Component {
     } else if (size < 4) {
       input = '(' + input;
     } else if (size < 7) {
-      input = '(' + input.substring(0,3) + ') ' + input.substring(3,6);
+      input = '(' + input.substring(0, 3) + ') ' + input.substring(3, 6);
     } else {
-      input = '(' + input.substring(0,3) + ') ' + input.substring(3,6) + '-' + input.substring(6,10);
+      input =
+        '(' +
+        input.substring(0, 3) +
+        ') ' +
+        input.substring(3, 6) +
+        '-' +
+        input.substring(6, 10);
     }
     this.setState({phone: input});
-  }
+  };
 
   returnToSignin = () => {
     this.props.navigation.navigate('LoginScreen');
@@ -46,22 +52,21 @@ export default class SignupScreen extends React.Component {
   // TODO: Try to sign up and assign errors here
   handleSignup = () => {
     this.props.navigation.navigate('ValidateScreen', {phone: this.state.phone});
-  }
+  };
 
   render() {
     return (
       <ImageBackground
         source={require('../assets/loginGradient.jpg')}
-        style={styles.background}>
+        style={LoginStyles.background}>
         <ScrollView style={{flex: 1}}>
-          <View style={styles.container}>
-
+          <View style={LoginStyles.container}>
             <Header
               headerText={'Create Account'}
               subHeaderText={'Join the community'}
             />
 
-            <View style={styles.inputDivider}></View>
+            <View style={LoginStyles.inputDivider}></View>
 
             <FloatingInput
               ref={r => (this.firstName = r)}
@@ -73,7 +78,7 @@ export default class SignupScreen extends React.Component {
               error={'*This textfield is fucking empty'}
             />
 
-            <View style={styles.inputDivider}></View>
+            <View style={LoginStyles.inputDivider}></View>
 
             <FloatingInput
               ref={r => (this.lastName = r)}
@@ -84,7 +89,7 @@ export default class SignupScreen extends React.Component {
               onSubmitEditing={() => this.phone.getInnerRef().focus()}
             />
 
-            <View style={styles.inputDivider}></View>
+            <View style={LoginStyles.inputDivider}></View>
 
             <FloatingInput
               ref={r => (this.phone = r)}
@@ -97,7 +102,7 @@ export default class SignupScreen extends React.Component {
               onSubmitEditing={() => this.password.getInnerRef().focus()}
             />
 
-            <View style={styles.inputDivider}></View>
+            <View style={LoginStyles.inputDivider}></View>
 
             <FloatingInput
               ref={r => (this.password = r)}
@@ -108,20 +113,20 @@ export default class SignupScreen extends React.Component {
               onSubmitEditing={this.handleSignup}
             />
 
-            <View style={styles.inputDivider}></View>
+            <View style={LoginStyles.inputDivider}></View>
 
-            <View style={styles.noticeContainer}>
-              <Text>By clicking Sign Up, you agree to Varmada's{' '}</Text>
+            <View style={LoginStyles.noticeContainer}>
+              <Text>By clicking Sign Up, you agree to Varmada's </Text>
               <TouchableOpacity>
-                <Text style={styles.highlightText}>Terms of Service</Text>
+                <Text style={LoginStyles.highlightText}>Terms of Service</Text>
               </TouchableOpacity>
               <Text> and acknowledge Varmada's </Text>
               <TouchableOpacity>
-                <Text style={styles.highlightText}>Privacy Policy</Text>
+                <Text style={LoginStyles.highlightText}>Privacy Policy</Text>
               </TouchableOpacity>
             </View>
 
-            <View style={styles.inputDivider}></View>
+            <View style={LoginStyles.inputDivider}></View>
 
             <CustomButton
               text={'Sign Up'}
@@ -130,22 +135,25 @@ export default class SignupScreen extends React.Component {
               buttonStyle={{elevation: 10}}
             />
 
-            <View style={styles.inputDivider}></View>
+            <View style={LoginStyles.inputDivider}></View>
 
             {/* TODO: This needs to be fixed at the bottom of scrollview. */}
-            <View style={{justifyContent: 'flex-end', alignItems: 'center', marginBottom: 15}}>
+            <View
+              style={{
+                justifyContent: 'flex-end',
+                alignItems: 'center',
+                marginBottom: 15,
+              }}>
               <TouchableOpacity onPress={this.returnToSignin}>
                 <Text style={{color: 'white'}}>
-                  Already An Account? <Text style={{color: 'white'}}>Sign In</Text>
+                  Already An Account?{' '}
+                  <Text style={{color: 'white'}}>Sign In</Text>
                 </Text>
               </TouchableOpacity>
             </View>
-
           </View>
         </ScrollView>
-
       </ImageBackground>
     );
   }
 }
-
