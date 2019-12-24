@@ -23,7 +23,6 @@ export default class EditAccountScreen extends React.Component {
         {/* this.props.navigation.navigate('ValidateScreen', {phone: this.state.phone}); */}
           <TouchableOpacity onPress={() => this.props.navigation.navigate('EditFieldScreen', {fName: 'Alex', lName: 'Tan'})}>
             <FloatingInput
-              ref={r => (this.firstName = r)}
               value={'Alex Tan'}
               label={'Name'}
               labelColorBlur={'#FFFFFF'}
@@ -35,7 +34,6 @@ export default class EditAccountScreen extends React.Component {
 
           <TouchableOpacity>
             <FloatingInput
-              ref={r => (this.firstName = r)}
               value={'(360) 515-1765'}
               label={'Phone Number'}
               labelColorBlur={'#FFFFFF'}
@@ -47,7 +45,6 @@ export default class EditAccountScreen extends React.Component {
 
           <TouchableOpacity>
             <FloatingInput
-              ref={r => (this.firstName = r)}
               value={'alextan785@gmail.com'}
               label={'Email Addresses'}
               labelColorBlur={'#FFFFFF'}
@@ -59,7 +56,6 @@ export default class EditAccountScreen extends React.Component {
 
           <TouchableOpacity>
             <FloatingInput
-              ref={r => (this.firstName = r)}
               value={'************'}
               label={'Password'}
               labelColorBlur={'#FFFFFF'}
