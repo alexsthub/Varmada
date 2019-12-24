@@ -13,7 +13,7 @@ import PropTypes from 'prop-types';
 
 // TODO: Box shadows
 // TODO: Add X button to clear text
-
+// TODO: What happens if I want to make this a little bigger?
 export default class FloatingInput extends React.Component {
   constructor(props) {
     super(props);

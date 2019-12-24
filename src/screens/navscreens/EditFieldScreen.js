@@ -12,8 +12,7 @@ const labelMapping = {
   password: 'Verify Password'
 }
 
-// TODO: Handle Verify Password
-// TODO: Handle password input
+// TODO: Replace phone formatting with https://github.com/benhurott/react-native-masked-text?
 export default class EditFieldScreen extends React.Component {
   constructor(props) {
     super(props);
@@ -82,7 +81,7 @@ export default class EditFieldScreen extends React.Component {
               <Text>For your security, please verify your current password.</Text>
             </View> : null
           }
-          
+
         </View>
       counter += 1;
       return retValue;

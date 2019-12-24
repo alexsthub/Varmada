@@ -7,9 +7,12 @@ import ProfieImage from '../../components/general/ProfileImage';
 import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome';
 import {faUserEdit} from '@fortawesome/free-solid-svg-icons';
 
-// TODO: Profile Image itself should not be touchable in this case.
 // TODO: Make the rest of the buttons
 export default class SettingsScreen extends React.Component {
+  constructor(props) {
+    super(props);
+    this.state = {};
+  }
   render() {
     return (
       <View style={styles.container}>
@@ -18,9 +21,9 @@ export default class SettingsScreen extends React.Component {
           title={'Account Settings'}
         />
 
-        <TouchableHighlight 
+        <TouchableHighlight
           underlayColor={'lightgray'}
-          activeOpacity={.95}
+          activeOpacity={0.95}
           onPress={() => this.props.navigation.navigate('EditAccountScreen')}>
           <View style={styles.profileDetailsContainer}>
             <View style={styles.profileImageContainer}>
@@ -39,13 +42,74 @@ export default class SettingsScreen extends React.Component {
             </View>
 
             <View style={{marginRight: 20}}>
-              <FontAwesomeIcon icon={faUserEdit} style={{color: 'black'}} size={25}/>
+              <FontAwesomeIcon
+                icon={faUserEdit}
+                style={{color: 'black'}}
+                size={25}
+              />
             </View>
-
           </View>
         </TouchableHighlight>
 
+        <TouchableHighlight
+          underlayColor={'lightgray'}
+          activeOpacity={0.95}
+          onPress={() => {}}>
+          <View style={styles.settingOption}>
+            <Text style={{fontSize: 24}}>Notifications</Text>
+          </View>
+        </TouchableHighlight>
 
+        <TouchableHighlight
+          underlayColor={'lightgray'}
+          activeOpacity={0.95}
+          onPress={() => {}}>
+          <View style={styles.settingOption}>
+            <Text style={{fontSize: 24}}>Security</Text>
+          </View>
+        </TouchableHighlight>
+
+        <TouchableHighlight
+          underlayColor={'lightgray'}
+          activeOpacity={0.95}
+          onPress={() => {}}>
+          <View style={[styles.settingOption, styles.multiTextOption]}>
+            <Text style={{fontSize: 24}}>Language</Text>
+            <Text>English (US)</Text>
+          </View>
+        </TouchableHighlight>
+
+        <TouchableHighlight
+          underlayColor={'lightgray'}
+          activeOpacity={0.95}
+          onPress={() => {}}>
+          <View style={[styles.settingOption, styles.multiTextOption]}>
+            <Text style={{fontSize: 24}}>Dark Mode</Text>
+            <Text>Off</Text>
+          </View>
+        </TouchableHighlight>
+
+        <TouchableHighlight
+          underlayColor={'lightgray'}
+          activeOpacity={0.95}
+          onPress={() => {}}>
+          <View style={styles.settingOption}>
+            <Text style={{fontSize: 24}}>Help</Text>
+          </View>
+        </TouchableHighlight>
+
+        <TouchableHighlight
+          underlayColor={'lightgray'}
+          activeOpacity={0.95}
+          onPress={() => {}}>
+          <View style={styles.settingOption}>
+            <Text style={{fontSize: 24, color: '#B52323'}}>Sign Out</Text>
+          </View>
+        </TouchableHighlight>
+
+        <View style={styles.versionContainer}>
+          <Text>Version 1.0.0</Text>
+        </View>
       </View>
     );
   }
@@ -61,7 +125,7 @@ const styles = StyleSheet.create({
     paddingVertical: 15,
     borderTopWidth: 1,
     borderBottomWidth: 1,
-    borderColor: 'gray'
+    borderColor: 'gray',
   },
   profileImageContainer: {
     paddingHorizontal: 20,
@@ -69,5 +133,19 @@ const styles = StyleSheet.create({
   accountDetailsContainer: {
     flexDirection: 'column',
     flex: 1,
+  },
+  settingOption: {
+    paddingVertical: 15,
+    paddingLeft: 20,
+    borderBottomWidth: 1,
+    borderColor: 'lightgray',
+  },
+  multiTextOption: {
+    paddingVertical: 5,
+  },
+  versionContainer: {
+    flex: 1,
+    justifyContent: 'flex-end',
+    alignItems: 'center',
   },
 });

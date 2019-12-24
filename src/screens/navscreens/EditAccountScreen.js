@@ -4,6 +4,7 @@ import {StyleSheet, View, TouchableOpacity} from 'react-native';
 import ProfieImage from '../../components/general/ProfileImage';
 import FloatingInput from '../../components/general/FloatingInput';
 
+// TODO: Fill in the rest?
 export default class EditAccountScreen extends React.Component {
   render() {
     return (
