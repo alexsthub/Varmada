@@ -1,13 +1,7 @@
 import React from 'react';
 import {StyleSheet, View, Text, TouchableHighlight} from 'react-native';
-
 import NavScreenHeader from '../../components/general/NavScreenHeader';
 import CircularAddButton from '../../components/general/CircularAddButton';
-import Icon from 'react-native-vector-icons/AntDesign';
-
-import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome';
-import {faUserEdit} from '@fortawesome/free-solid-svg-icons';
-
 export default class MyAddressScreen extends React.Component {
   render() {
     return (
@@ -21,10 +15,11 @@ export default class MyAddressScreen extends React.Component {
           underlayColor={'lightgray'}
           activeOpacity={0.95}
           onPress={() => this.props.navigation.navigate('EditAccountScreen')}>
-          <View style={styles.profileDetailsContainer}>
+          <View style={styles.addressDetailsContainer}>
             <Text>Add a new address</Text>
             <CircularAddButton size={30} />
           </View>
+          <Text>Saved Addresses</Text>
         </TouchableHighlight>
       </View>
     );
@@ -32,7 +27,7 @@ export default class MyAddressScreen extends React.Component {
 }
 
 const styles = StyleSheet.create({
-  profileDetailsContainer: {
+  addressDetailsContainer: {
     flex: 1,
     flexDirection: 'row',
     alignItems: 'center',
@@ -42,8 +37,5 @@ const styles = StyleSheet.create({
     borderBottomWidth: 1,
     borderColor: 'gray',
     justifyContent: 'space-between',
-  },
-  profileImageContainer: {
-    paddingHorizontal: 20,
   },
 });
