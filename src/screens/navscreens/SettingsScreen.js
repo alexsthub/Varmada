@@ -7,11 +7,13 @@ import ProfieImage from '../../components/general/ProfileImage';
 import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome';
 import {faUserEdit} from '@fortawesome/free-solid-svg-icons';
 
-// TODO: Implement modal selector?
+import ModalPicker from '../../components/general/ModalPicker';
+
+// TODO: Make modal picker component
 export default class SettingsScreen extends React.Component {
   constructor(props) {
     super(props);
-    this.state = {};
+    this.state = {showModal: false};
   }
   render() {
     return (
@@ -19,6 +21,13 @@ export default class SettingsScreen extends React.Component {
         <NavScreenHeader
           navigation={this.props.navigation}
           title={'Account Settings'}
+        />
+
+        <ModalPicker 
+          animationIn={'fadeIn'}
+          animationOut={'fadeOut'}
+          showModal={this.state.showModal} 
+          closeModal={() => this.setState({showModal: false})}
         />
 
         <TouchableHighlight
@@ -82,7 +91,7 @@ export default class SettingsScreen extends React.Component {
         <TouchableHighlight
           underlayColor={'lightgray'}
           activeOpacity={0.95}
-          onPress={() => {}}>
+          onPress={() => this.setState({showModal: true})}>
           <View style={[styles.settingOption, styles.multiTextOption]}>
             <Text style={{fontSize: 24}}>Dark Mode</Text>
             <Text>Off</Text>

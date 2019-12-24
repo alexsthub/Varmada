@@ -1,5 +1,5 @@
 import React from 'react';
-import {StyleSheet, View, TouchableOpacity, PermissionsAndroid} from 'react-native';
+import {StyleSheet, View, TouchableOpacity} from 'react-native';
 
 import ProfieImage from '../../components/general/ProfileImage';
 import FloatingInput from '../../components/general/FloatingInput';
@@ -21,7 +21,7 @@ export default class EditAccountScreen extends React.Component {
       },
     };
 
-    ImagePicker.showImagePicker(options, (response) => {
+    ImagePicker.showImagePicker(options, response => {
       if (response.didCancel) {
         console.log('User cancelled image picker');
       } else if (response.error) {
@@ -32,12 +32,12 @@ export default class EditAccountScreen extends React.Component {
         const profileImage = {
           uri: response.uri,
           type: response.type,
-          name: 'profileImage.jpg'
+          name: 'profileImage.jpg',
         };
         this.setState({profileImage: profileImage});
       }
     });
-  }
+  };
 
   render() {
     return (
@@ -92,11 +92,11 @@ export default class EditAccountScreen extends React.Component {
           <TouchableOpacity
             onPress={() =>
               this.props.navigation.navigate('EditFieldScreen', {
-                email: 'alextan785@gmail.com',
+                email: '',
               })
             }>
             <FloatingInput
-              value={'alextan785@gmail.com'}
+              value={'*Link an email address for extra security'}
               label={'Email Addresses'}
               labelColorBlur={'#000000'}
               rgbaBackgroundColorBlur={'rgba(247,247,247,0.6)'}
@@ -110,7 +110,7 @@ export default class EditAccountScreen extends React.Component {
           <TouchableOpacity
             onPress={() =>
               this.props.navigation.navigate('EditFieldScreen', {
-                password: '************',
+                password: '',
               })
             }>
             <FloatingInput
