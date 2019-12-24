@@ -19,7 +19,7 @@ export default class FloatingInput extends React.Component {
     super(props);
     this.state = {
       active: false,
-      secureTextEntry: this.props.label === 'Password',
+      secureTextEntry: this.props.secureText,
       fadeValue: new Animated.Value(0),
       labelSlideValue: new Animated.Value(150),
     };
@@ -213,7 +213,8 @@ FloatingInput.propTypes = {
   labelColorFocus: PropTypes.string,
   rgbaBackgroundColorBlur: PropTypes.string,
   rgbaBackgroundColorFocus: PropTypes.string,
-  showPasswordIcon: PropTypes.bool
+  showPasswordIcon: PropTypes.bool,
+  secureText: PropTypes.bool
 };
 
 FloatingInput.defaultProps = {
@@ -227,5 +228,6 @@ FloatingInput.defaultProps = {
   labelColorFocus: '#83a4d4',
   rgbaBackgroundColorBlur: 'rgba(92,99,110,0.7)',
   rgbaBackgroundColorFocus: 'rgba(255,255,255,1)',
-  showPasswordIcon: false
+  showPasswordIcon: false,
+  secureText: false
 };

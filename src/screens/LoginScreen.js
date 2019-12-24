@@ -121,11 +121,12 @@ export default class LoginScreen extends React.Component {
               ref={r => (this.password = r)}
               value={this.state.password}
               label={'Password'}
-              showPasswordIcon={true}
               labelColorBlur={'#FFFFFF'}
               onChangeText={text => this.setState({password: text})}
               blurOnSubmit={false}
               icon={faLock}
+              showPasswordIcon={true}
+              secureText={true}
               onSubmitEditing={this.handleLogin}
             />
 

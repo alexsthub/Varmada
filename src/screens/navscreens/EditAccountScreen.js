@@ -55,7 +55,12 @@ export default class EditAccountScreen extends React.Component {
 
           <View style={{marginVertical: 10}} />
 
-          <TouchableOpacity>
+          <TouchableOpacity
+            onPress={() =>
+              this.props.navigation.navigate('EditFieldScreen', {
+                email: 'alextan785@gmail.com',
+              })
+            }>
             <FloatingInput
               value={'alextan785@gmail.com'}
               label={'Email Addresses'}
@@ -68,7 +73,12 @@ export default class EditAccountScreen extends React.Component {
 
           <View style={{marginVertical: 10}} />
 
-          <TouchableOpacity>
+          <TouchableOpacity
+            onPress={() =>
+              this.props.navigation.navigate('EditFieldScreen', {
+                password: '************',
+              })
+            }>
             <FloatingInput
               value={'************'}
               label={'Password'}

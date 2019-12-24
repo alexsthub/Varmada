@@ -1,10 +1,19 @@
 import React from 'react';
-import {View, FlatList} from 'react-native';
+import {View, Text} from 'react-native';
 
 import FloatingInput from '../../components/general/FloatingInput';
 import CustomButton from '../../components/general/CustomButton';
 
-// TODO: Make this dynamic from edit account screen
+const labelMapping = {
+  firstName: 'First Name',
+  lastName: 'Last Name',
+  phone: 'Phone Number',
+  email: 'Email Address',
+  password: 'Verify Password'
+}
+
+// TODO: Handle Verify Password
+// TODO: Handle password input
 export default class EditFieldScreen extends React.Component {
   constructor(props) {
     super(props);
@@ -14,36 +23,75 @@ export default class EditFieldScreen extends React.Component {
   handleSaveFields = () => {
     // TODO: Save field
     console.log('Saved!');
+  };
+
+  onChangePhone = (text, key) => {
+    let input = text.replace(/[(\-) ]/g,'');
+    const size = input.length;
+    if (input === '(') {
+      input = '';
+    } else if (size == 0) {
+      input = input;
+    } else if (size < 4) {
+      input = '(' + input;
+    } else if (size < 7) {
+      input = '(' + input.substring(0,3) + ') ' + input.substring(3,6);
+    } else {
+      input = '(' + input.substring(0,3) + ') ' + input.substring(3,6) + '-' + input.substring(6,10);
+    }
+    this.setState({[key]: input});
   }
 
   render() {
-    console.log(this.props.navigation.state.params);
-    console.log(Object.keys(this.state).length);
+    let counter = 0;
+    const numObjects = Object.keys(this.state).length;
+    const components = Object.keys(this.state).map(key => {
+      let nextRef;
+      let keyboardType;
+      const index = String(counter);
+      if (counter < numObjects-1) {
+        nextRef = String(counter+1);
+      }
+      if (key === 'phone') {
+        keyboardType = 'numeric';
+      } else if (key === 'email') {
+        keyboardType = 'email-address';
+      } else {
+        keyboardType = 'default';
+      }
+      let retValue = 
+        <View 
+          style={{marginVertical: 10}}
+          key={key}>
+          <FloatingInput
+            ref={r => (this[index] = r)}
+            value={this.state[key]}
+            label={labelMapping[key]}
+            labelColorBlur={'#000000'}
+            rgbaBackgroundColorBlur={'rgba(247,247,247,0.6)'}
+            rgbaBackgroundColorFocus={'rgba(230,230,230,1)'}
+            keyboardType={keyboardType}
+            onChangeText={(text) => key === 'phone' ? this.onChangePhone(text, key): this.setState({[key]: text})}
+            maxLength={key === 'phone' ? 14 : null}
+            secureText={key === 'password' ? true : false}
+            onSubmitEditing={counter < numObjects-1 ? () => this[nextRef].getInnerRef().focus() : this.handleSaveFields}
+          />
+
+          {key === 'password' ? 
+            <View style={{marginTop: 10}}> 
+              <Text>For your security, please verify your current password.</Text>
+            </View> : null
+          }
+          
+        </View>
+      counter += 1;
+      return retValue;
+    });
+
     return (
       <View style={{marginTop: 100, flex: 1, marginHorizontal: 40}}>
-        <FloatingInput
-          ref={r => (this.first = r)}
-          value={this.state.firstName}
-          label={'First Name'}
-          labelColorBlur={'#000000'}
-          rgbaBackgroundColorBlur={'rgba(247,247,247,0.6)'}
-          rgbaBackgroundColorFocus={'rgba(230,230,230,1)'}
-          onChangeText={(text) => this.setState({firstName: text})}
-          onSubmitEditing={() => this.last.getInnerRef().focus()}
-        />
 
-        <View style={{marginVertical: 10}} />
-
-        <FloatingInput
-          ref={r => (this.last = r)}
-          value={this.state.lastName}
-          label={'Last Name'}
-          labelColorBlur={'#000000'}
-          rgbaBackgroundColorBlur={'rgba(247,247,247,0.6)'}
-          rgbaBackgroundColorFocus={'rgba(230,230,230,1)'}
-          onChangeText={(text) => this.setState({lastName: text})}
-          onSubmitEditing={this.handleSaveFields}
-        />
+        {components}
 
         <View style={{marginTop: 30}} />
 
@@ -53,7 +101,6 @@ export default class EditFieldScreen extends React.Component {
           textStyle={{color: '#000000'}}
           buttonStyle={{elevation: 10}}
         />
-
       </View>
     );
   }
