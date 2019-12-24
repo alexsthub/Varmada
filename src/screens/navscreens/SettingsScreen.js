@@ -7,7 +7,7 @@ import ProfieImage from '../../components/general/ProfileImage';
 import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome';
 import {faUserEdit} from '@fortawesome/free-solid-svg-icons';
 
-// TODO: Make the rest of the buttons
+// TODO: Implement modal selector?
 export default class SettingsScreen extends React.Component {
   constructor(props) {
     super(props);

@@ -1,11 +1,44 @@
 import React from 'react';
-import {StyleSheet, View, TouchableOpacity} from 'react-native';
+import {StyleSheet, View, TouchableOpacity, PermissionsAndroid} from 'react-native';
 
 import ProfieImage from '../../components/general/ProfileImage';
 import FloatingInput from '../../components/general/FloatingInput';
+import ImagePicker from 'react-native-image-picker';
 
-// TODO: Fill in the rest?
+// TODO: Upload file to s3
 export default class EditAccountScreen extends React.Component {
+  constructor(props) {
+    super(props);
+    this.state = {profileImage: {}};
+  }
+
+  changeImage = () => {
+    const options = {
+      title: 'Select a profile picture',
+      storageOptions: {
+        skipBackup: true,
+        path: 'images',
+      },
+    };
+
+    ImagePicker.showImagePicker(options, (response) => {
+      if (response.didCancel) {
+        console.log('User cancelled image picker');
+      } else if (response.error) {
+        console.log('ImagePicker Error: ', response.error);
+      } else if (response.customButton) {
+        console.log('User tapped custom button: ', response.customButton);
+      } else {
+        const profileImage = {
+          uri: response.uri,
+          type: response.type,
+          name: 'profileImage.jpg'
+        };
+        this.setState({profileImage: profileImage});
+      }
+    });
+  }
+
   render() {
     return (
       <View style={{flex: 1}}>
@@ -14,7 +47,7 @@ export default class EditAccountScreen extends React.Component {
             borderWidth={1}
             size={120}
             backgroundColor={'#F7F7F7'}
-            onPress={() => console.log('pressed image')}
+            onPress={this.changeImage}
           />
         </View>
 
