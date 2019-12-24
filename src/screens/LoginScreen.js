@@ -26,7 +26,6 @@ export default class LoginScreen extends React.Component {
     this.keyboardDidHideListener = Keyboard.addListener('keyboardDidHide', this.keyboardDidHide);
   }
 
-  // TODO: This doesn't work. Throwing warnings
   componentWillUnmount() {
     if (this.keyboardDidShowListener) {
       this.keyboardDidShowListener.remove();

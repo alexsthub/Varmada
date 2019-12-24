@@ -12,8 +12,8 @@ import {faEye, faEyeSlash} from '@fortawesome/free-solid-svg-icons';
 import PropTypes from 'prop-types';
 
 // TODO: Box shadows
-// TODO: Just be floated up already if this.props.value is not empty
-// TODO: Be able to set editable to false and make the press go to the field edit.
+// TODO: Make it so the 'show password' icon doesn't always show just if label is password
+// TODO: Add X button to clear text
 export default class FloatingInput extends React.Component {
   constructor(props) {
     super(props);
@@ -100,11 +100,7 @@ export default class FloatingInput extends React.Component {
         ) : null}
 
         <Animated.View
-          style={[
-            styles.field,
-            this.props.error ? styles.errorField : null,
-            animatedBackground,
-          ]}>
+          style={[styles.field, this.props.error ? styles.errorField : null, animatedBackground,]}>
           {this.props.icon ? (
             <View style={{justifyContent: 'center', marginLeft: 10}}>
               <FontAwesomeIcon icon={this.props.icon} />

@@ -27,40 +27,45 @@ export default class EditAccountScreen extends React.Component {
               value={'Alex Tan'}
               label={'Name'}
               labelColorBlur={'#FFFFFF'}
-              onChangeText={text => {}}
               editable={false}
             />
           </TouchableOpacity>
 
           <View style={{marginVertical: 10}} />
 
-          <FloatingInput
-            ref={r => (this.firstName = r)}
-            value={'(360) 515-1765'}
-            label={'Phone Number'}
-            labelColorBlur={'#FFFFFF'}
-            onChangeText={text => {}}
-          />
+          <TouchableOpacity>
+            <FloatingInput
+              ref={r => (this.firstName = r)}
+              value={'(360) 515-1765'}
+              label={'Phone Number'}
+              labelColorBlur={'#FFFFFF'}
+              editable={false}
+            />
+          </TouchableOpacity>
 
           <View style={{marginVertical: 10}} />
 
-          <FloatingInput
-            ref={r => (this.firstName = r)}
-            value={'alextan785@gmail.com'}
-            label={'Email Addresses'}
-            labelColorBlur={'#FFFFFF'}
-            onChangeText={text => {}}
-          />
+          <TouchableOpacity>
+            <FloatingInput
+              ref={r => (this.firstName = r)}
+              value={'alextan785@gmail.com'}
+              label={'Email Addresses'}
+              labelColorBlur={'#FFFFFF'}
+              editable={false}
+            />
+          </TouchableOpacity>
 
           <View style={{marginVertical: 10}} />
 
-          <FloatingInput
-            ref={r => (this.firstName = r)}
-            value={'************'}
-            label={'Password'}
-            labelColorBlur={'#FFFFFF'}
-            onChangeText={text => {}}
-          />
+          <TouchableOpacity>
+            <FloatingInput
+              ref={r => (this.firstName = r)}
+              value={'************'}
+              label={'Password'}
+              labelColorBlur={'#FFFFFF'}
+              editable={false}
+            />
+          </TouchableOpacity>
         </View>
       </View>
     );
