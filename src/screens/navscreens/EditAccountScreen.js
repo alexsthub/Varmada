@@ -4,7 +4,6 @@ import {StyleSheet, View, TouchableOpacity} from 'react-native';
 import ProfieImage from '../../components/general/ProfileImage';
 import FloatingInput from '../../components/general/FloatingInput';
 
-// TODO: Fill this bad boy in
 export default class EditAccountScreen extends React.Component {
   render() {
     return (
@@ -19,24 +18,37 @@ export default class EditAccountScreen extends React.Component {
         </View>
 
         <View style={{marginHorizontal: 40, marginTop: 30}}>
-
-        {/* this.props.navigation.navigate('ValidateScreen', {phone: this.state.phone}); */}
-          <TouchableOpacity onPress={() => this.props.navigation.navigate('EditFieldScreen', {fName: 'Alex', lName: 'Tan'})}>
+          <TouchableOpacity
+            onPress={() =>
+              this.props.navigation.navigate('EditFieldScreen', {
+                firstName: 'Alex',
+                lastName: 'Tan',
+              })
+            }>
             <FloatingInput
               value={'Alex Tan'}
               label={'Name'}
-              labelColorBlur={'#FFFFFF'}
+              labelColorBlur={'#000000'}
+              rgbaBackgroundColorBlur={'rgba(247,247,247,0.6)'}
+              rgbaBackgroundColorFocus={'rgba(230,230,230,1)'}
               editable={false}
             />
           </TouchableOpacity>
 
           <View style={{marginVertical: 10}} />
 
-          <TouchableOpacity>
+          <TouchableOpacity
+            onPress={() =>
+              this.props.navigation.navigate('EditFieldScreen', {
+                phone: '(360) 515-1765',
+              })
+            }>
             <FloatingInput
               value={'(360) 515-1765'}
               label={'Phone Number'}
-              labelColorBlur={'#FFFFFF'}
+              labelColorBlur={'#000000'}
+              rgbaBackgroundColorBlur={'rgba(247,247,247,0.6)'}
+              rgbaBackgroundColorFocus={'rgba(230,230,230,1)'}
               editable={false}
             />
           </TouchableOpacity>
@@ -47,7 +59,9 @@ export default class EditAccountScreen extends React.Component {
             <FloatingInput
               value={'alextan785@gmail.com'}
               label={'Email Addresses'}
-              labelColorBlur={'#FFFFFF'}
+              labelColorBlur={'#000000'}
+              rgbaBackgroundColorBlur={'rgba(247,247,247,0.6)'}
+              rgbaBackgroundColorFocus={'rgba(230,230,230,1)'}
               editable={false}
             />
           </TouchableOpacity>
@@ -58,7 +72,9 @@ export default class EditAccountScreen extends React.Component {
             <FloatingInput
               value={'************'}
               label={'Password'}
-              labelColorBlur={'#FFFFFF'}
+              labelColorBlur={'#000000'}
+              rgbaBackgroundColorBlur={'rgba(247,247,247,0.6)'}
+              rgbaBackgroundColorFocus={'rgba(230,230,230,1)'}
               editable={false}
             />
           </TouchableOpacity>

@@ -28,6 +28,7 @@ export default class SettingsScreen extends React.Component {
                 borderWidth={1}
                 size={50}
                 backgroundColor={'#F7F7F7'}
+                disabled={true}
                 onPress={() => console.log('pressed image')}
               />
             </View>

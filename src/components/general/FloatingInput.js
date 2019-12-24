@@ -12,10 +12,8 @@ import {faEye, faEyeSlash} from '@fortawesome/free-solid-svg-icons';
 import PropTypes from 'prop-types';
 
 // TODO: Box shadows
-// TODO: Make it so the 'show password' icon doesn't always show just if label is password
 // TODO: Add X button to clear text
 
-// TODO: Fix label color
 export default class FloatingInput extends React.Component {
   constructor(props) {
     super(props);
@@ -36,7 +34,6 @@ export default class FloatingInput extends React.Component {
   }
 
   componentDidUpdate(prevProps, prevState) {
-    console.log(prevProps);
     if (!prevState.active && this.state.active) {
       this.focusAnimation();
     } else if (prevState.active && !this.state.active) {
@@ -145,7 +142,7 @@ export default class FloatingInput extends React.Component {
             secureTextEntry={this.state.secureTextEntry}
             {...this.props}
           />
-          {this.props.label === 'Password' ? (
+          {this.props.showPasswordIcon ? (
             <TouchableOpacity
               onPress={this.toggleSecureText}
               style={styles.iconContainer}>
@@ -216,6 +213,7 @@ FloatingInput.propTypes = {
   labelColorFocus: PropTypes.string,
   rgbaBackgroundColorBlur: PropTypes.string,
   rgbaBackgroundColorFocus: PropTypes.string,
+  showPasswordIcon: PropTypes.bool
 };
 
 FloatingInput.defaultProps = {
@@ -229,4 +227,5 @@ FloatingInput.defaultProps = {
   labelColorFocus: '#83a4d4',
   rgbaBackgroundColorBlur: 'rgba(92,99,110,0.7)',
   rgbaBackgroundColorFocus: 'rgba(255,255,255,1)',
+  showPasswordIcon: false
 };

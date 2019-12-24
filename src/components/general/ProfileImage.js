@@ -17,7 +17,8 @@ export default class ProfileImage extends React.Component {
     return (
       <TouchableOpacity
         style={{elevation: 10}}
-        onPress={this.props.onPress}>
+        onPress={this.props.onPress}
+        disabled={this.props.disabled}>
         <Image
           source={require('../../assets/defaultProfile.png')}
           style={{
@@ -49,6 +50,7 @@ ProfileImage.propTypes = {
   borderWidth: PropTypes.number,
   backgroundColor: PropTypes.string,
   onPress: PropTypes.func,
+  disabled: PropTypes.bool
 };
 
 ProfileImage.defaultProps = {
@@ -56,4 +58,5 @@ ProfileImage.defaultProps = {
   borderWidth: 0,
   backgroundColor: 'white',
   onPress: () => {},
+  disabled: false
 };

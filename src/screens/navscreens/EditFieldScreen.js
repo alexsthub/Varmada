@@ -1,16 +1,14 @@
 import React from 'react';
-import {View} from 'react-native';
+import {View, FlatList} from 'react-native';
 
 import FloatingInput from '../../components/general/FloatingInput';
 import CustomButton from '../../components/general/CustomButton';
 
+// TODO: Make this dynamic from edit account screen
 export default class EditFieldScreen extends React.Component {
   constructor(props) {
     super(props);
-    this.state={
-      firstName: this.props.navigation.getParam('fName', 'default'),
-      lastName: this.props.navigation.getParam('lName', 'default')
-    };
+    this.state = this.props.navigation.state.params;
   }
 
   handleSaveFields = () => {
@@ -19,6 +17,8 @@ export default class EditFieldScreen extends React.Component {
   }
 
   render() {
+    console.log(this.props.navigation.state.params);
+    console.log(Object.keys(this.state).length);
     return (
       <View style={{marginTop: 100, flex: 1, marginHorizontal: 40}}>
         <FloatingInput
@@ -53,6 +53,7 @@ export default class EditFieldScreen extends React.Component {
           textStyle={{color: '#000000'}}
           buttonStyle={{elevation: 10}}
         />
+
       </View>
     );
   }
