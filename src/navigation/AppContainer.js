@@ -13,12 +13,19 @@ import PickupScreen from '../screens/PickupScreen';
 import MainScreen from '../screens/MainScreen';
 import LeftNav from '../components/leftNav/leftNav';
 
+import MyPickupScreen from '../screens/navscreens/MyPickupScreen';
+import MyAddressScreen from '../screens/navscreens/MyAddressScreen';
+import PaymentMethodScreen from '../screens/navscreens/PaymentMethodScreen';
+import SettingsScreen from '../screens/navscreens/SettingsScreen';
+import EditAccountScreen from '../screens/navscreens/EditAccountScreen';
+import EditFieldScreen from '../screens/navscreens/EditFieldScreen';
+
 const WIDTH = Dimensions.get('window').width;
 
 const DrawerConfig = {
   drawerWidth: WIDTH * 0.5,
-  contentComponent: ({navigation}) => {
-    return <LeftNav navigation={navigation} />;
+  contentComponent: (props) => {
+    return <LeftNav {...props}/>;
   },
 };
 
@@ -27,9 +34,18 @@ const MainDrawer = createDrawerNavigator(
     Home: {
       screen: MainScreen,
     },
-    Settings: {
-      screen: LoginScreen,
-      navigationOptions: {header: null},
+    Pickups: {
+      screen: MyPickupScreen
+    },
+    MyAddresses: {
+      screen: MyAddressScreen
+    },
+    PaymentMethods: {
+      screen: PaymentMethodScreen
+    },
+    AccountSettings: {
+      screen: SettingsScreen,
+      navigationOptions: {}
     },
   },
   DrawerConfig,
@@ -57,6 +73,14 @@ const AppNavigator = createStackNavigator(
       screen: PickupScreen,
       navigationOptions: {headerTransparent: true},
     },
+    EditAccountScreen: {
+      screen: EditAccountScreen,
+      navigationOptions: {title: 'Edit Profile'}
+    },
+    EditFieldScreen: {
+      screen: EditFieldScreen,
+      navigationOptions: {headerTransparent: true}
+    }
   },
   {
     initialRouteName: 'LoginScreen',

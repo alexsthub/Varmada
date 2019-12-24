@@ -1,6 +1,7 @@
 import React, {Component} from 'react';
 import {Text, View, StyleSheet, TouchableOpacity } from 'react-native';
 
+// TODO: Container style override.
 export default class CustomButton extends Component{
   constructor(props) {
     super(props)
@@ -8,7 +9,7 @@ export default class CustomButton extends Component{
 
   render() {
     return(
-      <View style={styles.container}>
+      <View style={[styles.container, this.props.containerStyle]}>
         <TouchableOpacity style={[styles.button, this.props.buttonStyle]} onPress = {this.props.onPress}>
           <Text style={[styles.text, this.props.textStyle]}>{this.props.text}</Text>
         </TouchableOpacity>

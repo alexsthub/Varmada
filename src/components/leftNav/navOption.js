@@ -30,7 +30,7 @@ export default class navOption extends React.Component {
       {content}
     </TouchableOpacity> :
     <TouchableHighlight
-      style={[styles.container, this.props.containerStyle]}
+      style={[styles.container, this.props.containerStyle, , {backgroundColor: this.props.active ? 'lightgray': null}]}
       onPress={this.props.onPress}
       underlayColor={'lightgray'}
       activeOpacity={.95}>
