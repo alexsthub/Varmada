@@ -12,22 +12,32 @@ export default class AddressBox extends Component {
     console.log(this.props);
     return (
       <View style={styles.addressBoxView}>
-        <Text>{this.props.addressTitle}</Text>
-        <Text>{this.props.address}</Text>
-        {this.props.isDefault ? null : (
-          <TouchableOpacity
-            style={[styles.button, this.props.buttonStyle]}
-            onPress={this.props.onPress}>
-            <Text style={styles.text}>Set As Default</Text>
-          </TouchableOpacity>
-        )}
-        <View style={styles.addressButtonsContainer}>
-          <TouchableOpacity style={styles.button} onPress={this.props.onPress}>
-            <Text style={styles.text}>Edit</Text>
-          </TouchableOpacity>
-          <TouchableOpacity style={styles.button} onPress={this.props.onPress}>
-            <Text style={styles.text}>Delete</Text>
-          </TouchableOpacity>
+        <View style={{marginHorizontal: 30, backgroundColor: 'green'}}>
+          <Text style={{fontWeight: 'bold'}}>{this.props.addressTitle}</Text>
+          <Text>{this.props.street}</Text>
+          {this.props.apartment ? <Text>{this.props.apartment}</Text> : null}
+          <Text>
+            {this.props.city}, {this.props.state} {this.props.zipcode}
+          </Text>
+          {this.props.isDefault ? null : (
+            <TouchableOpacity
+              style={[styles.button, this.props.buttonStyle]}
+              onPress={this.props.onPress}>
+              <Text style={styles.text}>Set As Default</Text>
+            </TouchableOpacity>
+          )}
+          <View style={styles.addressButtonsContainer}>
+            <TouchableOpacity
+              style={styles.button}
+              onPress={this.props.onPress}>
+              <Text style={styles.text}>Edit</Text>
+            </TouchableOpacity>
+            <TouchableOpacity
+              style={styles.button}
+              onPress={this.props.onPress}>
+              <Text style={styles.text}>Delete</Text>
+            </TouchableOpacity>
+          </View>
         </View>
       </View>
     );

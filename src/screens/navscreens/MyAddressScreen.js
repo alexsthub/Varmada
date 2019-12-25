@@ -26,6 +26,11 @@ export default class MyAddressScreen extends React.Component {
             <View>
               <AddressBox
                 addressTitle={'Olympia Home'}
+                street={'1785 53rd Loop SE'}
+                apartment={''}
+                city={'Olympia'}
+                state={'WA'}
+                zipcode={'98501'}
                 address={'1785 53rd Loop SE Olypmia WA 98501 United States'}
                 onPress={() => console.log('pressed image')}></AddressBox>
             </View>
