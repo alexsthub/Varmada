@@ -9,7 +9,7 @@ import {
   Platform,
   PermissionsAndroid,
 } from 'react-native';
-import styles from '../constants/styles';
+import styles from '../constants/styles/loginStyles';
 
 import SmsListener from 'react-native-android-sms-listener';
 
