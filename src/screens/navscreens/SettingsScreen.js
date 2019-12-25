@@ -79,7 +79,7 @@ export default class SettingsScreen extends React.Component {
         <TouchableHighlight
           underlayColor={'lightgray'}
           activeOpacity={0.95}
-          onPress={() => {}}>
+          onPress={() => this.props.navigation.navigate('NotificationSettingsScreen')}>
           <View style={styles.settingOption}>
             <Text style={{fontSize: 24}}>Notifications</Text>
           </View>
@@ -88,7 +88,7 @@ export default class SettingsScreen extends React.Component {
         <TouchableHighlight
           underlayColor={'lightgray'}
           activeOpacity={0.95}
-          onPress={() => {}}>
+          onPress={() => this.props.navigation.navigate('SecuritySettingsScreen')}>
           <View style={styles.settingOption}>
             <Text style={{fontSize: 24}}>Security</Text>
           </View>

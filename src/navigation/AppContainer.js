@@ -19,6 +19,9 @@ import PaymentMethodScreen from '../screens/navscreens/PaymentMethodScreen';
 import SettingsScreen from '../screens/navscreens/SettingsScreen';
 import EditAccountScreen from '../screens/navscreens/EditAccountScreen';
 import EditFieldScreen from '../screens/navscreens/EditFieldScreen';
+import NotificationSettingsScreen from '../screens/NotificationSettingsScreen';
+import SecuritySettingsScreen from '../screens/SecuritySettingsScreen';
+
 
 const WIDTH = Dimensions.get('window').width;
 
@@ -80,6 +83,14 @@ const AppNavigator = createStackNavigator(
     EditFieldScreen: {
       screen: EditFieldScreen,
       navigationOptions: {headerTransparent: true}
+    },
+    NotificationSettingsScreen: {
+      screen: NotificationSettingsScreen,
+      navigationOptions: {title: 'Notifications'}
+    },
+    SecuritySettingsScreen: {
+      screen: SecuritySettingsScreen,
+      navigationOptions: {title: 'Security'}
     }
   },
   {
