@@ -7,14 +7,17 @@ export default class AddressBox extends Component {
   constructor(props) {
     super(props);
   }
-
+  //this.props.isDefault ? (backgroundColor = 'red') : null,
   render() {
     return (
-      <View style={styles.addressBoxView}>
+      <View
+        style={[
+          styles.addressBoxView,
+          {backgroundColor: this.props.isDefault ? '#F8B500' : null},
+        ]}>
         <View
           style={{
             marginHorizontal: 30,
-            backgroundColor: 'green',
             width: '60%',
           }}>
           <Text style={{fontWeight: 'bold'}}>{this.props.addressTitle}</Text>
@@ -26,7 +29,12 @@ export default class AddressBox extends Component {
 
           {this.props.isDefault ? null : (
             <TouchableOpacity
-              style={[styles.button, this.props.buttonStyle]}
+              //style={[styles.container, this.props.containerStyle, , {backgroundColor: this.props.active ? 'lightgray': null}]}
+              style={[
+                styles.button,
+                this.props.buttonStyle,
+                {backgroundColor: '#F8B500'},
+              ]}
               onPress={this.props.onPress}>
               <Text style={styles.text}>Set As Default</Text>
             </TouchableOpacity>
@@ -41,7 +49,7 @@ export default class AddressBox extends Component {
               </TouchableOpacity>
             </View>
 
-            <View style={styles.divider}/>
+            <View style={styles.divider} />
 
             <View style={{flex: 1}}>
               <TouchableOpacity
@@ -50,7 +58,6 @@ export default class AddressBox extends Component {
                 <Text style={styles.text}>Delete</Text>
               </TouchableOpacity>
             </View>
-
           </View>
         </View>
       </View>
@@ -62,15 +69,14 @@ const styles = StyleSheet.create({
   addressBoxView: {
     alignItems: 'center',
     marginVertical: 10,
-    backgroundColor: 'red',
   },
   button: {
     alignItems: 'center',
     borderWidth: 0.5,
-    backgroundColor: Colors.boldColor,
     opacity: 0.8,
     padding: 10,
     marginTop: 10,
+    backgroundColor: 'white',
   },
   text: {
     color: Colors.defaultColor,
@@ -80,8 +86,8 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
   },
   divider: {
-    marginHorizontal: 8
-  }
+    marginHorizontal: 8,
+  },
 });
 
 AddressBox.propTypes = {

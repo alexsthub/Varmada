@@ -1,10 +1,36 @@
 import React from 'react';
-import {StyleSheet, View, Text, TouchableHighlight} from 'react-native';
+import {
+  StyleSheet,
+  View,
+  Text,
+  TouchableHighlight,
+  FlatList,
+} from 'react-native';
 import NavScreenHeader from '../../components/general/NavScreenHeader';
 import CircularAddButton from '../../components/general/CircularAddButton';
 import AddressBox from '../../components/general/AddressBox';
 export default class MyAddressScreen extends React.Component {
   render() {
+    const DATA = [
+      {
+        addressTitle: 'Olympia Home',
+        street: '1785 53rd Loop SE',
+        apartment: 'Apartment #308',
+        city: 'Olympia',
+        state: 'WA',
+        zipcode: '98501',
+        isDefault: true,
+      },
+      {
+        addressTitle: 'Seattle Apt',
+        street: '4105 Brooklyn Ave NE',
+        apartment: 'Unit #308',
+        city: 'Seattle',
+        state: 'WA',
+        zipcode: '98501',
+        isDefault: false,
+      },
+    ];
     return (
       <View>
         <NavScreenHeader
@@ -24,22 +50,34 @@ export default class MyAddressScreen extends React.Component {
           </TouchableHighlight>
 
           <View style={styles.addressContainer}>
-            <Text style={{color: '#555555', fontWeight: 'bold', fontSize: 18}}>Saved Addresses</Text>
-
-            <AddressBox
-              addressTitle={'Olympia Home'}
-              street={'1785 53rd Loop SE'}
-              apartment={'Apartment #308'}
-              city={'Olympia'}
-              state={'WA'}
-              zipcode={'98501'}
-              address={'1785 53rd Loop SE Olypmia WA 98501 United States'}
-              onPress={() => console.log('pressed image')}
-              isDefault={false}
-            />
-
+            <Text style={{color: '#555555', fontWeight: 'bold', fontSize: 18}}>
+              Saved Addresses
+            </Text>
+            <View>
+              <FlatList
+                data={DATA}
+                renderItem={({item}) => (
+                  <AddressBox
+                    onPress={() =>
+                      this.props.navigation.navigate('EditAccountScreen')
+                    }
+                    addressTitle={item.addressTitle}
+                    street={item.street}
+                    apartment={item.apartment}
+                    city={item.city}
+                    state={item.state}
+                    zipcode={item.zipcode}
+                    address={item.address}
+                    isDefault={item.isDefault}
+                  />
+                )}
+                keyExtractor={item => item.addressTitle}
+                ItemSeparatorComponent={() => (
+                  <View style={{height: 1, backgroundColor: 'lightgray'}} />
+                )}
+              />
+            </View>
           </View>
-
         </View>
       </View>
     );
@@ -59,6 +97,6 @@ const styles = StyleSheet.create({
     justifyContent: 'space-between',
   },
   addressContainer: {
-    marginTop: 20
+    marginTop: 20,
   },
 });
