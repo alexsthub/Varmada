@@ -7,7 +7,7 @@ import {
   TouchableWithoutFeedback,
   TouchableOpacity,
   Platform,
-  PermissionsAndroid
+  PermissionsAndroid,
 } from 'react-native';
 import styles from '../constants/styles/loginStyles';
 
@@ -156,7 +156,7 @@ export default class ValidateScreen extends React.Component {
   };
 
   completeSignup = () => {
-    this.setState({showModal: true})
+    this.setState({showModal: true});
     console.log('Sign me up!');
   };
 
@@ -166,7 +166,7 @@ export default class ValidateScreen extends React.Component {
 
   closeModal = () => {
     this.setState({showModal: false});
-  }
+  };
 
   render() {
     let codeInputs = [];
@@ -189,7 +189,6 @@ export default class ValidateScreen extends React.Component {
       <ImageBackground
         source={require('../assets/loginGradient.jpg')}
         style={styles.background}>
-
         <ErrorModal
           showModal={this.state.showModal}
           title={'Wrong Code'}
@@ -234,8 +233,7 @@ export default class ValidateScreen extends React.Component {
         <TouchableOpacity
           style={styles.signUpContainer}
           onPress={this.handleResend}>
-          <Text
-            style={styles.highlightText}>
+          <Text style={styles.highlightText}>
             Didn't Get Your Code? Click Here To Resend
           </Text>
         </TouchableOpacity>
@@ -243,4 +241,3 @@ export default class ValidateScreen extends React.Component {
     );
   }
 }
-
