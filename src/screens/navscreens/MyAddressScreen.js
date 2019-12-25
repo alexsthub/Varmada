@@ -11,31 +11,36 @@ export default class MyAddressScreen extends React.Component {
           navigation={this.props.navigation}
           title={'My Addresses'}
         />
-        <TouchableHighlight
-          underlayColor={'lightgray'}
-          activeOpacity={0.95}
-          onPress={() => this.props.navigation.navigate('EditAccountScreen')}>
-          <View>
+
+        <View style={{marginHorizontal: 30}}>
+          <TouchableHighlight
+            underlayColor={'lightgray'}
+            activeOpacity={0.95}
+            onPress={() => this.props.navigation.navigate('EditAccountScreen')}>
             <View style={styles.addressDetailsContainer}>
               <Text>Add a new address</Text>
               <CircularAddButton size={30} />
             </View>
-            <View style={styles.addAddressContainer}>
-              <Text>Saved Addresses</Text>
-            </View>
-            <View>
-              <AddressBox
-                addressTitle={'Olympia Home'}
-                street={'1785 53rd Loop SE'}
-                apartment={''}
-                city={'Olympia'}
-                state={'WA'}
-                zipcode={'98501'}
-                address={'1785 53rd Loop SE Olypmia WA 98501 United States'}
-                onPress={() => console.log('pressed image')}></AddressBox>
-            </View>
+          </TouchableHighlight>
+
+          <View style={styles.addressContainer}>
+            <Text style={{color: '#555555', fontWeight: 'bold', fontSize: 18}}>Saved Addresses</Text>
+
+            <AddressBox
+              addressTitle={'Olympia Home'}
+              street={'1785 53rd Loop SE'}
+              apartment={'Apartment #308'}
+              city={'Olympia'}
+              state={'WA'}
+              zipcode={'98501'}
+              address={'1785 53rd Loop SE Olypmia WA 98501 United States'}
+              onPress={() => console.log('pressed image')}
+              isDefault={false}
+            />
+
           </View>
-        </TouchableHighlight>
+
+        </View>
       </View>
     );
   }
@@ -49,12 +54,11 @@ const styles = StyleSheet.create({
     paddingVertical: 25,
     paddingHorizontal: 10,
     borderTopWidth: 1,
-    borderBottomWidth: 1,
+    borderWidth: 1,
     borderColor: 'gray',
     justifyContent: 'space-between',
   },
-  addAddressContainer: {
-    paddingHorizontal: 10,
-    justifyContent: 'space-between',
+  addressContainer: {
+    marginTop: 20
   },
 });
