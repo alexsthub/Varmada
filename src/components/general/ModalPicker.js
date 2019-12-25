@@ -1,11 +1,5 @@
 import React from 'react';
-import {
-  StyleSheet,
-  View,
-  Text,
-  FlatList,
-  Dimensions,
-} from 'react-native';
+import {StyleSheet, View, Text, FlatList, Dimensions} from 'react-native';
 import Modal from 'react-native-modal';
 import PropTypes from 'prop-types';
 
@@ -18,10 +12,21 @@ export default class ModalPicker extends React.Component {
   }
 
   render() {
-    const options = [
-      {title: 'On', active: this.props.darkMode},
-      {title: 'Off', active: !this.props.darkMode}
-    ];
+    const options =
+      this.props.type === 'darkMode'
+        ? [
+            {title: 'On', active: this.props.darkMode},
+            {title: 'Off', active: !this.props.darkMode},
+          ]
+        : [
+            {title: 'English (US)', active: this.props.language.code === 'en'},
+            {title: 'Spanish', active: this.props.language.code === 'es'},
+          ];
+
+    const title =
+      this.props.type === 'darkMode'
+        ? 'Dark Mode Selection'
+        : 'Language Selection';
 
     return (
       <Modal
@@ -39,7 +44,7 @@ export default class ModalPicker extends React.Component {
           <View style={styles.modalContentContainer}>
             <View style={{flexDirection: 'row'}}>
               <View style={styles.titleContainer}>
-                <Text style={styles.titleStyle}>Dark Mode Selection</Text>
+                <Text style={styles.titleStyle}>{title}</Text>
               </View>
             </View>
 
@@ -48,7 +53,7 @@ export default class ModalPicker extends React.Component {
               data={options}
               renderItem={({item}) => (
                 <ModalPickerOption
-                  onPress={(title) => this.props.onPress(title)}
+                  onPress={title => this.props.onPress(title)}
                   title={item.title}
                   active={item.active}
                 />

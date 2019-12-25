@@ -9,25 +9,37 @@ import {faUserEdit} from '@fortawesome/free-solid-svg-icons';
 
 import ModalPicker from '../../components/general/ModalPicker';
 
-// TODO: How do i pass up which item was pressed?
+// TODO: Modal picker code is actually disgusting
 export default class SettingsScreen extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
+      language: {name: 'English (US)', code: 'en'},
       darkMode: false,
-      showModal: false
+      type: 'darkMode',
+      showModal: false,
     };
   }
 
   handleModalSettingsPress = (title) => {
-    if (title === 'On' && !this.state.darkMode) {
-      this.setState({darkMode: true, showModal: false});
-    } else if (title === 'Off' && this.state.darkMode) {
-      this.setState({darkMode: false, showModal: false});
+    if (this.state.type === 'darkMode') {
+      if (title === 'On' && !this.state.darkMode) {
+        this.setState({darkMode: true, showModal: false});
+      } else if (title === 'Off' && this.state.darkMode) {
+        this.setState({darkMode: false, showModal: false});
+      } else {
+        this.setState({showModal: false});
+      }
     } else {
-      this.setState({showModal: false});
+      if (title === 'English (US)' && this.state.language.name != 'English (US)') {
+        this.setState({language: {name: 'English (US)', code: 'en'}, showModal: false});
+      } else if (title === 'Spanish' && this.state.language.name != 'Spanish') {
+        this.setState({language: {name: 'Spanish', code: 'es'}, showModal: false});
+      } else {
+        this.setState({showModal: false});
+      }
     }
-  }
+  };
 
   render() {
     return (
@@ -39,9 +51,11 @@ export default class SettingsScreen extends React.Component {
 
         <ModalPicker
           darkMode={this.state.darkMode}
+          language={this.state.language}
+          type={this.state.type}
           animationIn={'fadeIn'}
           animationOut={'fadeOut'}
-          showModal={this.state.showModal} 
+          showModal={this.state.showModal}
           closeModal={() => this.setState({showModal: false})}
           onPress={this.handleModalSettingsPress}
         />
@@ -79,7 +93,9 @@ export default class SettingsScreen extends React.Component {
         <TouchableHighlight
           underlayColor={'lightgray'}
           activeOpacity={0.95}
-          onPress={() => this.props.navigation.navigate('NotificationSettingsScreen')}>
+          onPress={() =>
+            this.props.navigation.navigate('NotificationSettingsScreen')
+          }>
           <View style={styles.settingOption}>
             <Text style={{fontSize: 24}}>Notifications</Text>
           </View>
@@ -88,7 +104,9 @@ export default class SettingsScreen extends React.Component {
         <TouchableHighlight
           underlayColor={'lightgray'}
           activeOpacity={0.95}
-          onPress={() => this.props.navigation.navigate('SecuritySettingsScreen')}>
+          onPress={() =>
+            this.props.navigation.navigate('SecuritySettingsScreen')
+          }>
           <View style={styles.settingOption}>
             <Text style={{fontSize: 24}}>Security</Text>
           </View>
@@ -97,17 +115,17 @@ export default class SettingsScreen extends React.Component {
         <TouchableHighlight
           underlayColor={'lightgray'}
           activeOpacity={0.95}
-          onPress={() => {}}>
+          onPress={() => this.setState({showModal: true, type: 'lang'})}>
           <View style={[styles.settingOption, styles.multiTextOption]}>
             <Text style={{fontSize: 24}}>Language</Text>
-            <Text>English (US)</Text>
+            <Text>{this.state.language.name}</Text>
           </View>
         </TouchableHighlight>
 
         <TouchableHighlight
           underlayColor={'lightgray'}
           activeOpacity={0.95}
-          onPress={() => this.setState({showModal: true})}>
+          onPress={() => this.setState({showModal: true, type: 'darkMode'})}>
           <View style={[styles.settingOption, styles.multiTextOption]}>
             <Text style={{fontSize: 24}}>Dark Mode</Text>
             <Text>{this.state.darkMode ? 'On' : 'Off'}</Text>
