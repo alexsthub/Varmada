@@ -3,12 +3,16 @@ import {StyleSheet, View, Text, TouchableHighlight} from 'react-native';
 import PropTypes from 'prop-types';
 
 export default class ModalPickerOption extends React.Component {
+  handlePress = () => {
+    this.props.onPress(this.props.title);
+  }
+
   render() {
     return (
       <TouchableHighlight
         underlayColor={'lightgray'}
         activeOpacity={0.95}
-        onPress={this.props.onPress}>
+        onPress={this.handlePress}>
         <View style={styles.container}>
           <View style={[styles.circle, {backgroundColor: this.props.active ? '#F8B500' : null}]}/>
           <Text style={{fontSize: 24}}>{this.props.title}</Text>

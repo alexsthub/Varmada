@@ -3,7 +3,6 @@ import {
   StyleSheet,
   View,
   Text,
-  TouchableOpacity,
   FlatList,
   Dimensions,
 } from 'react-native';
@@ -19,10 +18,11 @@ export default class ModalPicker extends React.Component {
   }
 
   render() {
-    const data = [
-      {title: 'On', active: true},
-      {title: 'Off', active: false},
+    const options = [
+      {title: 'On', active: this.props.darkMode},
+      {title: 'Off', active: !this.props.darkMode}
     ];
+
     return (
       <Modal
         isVisible={this.props.showModal}
@@ -37,7 +37,6 @@ export default class ModalPicker extends React.Component {
         onBackButtonPress={this.props.closeModal}>
         <View style={styles.modalContainer}>
           <View style={styles.modalContentContainer}>
-            
             <View style={{flexDirection: 'row'}}>
               <View style={styles.titleContainer}>
                 <Text style={styles.titleStyle}>Dark Mode Selection</Text>
@@ -45,10 +44,11 @@ export default class ModalPicker extends React.Component {
             </View>
 
             <FlatList
-              data={data}
+              style={{borderWidth: 1, borderColor: 'lightgray'}}
+              data={options}
               renderItem={({item}) => (
                 <ModalPickerOption
-                  onPress={() => {}}
+                  onPress={(title) => this.props.onPress(title)}
                   title={item.title}
                   active={item.active}
                 />
@@ -58,7 +58,6 @@ export default class ModalPicker extends React.Component {
                 <View style={{height: 1, backgroundColor: 'lightgray'}} />
               )}
             />
-
           </View>
         </View>
       </Modal>
@@ -75,18 +74,17 @@ const styles = StyleSheet.create({
     elevation: 10,
   },
   modalContentContainer: {
-    marginHorizontal: 20
+    marginHorizontal: 20,
+    marginBottom: 20,
   },
   titleContainer: {
     flex: 1,
-    borderBottomWidth: 1,
-    borderColor: 'lightgray',
     alignItems: 'center',
     paddingVertical: 5,
   },
   titleStyle: {
     fontSize: 24,
-    fontWeight: 'bold'
+    fontWeight: 'bold',
   },
 });
 

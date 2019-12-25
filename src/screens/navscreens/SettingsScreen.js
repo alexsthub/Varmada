@@ -9,12 +9,26 @@ import {faUserEdit} from '@fortawesome/free-solid-svg-icons';
 
 import ModalPicker from '../../components/general/ModalPicker';
 
-// TODO: Make modal picker component
+// TODO: How do i pass up which item was pressed?
 export default class SettingsScreen extends React.Component {
   constructor(props) {
     super(props);
-    this.state = {showModal: false};
+    this.state = {
+      darkMode: false,
+      showModal: false
+    };
   }
+
+  handleModalSettingsPress = (title) => {
+    if (title === 'On' && !this.state.darkMode) {
+      this.setState({darkMode: true, showModal: false});
+    } else if (title === 'Off' && this.state.darkMode) {
+      this.setState({darkMode: false, showModal: false});
+    } else {
+      this.setState({showModal: false});
+    }
+  }
+
   render() {
     return (
       <View style={styles.container}>
@@ -23,11 +37,13 @@ export default class SettingsScreen extends React.Component {
           title={'Account Settings'}
         />
 
-        <ModalPicker 
+        <ModalPicker
+          darkMode={this.state.darkMode}
           animationIn={'fadeIn'}
           animationOut={'fadeOut'}
           showModal={this.state.showModal} 
           closeModal={() => this.setState({showModal: false})}
+          onPress={this.handleModalSettingsPress}
         />
 
         <TouchableHighlight
@@ -94,7 +110,7 @@ export default class SettingsScreen extends React.Component {
           onPress={() => this.setState({showModal: true})}>
           <View style={[styles.settingOption, styles.multiTextOption]}>
             <Text style={{fontSize: 24}}>Dark Mode</Text>
-            <Text>Off</Text>
+            <Text>{this.state.darkMode ? 'On' : 'Off'}</Text>
           </View>
         </TouchableHighlight>
 
