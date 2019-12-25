@@ -662,6 +662,13 @@
     exec-sh "^0.3.2"
     minimist "^1.2.0"
 
+"@dooboo-ui/native-switch-toggle@^0.4.0":
+  version "0.4.0"
+  resolved "https://registry.yarnpkg.com/@dooboo-ui/native-switch-toggle/-/native-switch-toggle-0.4.0.tgz#147b552cc96daeefb473382857da8efa5c402033"
+  integrity sha512-LlFqVEp5FOedHOmjztnQWLcZa42i6Aj6Xu+71K0LVbkeWui2CeW3zgr8VPXAIaye7zBhkWei4QTGR/10/2v8Kg==
+  dependencies:
+    dooboolab-welcome "^1.1.1"
+
 "@fortawesome/fontawesome-common-types@^0.2.26":
   version "0.2.26"
   resolved "https://registry.yarnpkg.com/@fortawesome/fontawesome-common-types/-/fontawesome-common-types-0.2.26.tgz#6e0b13a752676036f8196f8a1500d53a27b4adc1"
@@ -2168,6 +2175,11 @@ domutils@^1.7.0:
   dependencies:
     dom-serializer "0"
     domelementtype "1"
+
+dooboolab-welcome@^1.1.1:
+  version "1.1.1"
+  resolved "https://registry.yarnpkg.com/dooboolab-welcome/-/dooboolab-welcome-1.1.1.tgz#ca2184f6e1f568865d707a6ce3bda7e003550f54"
+  integrity sha512-tQ/9NBCGnalHwKOBjDqTD4t4wQpDfSSbxQGctzkzaLHR3AhN0wCBkIs05JciVtvl/jfLZ+DgAndktAMk3Bu7Vw==
 
 ecc-jsbn@~0.1.1:
   version "0.1.2"

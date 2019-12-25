@@ -86,7 +86,7 @@ const AppNavigator = createStackNavigator(
     },
     NotificationSettingsScreen: {
       screen: NotificationSettingsScreen,
-      navigationOptions: {title: 'Notifications'}
+      navigationOptions: {title: 'Notification Settings'}
     },
     SecuritySettingsScreen: {
       screen: SecuritySettingsScreen,
@@ -94,7 +94,7 @@ const AppNavigator = createStackNavigator(
     }
   },
   {
-    initialRouteName: 'LoginScreen',
+    initialRouteName: 'NotificationSettingsScreen',
   },
 );
 export default createAppContainer(AppNavigator);
