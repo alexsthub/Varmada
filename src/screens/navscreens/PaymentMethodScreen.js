@@ -1,8 +1,24 @@
 import React from 'react';
-import {StyleSheet, View, Text, TouchableHighlight} from 'react-native';
+import {StyleSheet, View, Text, FlatList} from 'react-native';
 import NavScreenHeader from '../../components/general/NavScreenHeader';
 
 import PaymentMethod from '../../components/general/PaymentMethod';
+
+const paymentMethods = [
+  {
+    id: '1',
+    type: 'venmo', 
+    username: 'alextan_97'
+  },
+  {
+    id: '2',
+    type: 'visa',
+    cardNumber: '1231231231',
+    expDate: '09/20',
+    cvv: '123',
+    zip: '98501',
+  },
+];
 
 export default class PaymentMethodScreen extends React.Component {
   render() {
@@ -13,12 +29,27 @@ export default class PaymentMethodScreen extends React.Component {
           title={'Payment Methods'}
         />
         <View style={{marginTop: 15}}>
-          <Text style={{fontSize: 20, fontWeight: 'bold', marginLeft: 15}}>Current Payment Methods</Text>
-
-          <View>
-            <PaymentMethod />
+          <Text style={{fontSize: 20, fontWeight: 'bold', marginLeft: 15}}>
+            Current Payment Methods
+          </Text>
+          <View style={{marginVertical: 10}}>
+            <FlatList 
+              data={paymentMethods}
+              renderItem={({item}) => (
+                <PaymentMethod type={item.type} onPress={() => {}}/>
+              )}
+              ItemSeparatorComponent={() => (
+                <View style={{height: 1, backgroundColor: 'lightgray', marginHorizontal: 15}} />
+              )}
+              keyExtractor={(item) => item.id}
+            />
           </View>
+        </View>
 
+        <View style={{marginTop: 15}}>
+          <Text style={{fontSize: 20, fontWeight: 'bold', marginLeft: 15}}>
+            Add a Payment Method
+          </Text>
         </View>
       </View>
     );
