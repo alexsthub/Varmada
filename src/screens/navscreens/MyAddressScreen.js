@@ -16,13 +16,21 @@ import {createAddress} from '../../graphql/mutations';
 import uuid from 'uuid/v4';
 const CLIENTID = uuid();
 export default class MyAddressScreen extends React.Component {
+  constructor(props) {
+    super(props);
+    this.state = {
+      addresses: [],
+    };
+  }
   async componentDidMount() {
     try {
       const addressData = await API.graphql(graphqlOperation(listAddresss));
-      console.log('addresses:', addressData.data.listAddresss.items);
+      //console.log('addresses:', addressData.data.listAddresss.items);
       this.setState({
         addresses: addressData.data.listAddresss.items,
       });
+      console.log('test');
+      console.log(this.state.addresses);
     } catch (err) {
       console.log('error fetching addresses...fuck', err);
     }
@@ -115,7 +123,7 @@ export default class MyAddressScreen extends React.Component {
             </Text>
             <View>
               <FlatList
-                data={DATA}
+                data={this.state.addresses}
                 renderItem={({item}) => (
                   <AddressBox
                     onPress={() =>
