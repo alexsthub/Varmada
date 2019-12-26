@@ -2,6 +2,7 @@ import React from 'react';
 import {StyleSheet, ScrollView, Text, View} from 'react-native';
 import PropTypes from 'prop-types';
 import {NavigationActions} from 'react-navigation';
+import ImagePicker from 'react-native-image-picker';
 
 import {
   faHome,
@@ -16,6 +17,37 @@ import ProfileImage from '../general/ProfileImage';
 
 // TODO: Make a Header Component that just rests on top
 class LeftNav extends React.Component {
+  constructor(props) {
+    super(props);
+    this.state = {profileImage: {}};
+  }
+
+  changeImage = () => {
+    const options = {
+      title: 'Select a profile picture',
+      storageOptions: {
+        skipBackup: true,
+        path: 'images',
+      },
+    };
+
+    ImagePicker.showImagePicker(options, response => {
+      if (response.didCancel) {
+        console.log('User cancelled image picker');
+      } else if (response.error) {
+        console.log('ImagePicker Error: ', response.error);
+      } else if (response.customButton) {
+        console.log('User tapped custom button: ', response.customButton);
+      } else {
+        const profileImage = {
+          uri: response.uri,
+          type: response.type,
+          name: 'profileImage.jpg',
+        };
+        this.setState({profileImage: profileImage});
+      }
+    });
+  };
   
   navigateToScreen = route => () => {
     const navigateAction = NavigationActions.navigate({
@@ -38,7 +70,7 @@ class LeftNav extends React.Component {
                 borderWidth={1}
                 size={100}
                 backgroundColor={'#F7F7F7'}
-                onPress={() => console.log('pressed image')}
+                onPress={this.changeImage}
               />
             </View>
           </View>

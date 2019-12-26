@@ -94,7 +94,7 @@ const AppNavigator = createStackNavigator(
     }
   },
   {
-    initialRouteName: 'NotificationSettingsScreen',
+    initialRouteName: 'LoginScreen',
   },
 );
 export default createAppContainer(AppNavigator);
