@@ -12,11 +12,16 @@ const labelMapping = {
   password: 'Verify Password'
 }
 
-// TODO: Replace phone formatting with https://github.com/benhurott/react-native-masked-text?
 export default class EditFieldScreen extends React.Component {
   constructor(props) {
     super(props);
     this.state = this.props.navigation.state.params;
+  }
+
+  // TODO: Why tf is this not focusing?
+  componentDidMount() {
+    console.log('Mounted');
+    this['0'].getInnerRef().focus();
   }
 
   handleSaveFields = () => {
@@ -41,22 +46,24 @@ export default class EditFieldScreen extends React.Component {
     this.setState({[key]: input});
   }
 
+  getKeyboardType = (key) => {
+    if (key === 'phone') {
+      return 'numeric';
+    } else if (key === 'email') {
+      return 'email-address';
+    } else {
+      return 'default';
+    }
+  }
+
   render() {
     let counter = 0;
     const numObjects = Object.keys(this.state).length;
     const components = Object.keys(this.state).map(key => {
       let nextRef;
-      let keyboardType;
       const index = String(counter);
       if (counter < numObjects-1) {
         nextRef = String(counter+1);
-      }
-      if (key === 'phone') {
-        keyboardType = 'numeric';
-      } else if (key === 'email') {
-        keyboardType = 'email-address';
-      } else {
-        keyboardType = 'default';
       }
       let retValue = 
         <View 
@@ -69,7 +76,7 @@ export default class EditFieldScreen extends React.Component {
             labelColorBlur={'#000000'}
             rgbaBackgroundColorBlur={'rgba(247,247,247,0.6)'}
             rgbaBackgroundColorFocus={'rgba(230,230,230,1)'}
-            keyboardType={keyboardType}
+            keyboardType={this.getKeyboardType(key)}
             onChangeText={(text) => key === 'phone' ? this.onChangePhone(text, key): this.setState({[key]: text})}
             maxLength={key === 'phone' ? 14 : null}
             secureText={key === 'password' ? true : false}
