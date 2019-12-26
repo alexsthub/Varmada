@@ -1,0 +1,20 @@
+{
+    "test": {
+        "awscloudformation": {
+            "AuthRoleName": "amplify-varmada-test-150017-authRole",
+            "UnauthRoleArn": "arn:aws:iam::175732317166:role/amplify-varmada-test-150017-unauthRole",
+            "AuthRoleArn": "arn:aws:iam::175732317166:role/amplify-varmada-test-150017-authRole",
+            "Region": "us-west-2",
+            "DeploymentBucketName": "amplify-varmada-test-150017-deployment",
+            "UnauthRoleName": "amplify-varmada-test-150017-unauthRole",
+            "StackName": "amplify-varmada-test-150017",
+            "StackId": "arn:aws:cloudformation:us-west-2:175732317166:stack/amplify-varmada-test-150017/5e4c5960-276a-11ea-814c-061773af76fc",
+            "AmplifyAppId": "dcmzhlmdahbki"
+        },
+        "categories": {
+            "auth": {
+                "varmadaf5a91c54": {}
+            }
+        }
+    }
+}
