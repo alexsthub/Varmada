@@ -1,49 +1,103 @@
 import React from 'react';
-import {View} from 'react-native';
+import {View, Text} from 'react-native';
 
 import FloatingInput from '../../components/general/FloatingInput';
 import CustomButton from '../../components/general/CustomButton';
 
+const labelMapping = {
+  firstName: 'First Name',
+  lastName: 'Last Name',
+  phone: 'Phone Number',
+  email: 'Email Address',
+  password: 'Verify Password'
+}
+
 export default class EditFieldScreen extends React.Component {
   constructor(props) {
     super(props);
-    this.state={
-      firstName: this.props.navigation.getParam('fName', 'default'),
-      lastName: this.props.navigation.getParam('lName', 'default')
-    };
+    this.state = this.props.navigation.state.params;
+  }
+
+  // TODO: Why tf is this not focusing?
+  componentDidMount() {
+    console.log('Mounted');
+    this['0'].getInnerRef().focus();
   }
 
   handleSaveFields = () => {
     // TODO: Save field
     console.log('Saved!');
+  };
+
+  onChangePhone = (text, key) => {
+    let input = text.replace(/[(\-) ]/g,'');
+    const size = input.length;
+    if (input === '(') {
+      input = '';
+    } else if (size == 0) {
+      input = input;
+    } else if (size < 4) {
+      input = '(' + input;
+    } else if (size < 7) {
+      input = '(' + input.substring(0,3) + ') ' + input.substring(3,6);
+    } else {
+      input = '(' + input.substring(0,3) + ') ' + input.substring(3,6) + '-' + input.substring(6,10);
+    }
+    this.setState({[key]: input});
+  }
+
+  getKeyboardType = (key) => {
+    if (key === 'phone') {
+      return 'numeric';
+    } else if (key === 'email') {
+      return 'email-address';
+    } else {
+      return 'default';
+    }
   }
 
   render() {
+    let counter = 0;
+    const numObjects = Object.keys(this.state).length;
+    const components = Object.keys(this.state).map(key => {
+      let nextRef;
+      const index = String(counter);
+      if (counter < numObjects-1) {
+        nextRef = String(counter+1);
+      }
+      let retValue = 
+        <View 
+          style={{marginVertical: 10}}
+          key={key}>
+          <FloatingInput
+            ref={r => (this[index] = r)}
+            value={this.state[key]}
+            label={labelMapping[key]}
+            labelColorBlur={'#000000'}
+            rgbaBackgroundColorBlur={'rgba(247,247,247,0.6)'}
+            rgbaBackgroundColorFocus={'rgba(230,230,230,1)'}
+            keyboardType={this.getKeyboardType(key)}
+            onChangeText={(text) => key === 'phone' ? this.onChangePhone(text, key): this.setState({[key]: text})}
+            maxLength={key === 'phone' ? 14 : null}
+            secureText={key === 'password' ? true : false}
+            onSubmitEditing={counter < numObjects-1 ? () => this[nextRef].getInnerRef().focus() : this.handleSaveFields}
+          />
+
+          {key === 'password' ? 
+            <View style={{marginTop: 10}}> 
+              <Text>For your security, please verify your current password.</Text>
+            </View> : null
+          }
+
+        </View>
+      counter += 1;
+      return retValue;
+    });
+
     return (
       <View style={{marginTop: 100, flex: 1, marginHorizontal: 40}}>
-        <FloatingInput
-          ref={r => (this.first = r)}
-          value={this.state.firstName}
-          label={'First Name'}
-          labelColorBlur={'#000000'}
-          rgbaBackgroundColorBlur={'rgba(247,247,247,0.6)'}
-          rgbaBackgroundColorFocus={'rgba(230,230,230,1)'}
-          onChangeText={(text) => this.setState({firstName: text})}
-          onSubmitEditing={() => this.last.getInnerRef().focus()}
-        />
 
-        <View style={{marginVertical: 10}} />
-
-        <FloatingInput
-          ref={r => (this.last = r)}
-          value={this.state.lastName}
-          label={'Last Name'}
-          labelColorBlur={'#000000'}
-          rgbaBackgroundColorBlur={'rgba(247,247,247,0.6)'}
-          rgbaBackgroundColorFocus={'rgba(230,230,230,1)'}
-          onChangeText={(text) => this.setState({lastName: text})}
-          onSubmitEditing={this.handleSaveFields}
-        />
+        {components}
 
         <View style={{marginTop: 30}} />
 

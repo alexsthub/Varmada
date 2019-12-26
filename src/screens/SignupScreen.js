@@ -109,6 +109,7 @@ export default class SignupScreen extends React.Component {
               value={this.state.password}
               label={'Password'}
               labelColorBlur={'#FFFFFF'}
+              secureText={true}
               onChangeText={text => this.setState({password: text})}
               onSubmitEditing={this.handleSignup}
             />
