@@ -42,14 +42,13 @@ export default class ModalPicker extends React.Component {
         onBackButtonPress={this.props.closeModal}>
         <View style={styles.modalContainer}>
           <View style={styles.modalContentContainer}>
-            <View style={{flexDirection: 'row'}}>
-              <View style={styles.titleContainer}>
-                <Text style={styles.titleStyle}>{title}</Text>
-              </View>
+
+            <View style={styles.titleContainer}>
+              <Text style={styles.titleStyle}>{title}</Text>
             </View>
 
             <FlatList
-              style={{borderWidth: 1, borderColor: 'lightgray'}}
+              style={{}}
               data={options}
               renderItem={({item}) => (
                 <ModalPickerOption
@@ -59,9 +58,6 @@ export default class ModalPicker extends React.Component {
                 />
               )}
               keyExtractor={item => item.title}
-              ItemSeparatorComponent={() => (
-                <View style={{height: 1, backgroundColor: 'lightgray'}} />
-              )}
             />
           </View>
         </View>
@@ -83,9 +79,7 @@ const styles = StyleSheet.create({
     marginBottom: 20,
   },
   titleContainer: {
-    flex: 1,
-    alignItems: 'center',
-    paddingVertical: 5,
+    paddingVertical: 10,
   },
   titleStyle: {
     fontSize: 24,
