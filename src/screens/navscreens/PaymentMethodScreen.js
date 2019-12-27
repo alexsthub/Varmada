@@ -13,7 +13,7 @@ const paymentMethods = [
   {
     id: '2',
     type: 'visa',
-    cardNumber: '1231231231',
+    cardNumber: '****5678',
     expDate: '09/20',
     cvv: '123',
     zip: '98501',
@@ -21,6 +21,7 @@ const paymentMethods = [
 ];
 
 export default class PaymentMethodScreen extends React.Component {
+
   render() {
     return (
       <View>
@@ -36,7 +37,12 @@ export default class PaymentMethodScreen extends React.Component {
             <FlatList 
               data={paymentMethods}
               renderItem={({item}) => (
-                <PaymentMethod type={item.type} onPress={() => {}}/>
+                <PaymentMethod 
+                  type={item.type} 
+                  username={item.username ? item.username : null}
+                  cardNumber={item.cardNumber ? item.cardNumber : null}
+                  onPress={() => {}}
+                />
               )}
               ItemSeparatorComponent={() => (
                 <View style={{height: 1, backgroundColor: 'lightgray', marginHorizontal: 15}} />
@@ -50,6 +56,11 @@ export default class PaymentMethodScreen extends React.Component {
           <Text style={{fontSize: 20, fontWeight: 'bold', marginLeft: 15}}>
             Add a Payment Method
           </Text>
+          <View style={{marginVertical: 10}}>
+            <PaymentMethod 
+              type={'Add'}
+              onPress={() => this.props.navigation.navigate("PaymentAddScreen")} />
+          </View>
         </View>
       </View>
     );
