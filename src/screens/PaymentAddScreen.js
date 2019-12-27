@@ -17,11 +17,10 @@ import FloatingInput from '../components/general/FloatingInput';
 
 import {CardIOModule, CardIOUtilities} from 'react-native-awesome-card-io';
 
-// TODO: Convert to floating text
+// TODO: label is too high in comparison to where the underline is
+// TODO: Absolute position bottom text gets caught on some shit when the keyboard is up
+// TODO: Country picker????
 
-// TODO: Country picker
-// TODO: Make the clickable camera a little bigger? Might need to change formatting
-// TODO: Do not allow any characters that are not numbers
 // TODO: Text formatting should change before, not after.
 export default class PaymentAddScreen extends React.Component {
   constructor(props) {
@@ -72,7 +71,7 @@ export default class PaymentAddScreen extends React.Component {
   };
 
   formatCardNumber = text => {
-    const v = text.replace(/\s+/g, '').replace(/[^0-9]/gi, '');
+    const v = text.replace(/\s+/g, '').replace(/[^0-9]/gi, '').replace(/\D/g,'');
     const matches = v.match(/\d{4,16}/g);
     const match = (matches && matches[0]) || '';
     const parts = [];
@@ -103,7 +102,7 @@ export default class PaymentAddScreen extends React.Component {
     }
 
     if (text.length >= 5) {
-      this.refs.cvv.focus();
+      this.cvv.getInnerRef().focus();
     }
   };
 
@@ -128,17 +127,15 @@ export default class PaymentAddScreen extends React.Component {
                 keyboardType={'numeric'}
                 maxLength={19}
                 blurOnSubmit={false}
-                onSubmitEditing={() => this.refs.exp.focus()}
+                onSubmitEditing={() => this.exp.getInnerRef().focus()}
                 returnKeyType={'next'}
                 autoCompleteType={'cc-number'}
               />
             </View>
 
             <TouchableOpacity
-              onPress={
-                this.state.cardNumber === '' ? this.scanCard : this.clearText
-              }
-              style={styles.cardNumberRightIcon}>
+              style={styles.cardNumberRightIcon}
+              onPress={this.state.cardNumber === '' ? this.scanCard : this.clearText}>
               {this.state.cardNumber === '' ? (
                 <FeatherIcon name={'camera'} size={20} />
               ) : (
@@ -152,7 +149,7 @@ export default class PaymentAddScreen extends React.Component {
             <View style={{flex: 2, borderBottomWidth: 1, borderColor: 'gray'}}>
               <FloatingInput
                 inputStyle={{paddingHorizontal: 5}}
-                ref={'exp'}
+                ref={r => (this.exp = r)}
                 label={'MM/YY'}
                 labelColorBlur={'gray'}
                 rgbaBackgroundColorBlur={'rgba(255,255,255,0.6)'}
@@ -162,7 +159,7 @@ export default class PaymentAddScreen extends React.Component {
                 maxLength={5}
                 keyboardType={'numeric'}
                 blurOnSubmit={false}
-                onSubmitEditing={() => this.refs.cvv.focus()}
+                onSubmitEditing={() => this.cvv.getInnerRef().focus()}
                 returnKeyType={'next'}
               />
             </View>
@@ -172,7 +169,7 @@ export default class PaymentAddScreen extends React.Component {
             <View style={{flex: 2, borderBottomWidth: 1, borderColor: 'gray'}}>
               <FloatingInput
                 inputStyle={{paddingHorizontal: 5}}
-                ref={'cvv'}
+                ref={r => (this.cvv = r)}
                 label={'CVV'}
                 labelColorBlur={'gray'}
                 rgbaBackgroundColorBlur={'rgba(255,255,255,0.6)'}
@@ -181,13 +178,13 @@ export default class PaymentAddScreen extends React.Component {
                 onChangeText={text => {
                   this.setState({cvv: text});
                   if (text.length >= 3) {
-                    this.refs.zip.focus();
+                    this.zip.getInnerRef().focus();
                   }
                 }}
                 maxLength={3}
                 keyboardType={'numeric'}
                 blurOnSubmit={false}
-                onSubmitEditing={() => this.refs.zip.focus()}
+                onSubmitEditing={() => this.zip.getInnerRef().focus()}
                 returnKeyType={'next'}
               />
             </View>
@@ -197,7 +194,7 @@ export default class PaymentAddScreen extends React.Component {
             <View style={{flex: 4, borderBottomWidth: 1, borderColor: 'gray'}}>
               <FloatingInput
                 inputStyle={{paddingHorizontal: 5}}
-                ref={'zip'}
+                ref={r => (this.zip = r)}
                 label={'Zip Code'}
                 labelColorBlur={'gray'}
                 rgbaBackgroundColorBlur={'rgba(255,255,255,0.6)'}
@@ -261,6 +258,7 @@ const styles = StyleSheet.create({
   rowContainer: {
     flexDirection: 'row',
     alignItems: 'center',
+    paddingVertical: 5
   },
   cardNumberInput: {
     borderBottomWidth: 1,
@@ -274,5 +272,6 @@ const styles = StyleSheet.create({
     right: 0,
     justifyContent: 'center',
     alignItems: 'center',
+    paddingLeft: 10
   },
 });

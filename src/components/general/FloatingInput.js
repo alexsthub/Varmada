@@ -96,9 +96,6 @@ export default class FloatingInput extends React.Component {
       outputRange: [0, 18],
     });
     const animatedTop = {top: interpolateTop};
-
-    const test = [styles.inputStyle, this.props.inputStyle].paddingHorizontal;
-    console.log(test);
     return (
       <View>
         {this.props.error ? (
