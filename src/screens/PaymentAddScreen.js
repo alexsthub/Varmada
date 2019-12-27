@@ -5,7 +5,6 @@ import {
   Text,
   TouchableOpacity,
   Platform,
-  TextInput
 } from 'react-native';
 
 import Icon from 'react-native-vector-icons/FontAwesome';
@@ -44,8 +43,6 @@ export default class PaymentAddScreen extends React.Component {
       hideCardIOLogo: true,
       suppressManualEntry: true,
       supressConfirmation: true,
-      requireCVV: false,
-      requirePostalCode: false,
       scanExpiry: false,
     };
 
