@@ -84,7 +84,10 @@ export default class FloatingInput extends React.Component {
   render() {
     const interpolateColor = this.state.fadeValue.interpolate({
       inputRange: [0, 150],
-      outputRange: [this.props.rgbaBackgroundColorBlur, this.props.rgbaBackgroundColorFocus],
+      outputRange: [
+        this.props.rgbaBackgroundColorBlur,
+        this.props.rgbaBackgroundColorFocus,
+      ],
     });
     const animatedBackground = {backgroundColor: interpolateColor};
 
@@ -102,55 +105,64 @@ export default class FloatingInput extends React.Component {
         ) : null}
 
         <Animated.View
-          style={[styles.field, this.props.error ? styles.errorField : null, animatedBackground,]}>
+          style={[
+            styles.field,
+            this.props.error ? styles.errorField : null,
+            animatedBackground,
+          ]}>
+
           {this.props.icon ? (
             <View style={{justifyContent: 'center', marginLeft: 10}}>
               <FontAwesomeIcon icon={this.props.icon} />
             </View>
           ) : null}
 
-          <Animated.View
-            style={[
-              styles.label,
-              animatedTop,
-              {left: this.props.icon ? 40 : 16},
-            ]}>
-            <Text
-              style={{
-                fontSize: !this.state.active
-                  ? this.props.labelSizeBlur
-                  : this.props.labelSizeFocus,
-                color: !this.state.active
-                  ? this.props.labelColorBlur
-                  : this.props.labelColorFocus,
-              }}>
-              {this.props.label}
-            </Text>
-          </Animated.View>
-          <TextInput
-            ref={r => (this.ref = r)}
-            style={[
-              styles.input,
-              this.state.active ? styles.activeInput : null,
-            ]}
-            value={this.props.value}
-            keyboardType={this.props.keyboardType}
-            onChangeText={this.props.onChangeText}
-            onFocus={this.handleFocus}
-            onBlur={this.handleBlur}
-            blurOnSubmit={this.props.blurOnSubmit}
-            secureTextEntry={this.state.secureTextEntry}
-            {...this.props}
-          />
-          {this.props.showPasswordIcon ? (
-            <TouchableOpacity
-              onPress={this.toggleSecureText}
-              style={styles.iconContainer}>
-              <FontAwesomeIcon
-                icon={this.state.secureTextEntry ? faEyeSlash : faEye}
-              />
-            </TouchableOpacity>
-          ) : null}
+          <View style={{flexDirection: 'row', flex: 1}}>
+            <Animated.View
+              style={[
+                styles.label,
+                animatedTop,
+                {left: this.props.inputStyle && this.props.inputStyle.paddingHorizontal ? this.props.inputStyle.paddingHorizontal : styles.input.paddingHorizontal}
+              ]}>
+              <Text
+                style={{
+                  fontSize: !this.state.active
+                    ? this.props.labelSizeBlur
+                    : this.props.labelSizeFocus,
+                  color: !this.state.active
+                    ? this.props.labelColorBlur
+                    : this.props.labelColorFocus,
+                }}>
+                {this.props.label}
+              </Text>
+            </Animated.View>
+
+            <TextInput
+              ref={r => (this.ref = r)}
+              style={[
+                styles.input,
+                this.state.active ? styles.activeInput : null,
+                this.props.inputStyle ? this.props.inputStyle : null,
+              ]}
+              value={this.props.value}
+              keyboardType={this.props.keyboardType}
+              onChangeText={this.props.onChangeText}
+              onFocus={this.handleFocus}
+              onBlur={this.handleBlur}
+              blurOnSubmit={this.props.blurOnSubmit}
+              secureTextEntry={this.state.secureTextEntry}
+              {...this.props}
+            />
+            {this.props.showPasswordIcon ? (
+              <TouchableOpacity
+                onPress={this.toggleSecureText}
+                style={styles.iconContainer}>
+                <FontAwesomeIcon
+                  icon={this.state.secureTextEntry ? faEyeSlash : faEye}
+                />
+              </TouchableOpacity>
+            ) : null}
+          </View>
         </Animated.View>
       </View>
     );
@@ -214,7 +226,7 @@ FloatingInput.propTypes = {
   rgbaBackgroundColorBlur: PropTypes.string,
   rgbaBackgroundColorFocus: PropTypes.string,
   showPasswordIcon: PropTypes.bool,
-  secureText: PropTypes.bool
+  secureText: PropTypes.bool,
 };
 
 FloatingInput.defaultProps = {
@@ -229,5 +241,5 @@ FloatingInput.defaultProps = {
   rgbaBackgroundColorBlur: 'rgba(92,99,110,0.7)',
   rgbaBackgroundColorFocus: 'rgba(255,255,255,1)',
   showPasswordIcon: false,
-  secureText: false
+  secureText: false,
 };

@@ -16,6 +16,7 @@ import LeftNav from '../components/leftNav/leftNav';
 import MyPickupScreen from '../screens/navscreens/MyPickupScreen';
 import MyAddressScreen from '../screens/navscreens/MyAddressScreen';
 import PaymentMethodScreen from '../screens/navscreens/PaymentMethodScreen';
+import PaymentAddScreen from '../screens/PaymentAddScreen';
 import SettingsScreen from '../screens/navscreens/SettingsScreen';
 import EditAccountScreen from '../screens/navscreens/EditAccountScreen';
 import EditFieldScreen from '../screens/navscreens/EditFieldScreen';
@@ -91,6 +92,10 @@ const AppNavigator = createStackNavigator(
     SecuritySettingsScreen: {
       screen: SecuritySettingsScreen,
       navigationOptions: {title: 'Security'}
+    },
+    PaymentAddScreen: {
+      screen: PaymentAddScreen,
+      navigationOptions: {headerTransparent: true}
     }
   },
   {

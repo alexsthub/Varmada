@@ -18,12 +18,6 @@ export default class EditFieldScreen extends React.Component {
     this.state = this.props.navigation.state.params;
   }
 
-  // TODO: Why tf is this not focusing?
-  componentDidMount() {
-    console.log('Mounted');
-    this['0'].getInnerRef().focus();
-  }
-
   handleSaveFields = () => {
     // TODO: Save field
     console.log('Saved!');
@@ -71,6 +65,7 @@ export default class EditFieldScreen extends React.Component {
           key={key}>
           <FloatingInput
             ref={r => (this[index] = r)}
+            autoFocus={counter === 0}
             value={this.state[key]}
             label={labelMapping[key]}
             labelColorBlur={'#000000'}
