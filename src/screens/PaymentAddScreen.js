@@ -3,7 +3,6 @@ import {
   StyleSheet,
   View,
   Text,
-  TextInput,
   TouchableOpacity,
   Platform,
 } from 'react-native';
@@ -11,12 +10,15 @@ import {
 import Icon from 'react-native-vector-icons/FontAwesome';
 import FeatherIcon from 'react-native-vector-icons/Feather';
 import AntIcon from 'react-native-vector-icons/AntDesign';
+
 import Header from '../components/general/Header';
 import CustomButton from '../components/general/CustomButton';
+import FloatingInput from '../components/general/FloatingInput';
 
 import {CardIOModule, CardIOUtilities} from 'react-native-awesome-card-io';
 
 // TODO: Convert to floating text
+
 // TODO: Country picker
 // TODO: Make the clickable camera a little bigger? Might need to change formatting
 // TODO: Do not allow any characters that are not numbers
@@ -35,7 +37,7 @@ export default class PaymentAddScreen extends React.Component {
 
   addPayment = () => {
     console.log('Save damnit!');
-  }
+  };
 
   scanCard = () => {
     const cardModuleConfig = {
@@ -52,7 +54,7 @@ export default class PaymentAddScreen extends React.Component {
         const {cardNumber, expiryMonth, expiryYear} = card;
         this.setState({
           cardNumber: this.formatCardNumber(cardNumber),
-          expDate: String(expiryMonth) + '/' + String(expiryYear)
+          expDate: String(expiryMonth) + '/' + String(expiryYear),
         });
       })
       .catch(err => {
@@ -90,20 +92,20 @@ export default class PaymentAddScreen extends React.Component {
     const v = text.replace(/\s+/g, '').replace(/[^0-9]/gi, '');
     const matches = v.match(/\d{2,4}/g);
     const match = (matches && matches[0]) || '';
-    const parts = []
+    const parts = [];
     for (let i = 0, len = match.length; i < len; i += 2) {
       parts.push(match.substring(i, i + 2));
     }
     if (parts.length) {
       this.setState({expDate: parts.join('/')});
     } else {
-      this.setState({expDate: text})
+      this.setState({expDate: text});
     }
 
     if (text.length >= 5) {
       this.refs.cvv.focus();
     }
-  }
+  };
 
   render() {
     return (
@@ -113,19 +115,24 @@ export default class PaymentAddScreen extends React.Component {
         <View>
           {/* First row input */}
           <View style={styles.rowContainer}>
-            <Icon name={'credit-card'} style={{}} size={30} />
-            <TextInput
-              style={styles.cardNumberInput}
-              placeholder={'Enter Card Number'}
-              value={this.state.cardNumber}
-              onChangeText={text => this.handleNumberChange(text)}
-              keyboardType={'numeric'}
-              maxLength={19}
-              blurOnSubmit={false}
-              onSubmitEditing={() => this.refs.exp.focus()}
-              returnKeyType={'next'}
-              autoCompleteType={'cc-number'}
-            />
+            <Icon name={'credit-card'} size={30} />
+            <View style={styles.cardNumberInput}>
+              <FloatingInput
+                inputStyle={{paddingHorizontal: 5}}
+                label={'Card Number'}
+                value={this.state.cardNumber}
+                labelColorBlur={'gray'}
+                rgbaBackgroundColorBlur={'rgba(255,255,255,0.6)'}
+                rgbaBackgroundColorFocus={'rgba(255,255,255,1)'}
+                onChangeText={text => this.handleNumberChange(text)}
+                keyboardType={'numeric'}
+                maxLength={19}
+                blurOnSubmit={false}
+                onSubmitEditing={() => this.refs.exp.focus()}
+                returnKeyType={'next'}
+                autoCompleteType={'cc-number'}
+              />
+            </View>
 
             <TouchableOpacity
               onPress={
@@ -142,57 +149,80 @@ export default class PaymentAddScreen extends React.Component {
 
           {/* Second row input */}
           <View style={styles.rowContainer}>
-            <TextInput
-              ref={'exp'}
-              style={{flex: 2, borderBottomWidth: 1, borderColor: 'gray'}}
-              placeholder={'MM/YY'}
-              value={this.state.expDate}
-              onChangeText={(text) => this.formatExpirationDate(text)}
-              maxLength={5}
-              keyboardType={'numeric'}
-              blurOnSubmit={false}
-              onSubmitEditing={() => this.refs.cvv.focus()}
-              returnKeyType={'next'}
-            />
-            <View style={{flex:1}}/>
-            <TextInput
-              ref={'cvv'}
-              style={{flex: 2, borderBottomWidth: 1, borderColor: 'gray'}}
-              placeholder={'CVV'}
-              value={this.state.cvv}
-              onChangeText={(text) => {
-                this.setState({cvv: text}); 
-                if (text.length >= 3) {
-                  this.refs.zip.focus();
-                }
-              }}
-              maxLength={3}
-              keyboardType={'numeric'}
-              blurOnSubmit={false}
-              onSubmitEditing={() => this.refs.zip.focus()}
-              returnKeyType={'next'}
-            />
-            <View style={{flex:1}}/>
-            <TextInput
-              ref={'zip'}
-              style={{flex: 4, borderBottomWidth: 1, borderColor: 'gray'}}
-              placeholder={'Zip Code'}
-              value={this.state.zipCode}
-              onChangeText={(text) => this.setState({zipCode: text})}
-              maxLength={5}
-              keyboardType={'numeric'}
-              onSubmitEditing={this.addPayment}
-            />
+            <View style={{flex: 2, borderBottomWidth: 1, borderColor: 'gray'}}>
+              <FloatingInput
+                inputStyle={{paddingHorizontal: 5}}
+                ref={'exp'}
+                label={'MM/YY'}
+                labelColorBlur={'gray'}
+                rgbaBackgroundColorBlur={'rgba(255,255,255,0.6)'}
+                rgbaBackgroundColorFocus={'rgba(255,255,255,1)'}
+                value={this.state.expDate}
+                onChangeText={text => this.formatExpirationDate(text)}
+                maxLength={5}
+                keyboardType={'numeric'}
+                blurOnSubmit={false}
+                onSubmitEditing={() => this.refs.cvv.focus()}
+                returnKeyType={'next'}
+              />
+            </View>
+
+            <View style={{flex: 1}} />
+
+            <View style={{flex: 2, borderBottomWidth: 1, borderColor: 'gray'}}>
+              <FloatingInput
+                inputStyle={{paddingHorizontal: 5}}
+                ref={'cvv'}
+                label={'CVV'}
+                labelColorBlur={'gray'}
+                rgbaBackgroundColorBlur={'rgba(255,255,255,0.6)'}
+                rgbaBackgroundColorFocus={'rgba(255,255,255,1)'}
+                value={this.state.cvv}
+                onChangeText={text => {
+                  this.setState({cvv: text});
+                  if (text.length >= 3) {
+                    this.refs.zip.focus();
+                  }
+                }}
+                maxLength={3}
+                keyboardType={'numeric'}
+                blurOnSubmit={false}
+                onSubmitEditing={() => this.refs.zip.focus()}
+                returnKeyType={'next'}
+              />
+            </View>
+
+            <View style={{flex: 1}} />
+
+            <View style={{flex: 4, borderBottomWidth: 1, borderColor: 'gray'}}>
+              <FloatingInput
+                inputStyle={{paddingHorizontal: 5}}
+                ref={'zip'}
+                label={'Zip Code'}
+                labelColorBlur={'gray'}
+                rgbaBackgroundColorBlur={'rgba(255,255,255,0.6)'}
+                rgbaBackgroundColorFocus={'rgba(255,255,255,1)'}
+                value={this.state.zipCode}
+                onChangeText={text => this.setState({zipCode: text})}
+                maxLength={5}
+                keyboardType={'numeric'}
+                onSubmitEditing={this.addPayment}
+              />
+            </View>
           </View>
 
           <View style={styles.rowContainer}>
-            <TextInput 
-              style={{borderBottomWidth: 1, borderColor: 'gray', flex: 1}}
-              placeholder={'Country'}
-            />
-
+            <TouchableOpacity style={{borderBottomWidth: 1, borderColor: 'gray', flex: 1}}>
+              <FloatingInput 
+                inputStyle={{paddingHorizontal: 5}}
+                label={'Country'} 
+                labelColorBlur={'gray'}
+                rgbaBackgroundColorBlur={'rgba(255,255,255,0.6)'}
+                rgbaBackgroundColorFocus={'rgba(255,255,255,1)'}
+                editable={false}
+              />
+            </TouchableOpacity>
           </View>
-
         </View>
 
         <View style={{alignItems: 'center'}}>
