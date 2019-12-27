@@ -5,6 +5,7 @@ import {
   Text,
   TouchableOpacity,
   Platform,
+  TextInput
 } from 'react-native';
 
 import Icon from 'react-native-vector-icons/FontAwesome';
