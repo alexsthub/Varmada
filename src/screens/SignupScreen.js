@@ -76,7 +76,10 @@ export default class SignupScreen extends React.Component {
       <ImageBackground
         source={require('../assets/loginGradient.jpg')}
         style={styles.background}>
-        <ScrollView style={{flex: 1}}>
+        <ScrollView 
+          style={{flex: 1}}
+          showsVerticalScrollIndicator={false}
+          keyboardShouldPersistTaps={'handled'}>
           <View style={styles.container}>
             <Header
               headerText={'Create Account'}
@@ -127,6 +130,7 @@ export default class SignupScreen extends React.Component {
               label={'Password'}
               labelColorBlur={'#FFFFFF'}
               secureText={true}
+              showPasswordIcon={true}
               onChangeText={text => this.setState({password: text})}
               onSubmitEditing={this.handleSignup}
             />

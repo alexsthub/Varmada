@@ -11,6 +11,7 @@ import {
 } from 'react-native';
 import styles from '../constants/styles/loginStyles';
 
+import {Auth} from 'aws-amplify';
 import SmsListener from 'react-native-android-sms-listener';
 
 import DigitInput from '../components/login/DigitInput';
@@ -18,6 +19,7 @@ import ErrorModal from '../components/login/ErrorModal';
 import Header from '../components/general/Header';
 import CustomButton from '../components/general/CustomButton';
 
+// TODO: Send sms permissions to signup part?
 // TODO: Can probably get rid of the editable thing if it is wrapped in touchable without feedback? Fix it?
 export default class ValidateScreen extends React.Component {
   number_cells = 6;
@@ -44,11 +46,14 @@ export default class ValidateScreen extends React.Component {
     if (Platform.OS === 'android') {
       this.requestReadSmsPermission();
       this.subscription = SmsListener.addListener(message => {
-        console.info(message);
-        // TODO: Parse the message and set the state, then call on the submit function
-        this.setState({codes: ['1', '2', '3', '4', '5', '6']}, () =>
-          console.log('call function here'),
-        );
+        let verificationCodeRegex = /Your verification code is ([\d]{6})/;
+        if (verificationCodeRegex.test(message.body)) {
+          let verificationCode = message.body.match(verificationCodeRegex)[1];
+          const codes = verificationCode.split('');
+          this.setState({codes: codes}, () => {
+            this.handleVerification(this.props.navigation.getParam('user', 'default').user.username, verificationCode);
+          });
+        }
       });
     }
   }
@@ -58,6 +63,18 @@ export default class ValidateScreen extends React.Component {
       this.subscription.remove();
     }
   }
+
+  handleVerification = (username, verificationCode) => {
+    Auth.confirmSignUp(username, verificationCode)
+      .then(data => {
+        console.log('verified');
+        // Data just says success
+        console.log(data);
+      })
+      .catch(err => {
+        alert(JSON.stringify(err));
+      });
+  };
 
   async requestReadSmsPermission() {
     try {
@@ -210,7 +227,7 @@ export default class ValidateScreen extends React.Component {
                   Enter the code
                 </Text>
                 <Text style={{fontSize: 16}}>
-                  Sent to: {this.props.navigation.getParam('phone', 'default')}
+                  Sent to: {this.props.navigation.getParam('user', 'default').user.username}
                 </Text>
               </View>
 
