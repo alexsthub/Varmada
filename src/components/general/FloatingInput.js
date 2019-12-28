@@ -36,7 +36,6 @@ export default class FloatingInput extends React.Component {
   }
 
   componentDidUpdate(prevProps, prevState) {
-    console.log(prevProps);
     if (!prevState.active && this.state.active) {
       this.focusAnimation();
     } else if (prevState.active && !this.state.active) {

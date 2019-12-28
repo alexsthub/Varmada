@@ -1,6 +1,6 @@
 {
 	"auth": {
-		"varmadaf5a91c54": {
+		"varmadacd6012bacd6012ba": {
 			"service": "Cognito",
 			"providerPlugin": "awscloudformation",
 			"dependsOn": []

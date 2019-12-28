@@ -1,8 +1,8 @@
 {
-    "identityPoolName": "varmadaf5a91c54_identitypool_f5a91c54",
+    "identityPoolName": "varmada4a0bc377_identitypool_4a0bc377",
     "allowUnauthenticatedIdentities": false,
-    "resourceNameTruncated": "varmadf5a91c54",
-    "userPoolName": "varmadaf5a91c54_userpool_f5a91c54",
+    "resourceNameTruncated": "varmad4a0bc377",
+    "userPoolName": "varmada4a0bc377_userpool_4a0bc377",
     "autoVerifiedAttributes": [
         "email"
     ],
@@ -28,9 +28,9 @@
     "userpoolClientReadAttributes": [
         "email"
     ],
-    "userpoolClientLambdaRole": "varmadf5a91c54_userpoolclient_lambda_role",
+    "userpoolClientLambdaRole": "varmad4a0bc377_userpoolclient_lambda_role",
     "userpoolClientSetAttributes": false,
-    "resourceName": "varmadaf5a91c54",
+    "resourceName": "varmada4a0bc377",
     "authSelections": "identityPoolAndUserPool",
     "authRoleArn": {
         "Fn::GetAtt": [
@@ -44,7 +44,17 @@
             "Arn"
         ]
     },
-    "useDefault": "default",
+    "useDefault": "defaultSocial",
+    "hostedUI": true,
+    "usernameAttributes": [
+        "phone_number"
+    ],
+    "hostedUIDomainName": "varmada4a0bc377-4a0bc377",
+    "authProvidersUserPool": [
+        "Google"
+    ],
+    "hostedUIProviderMeta": "[{\"ProviderName\":\"Google\",\"authorize_scopes\":\"openid email profile\",\"AttributeMapping\":{\"email\":\"email\",\"username\":\"sub\"}}]",
+    "oAuthMetadata": "{\"AllowedOAuthFlows\":[\"code\"],\"AllowedOAuthScopes\":[\"phone\",\"email\",\"openid\",\"profile\",\"aws.cognito.signin.user.admin\"],\"CallbackURLs\":[\"http://localhost.com/signin/\"],\"LogoutURLs\":[\"http://localhost.com/signout/\"]}",
     "userPoolGroupList": [],
     "dependsOn": []
 }

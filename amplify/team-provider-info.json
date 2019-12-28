@@ -13,7 +13,9 @@
         },
         "categories": {
             "auth": {
-                "varmadaf5a91c54": {}
+                "varmadacd6012bacd6012ba": {
+                    "googleClientId": "986171639393-6iidvl3i49eqijjn6rj9imkhokeq3dbj.apps.googleusercontent.com"
+                }
             }
         }
     }

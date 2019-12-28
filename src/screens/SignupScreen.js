@@ -6,7 +6,9 @@ import {
   ScrollView,
   TouchableOpacity,
 } from 'react-native';
-import {LoginStyles} from '../constants/styles';
+import {Auth} from 'aws-amplify';
+
+import styles from '../constants/styles/loginStyles';
 
 import FloatingInput from '../components/general/FloatingInput';
 import CustomButton from '../components/general/CustomButton';
@@ -49,24 +51,39 @@ export default class SignupScreen extends React.Component {
     this.props.navigation.navigate('LoginScreen');
   };
 
-  // TODO: Try to sign up and assign errors here
   handleSignup = () => {
-    this.props.navigation.navigate('ValidateScreen', {phone: this.state.phone});
+    const phoneNumber = '+1' + this.state.phone.replace(/[(\-) ]/g, '')
+    Auth.signUp({
+      username: phoneNumber,
+      password: this.state.password,
+      attributes: {
+        phone_number: phoneNumber,
+        name: this.state.firstName,
+        family_name: this.state.lastName
+      }
+    })
+    .then((user) => {
+      console.log(user);
+      this.props.navigation.navigate('ValidateScreen', {user: user});
+    })
+    .catch((error) => {
+      console.log(error);
+    })
   };
 
   render() {
     return (
       <ImageBackground
         source={require('../assets/loginGradient.jpg')}
-        style={LoginStyles.background}>
+        style={styles.background}>
         <ScrollView style={{flex: 1}}>
-          <View style={LoginStyles.container}>
+          <View style={styles.container}>
             <Header
               headerText={'Create Account'}
               subHeaderText={'Join the community'}
             />
 
-            <View style={LoginStyles.inputDivider}></View>
+            <View style={styles.inputDivider}></View>
 
             <FloatingInput
               ref={r => (this.firstName = r)}
@@ -75,10 +92,10 @@ export default class SignupScreen extends React.Component {
               labelColorBlur={'#FFFFFF'}
               onChangeText={text => this.setState({firstName: text})}
               onSubmitEditing={() => this.lastName.getInnerRef().focus()}
-              error={'*This textfield is fucking empty'}
+              // error={'*This textfield is fucking empty'}
             />
 
-            <View style={LoginStyles.inputDivider}></View>
+            <View style={styles.inputDivider}></View>
 
             <FloatingInput
               ref={r => (this.lastName = r)}
@@ -89,7 +106,7 @@ export default class SignupScreen extends React.Component {
               onSubmitEditing={() => this.phone.getInnerRef().focus()}
             />
 
-            <View style={LoginStyles.inputDivider}></View>
+            <View style={styles.inputDivider}></View>
 
             <FloatingInput
               ref={r => (this.phone = r)}
@@ -102,7 +119,7 @@ export default class SignupScreen extends React.Component {
               onSubmitEditing={() => this.password.getInnerRef().focus()}
             />
 
-            <View style={LoginStyles.inputDivider}></View>
+            <View style={styles.inputDivider}></View>
 
             <FloatingInput
               ref={r => (this.password = r)}
@@ -113,20 +130,20 @@ export default class SignupScreen extends React.Component {
               onSubmitEditing={this.handleSignup}
             />
 
-            <View style={LoginStyles.inputDivider}></View>
+            <View style={styles.inputDivider}></View>
 
-            <View style={LoginStyles.noticeContainer}>
+            <View style={styles.noticeContainer}>
               <Text>By clicking Sign Up, you agree to Varmada's </Text>
               <TouchableOpacity>
-                <Text style={LoginStyles.highlightText}>Terms of Service</Text>
+                <Text style={styles.highlightText}>Terms of Service</Text>
               </TouchableOpacity>
               <Text> and acknowledge Varmada's </Text>
               <TouchableOpacity>
-                <Text style={LoginStyles.highlightText}>Privacy Policy</Text>
+                <Text style={styles.highlightText}>Privacy Policy</Text>
               </TouchableOpacity>
             </View>
 
-            <View style={LoginStyles.inputDivider}></View>
+            <View style={styles.inputDivider}></View>
 
             <CustomButton
               text={'Sign Up'}
@@ -135,7 +152,7 @@ export default class SignupScreen extends React.Component {
               buttonStyle={{elevation: 10}}
             />
 
-            <View style={LoginStyles.inputDivider}></View>
+            <View style={styles.inputDivider}></View>
 
             {/* TODO: This needs to be fixed at the bottom of scrollview. */}
             <View
