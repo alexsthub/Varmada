@@ -20,6 +20,10 @@ import Header from '../components/general/Header';
 import CustomButton from '../components/general/CustomButton';
 
 // TODO: Send sms permissions to signup part?
+// TODO: Handle manual confirmation
+// TODO: Handle errors?
+// TODO: Maybe just set the user to state. don't need to access from navigation props.
+
 // TODO: Can probably get rid of the editable thing if it is wrapped in touchable without feedback? Fix it?
 export default class ValidateScreen extends React.Component {
   number_cells = 6;
@@ -66,13 +70,11 @@ export default class ValidateScreen extends React.Component {
 
   handleVerification = (username, verificationCode) => {
     Auth.confirmSignUp(username, verificationCode)
-      .then(data => {
-        console.log('verified');
-        // Data just says success
-        console.log(data);
+      .then(() => {
+        this.props.navigation.navigate('MainDrawer');
       })
-      .catch(err => {
-        alert(JSON.stringify(err));
+      .catch(error => {
+        console.log(error);
       });
   };
 
@@ -178,7 +180,11 @@ export default class ValidateScreen extends React.Component {
   };
 
   handleResend = () => {
-    console.log('Resend code!');
+    Auth.resendSignUp(this.props.navigation.getParam('user', 'default').user.username).then(() => {
+      console.log('code resent successfully');
+    }).catch(e => {
+      console.log(e);
+    });
   };
 
   closeModal = () => {

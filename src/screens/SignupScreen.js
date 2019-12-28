@@ -14,6 +14,9 @@ import FloatingInput from '../components/general/FloatingInput';
 import CustomButton from '../components/general/CustomButton';
 import Header from '../components/general/Header';
 
+// TODO: Handle errors
+// TODO: Implement my own error handling.
+
 // TODO: Go back to signin isn't actually at the bottom because of the goddamn scrollview.
 // TODO: Do a check if all textvalues are valid, otherwise show error above
 // TODO: Way to fix the laggy input change is to put an invisible textinput right on top and the main one will only show the value.
@@ -95,6 +98,7 @@ export default class SignupScreen extends React.Component {
               labelColorBlur={'#FFFFFF'}
               onChangeText={text => this.setState({firstName: text})}
               onSubmitEditing={() => this.lastName.getInnerRef().focus()}
+              returnKeyType={'next'}
               // error={'*This textfield is fucking empty'}
             />
 
@@ -107,6 +111,7 @@ export default class SignupScreen extends React.Component {
               labelColorBlur={'#FFFFFF'}
               onChangeText={text => this.setState({lastName: text})}
               onSubmitEditing={() => this.phone.getInnerRef().focus()}
+              returnKeyType={'next'}
             />
 
             <View style={styles.inputDivider}></View>
@@ -120,6 +125,7 @@ export default class SignupScreen extends React.Component {
               labelColorBlur={'#FFFFFF'}
               onChangeText={this.onChangePhone}
               onSubmitEditing={() => this.password.getInnerRef().focus()}
+              returnKeyType={'next'}
             />
 
             <View style={styles.inputDivider}></View>
