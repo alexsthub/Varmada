@@ -6,11 +6,8 @@ import {
   ScrollView,
   TouchableOpacity,
 } from 'react-native';
-<<<<<<< HEAD
 import {Auth} from 'aws-amplify';
 
-=======
->>>>>>> master
 import styles from '../constants/styles/loginStyles';
 
 import FloatingInput from '../components/general/FloatingInput';
