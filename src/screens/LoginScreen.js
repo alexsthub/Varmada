@@ -95,7 +95,7 @@ export default class LoginScreen extends React.Component {
         style={styles.background}>
         <ScrollView
           showsVerticalScrollIndicator={false}
-          keyboardShouldPersistTaps={'never'}>
+          keyboardShouldPersistTaps={'handled'}>
           <View style={styles.container}>
 
             {logoContainer}
@@ -125,6 +125,8 @@ export default class LoginScreen extends React.Component {
               onChangeText={text => this.setState({password: text})}
               blurOnSubmit={false}
               icon={faLock}
+              showPasswordIcon={true}
+              secureText={true}
               onSubmitEditing={this.handleLogin}
             />
 

@@ -6,8 +6,11 @@ import {
   ScrollView,
   TouchableOpacity,
 } from 'react-native';
+<<<<<<< HEAD
 import {Auth} from 'aws-amplify';
 
+=======
+>>>>>>> master
 import styles from '../constants/styles/loginStyles';
 
 import FloatingInput from '../components/general/FloatingInput';
@@ -126,6 +129,7 @@ export default class SignupScreen extends React.Component {
               value={this.state.password}
               label={'Password'}
               labelColorBlur={'#FFFFFF'}
+              secureText={true}
               onChangeText={text => this.setState({password: text})}
               onSubmitEditing={this.handleSignup}
             />
@@ -154,7 +158,6 @@ export default class SignupScreen extends React.Component {
 
             <View style={styles.inputDivider}></View>
 
-            {/* TODO: This needs to be fixed at the bottom of scrollview. */}
             <View
               style={{
                 justifyContent: 'flex-end',
