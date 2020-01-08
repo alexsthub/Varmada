@@ -24,7 +24,13 @@ import Header from '../components/general/Header';
 export default class SignupScreen extends React.Component {
   constructor(props) {
     super(props);
-    this.state = {firstName: '', lastName: '', phone: '', password: '', errors:['', '', '', '']};
+    this.state = {
+      firstName: '',
+      lastName: '',
+      phone: '',
+      password: '',
+      errors: ['', '', '', ''],
+    };
   }
 
   onChangePhone = text => {
@@ -57,15 +63,15 @@ export default class SignupScreen extends React.Component {
   checkFieldErrors = () => {
     let errors = this.state.errors;
     if (this.state.firstName === '') {
-      errors[0] = 'Please enter your first name'
+      errors[0] = 'Please enter your first name';
     }
     if (this.state.lastName === '') {
       errors[1] = 'Please enter your last name';
     }
-  }
+  };
 
   handleSignup = () => {
-    const phoneNumber = '+1' + this.state.phone.replace(/[(\-) ]/g, '')
+    const phoneNumber = '+1' + this.state.phone.replace(/[(\-) ]/g, '');
     this.checkFieldErrors();
     Auth.signUp({
       username: phoneNumber,
@@ -73,16 +79,16 @@ export default class SignupScreen extends React.Component {
       attributes: {
         phone_number: phoneNumber,
         name: this.state.firstName,
-        family_name: this.state.lastName
-      }
+        family_name: this.state.lastName,
+      },
     })
-    .then((user) => {
-      console.log(user);
-      this.props.navigation.navigate('ValidateScreen', {user: user});
-    })
-    .catch((error) => {
-      console.log(error);
-    })
+      .then(user => {
+        console.log(user);
+        this.props.navigation.navigate('ValidateScreen', {user: user});
+      })
+      .catch(error => {
+        console.log(error);
+      });
   };
 
   render() {
@@ -90,7 +96,7 @@ export default class SignupScreen extends React.Component {
       <ImageBackground
         source={require('../assets/loginGradient.jpg')}
         style={styles.background}>
-        <ScrollView 
+        <ScrollView
           style={{flex: 1}}
           showsVerticalScrollIndicator={false}
           keyboardShouldPersistTaps={'handled'}>
@@ -110,6 +116,7 @@ export default class SignupScreen extends React.Component {
               onChangeText={text => this.setState({firstName: text})}
               onSubmitEditing={() => this.lastName.getInnerRef().focus()}
               returnKeyType={'next'}
+              blurOnSubmit={false}
               error={this.state.errors[0] !== '' ? this.state.errors[0] : null}
             />
 
@@ -123,6 +130,7 @@ export default class SignupScreen extends React.Component {
               onChangeText={text => this.setState({lastName: text})}
               onSubmitEditing={() => this.phone.getInnerRef().focus()}
               returnKeyType={'next'}
+              blurOnSubmit={false}
               error={this.state.errors[1] !== '' ? this.state.errors[1] : null}
             />
 
@@ -136,6 +144,7 @@ export default class SignupScreen extends React.Component {
               maxLength={14}
               labelColorBlur={'#FFFFFF'}
               onChangeText={this.onChangePhone}
+              blurOnSubmit={false}
               onSubmitEditing={() => this.password.getInnerRef().focus()}
               returnKeyType={'next'}
             />
@@ -150,6 +159,7 @@ export default class SignupScreen extends React.Component {
               secureText={true}
               showPasswordIcon={true}
               onChangeText={text => this.setState({password: text})}
+              blurOnSubmit={false}
               onSubmitEditing={this.handleSignup}
             />
 
