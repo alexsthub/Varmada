@@ -35,6 +35,7 @@ export default class ValidateScreen extends React.Component {
       username: '',
       showModal: false,
       error: {},
+      user: {}
     };
   }
 
@@ -46,21 +47,21 @@ export default class ValidateScreen extends React.Component {
     return editableArray;
   };
 
-  componentDidMount() {
-    if (Platform.OS === 'android') {
-      this.requestReadSmsPermission();
-      this.subscription = SmsListener.addListener(message => {
-        let verificationCodeRegex = /Your verification code is ([\d]{6})/;
-        if (verificationCodeRegex.test(message.body)) {
-          let verificationCode = message.body.match(verificationCodeRegex)[1];
-          const codes = verificationCode.split('');
-          this.setState({codes: codes}, () => {
-            this.handleVerification(this.props.navigation.getParam('user', 'default').user.username, verificationCode);
-          });
-        }
-      });
-    }
-  }
+  // componentDidMount() {
+  //   if (Platform.OS === 'android') {
+  //     this.requestReadSmsPermission();
+  //     this.subscription = SmsListener.addListener(message => {
+  //       let verificationCodeRegex = /Your verification code is ([\d]{6})/;
+  //       if (verificationCodeRegex.test(message.body)) {
+  //         let verificationCode = message.body.match(verificationCodeRegex)[1];
+  //         const codes = verificationCode.split('');
+  //         this.setState({codes: codes}, () => {
+  //           this.handleVerification(this.props.navigation.getParam('user', 'default').user.username, verificationCode);
+  //         });
+  //       }
+  //     });
+  //   }
+  // }
 
   componentWillUnmount() {
     if (this.subscription) {
@@ -175,8 +176,12 @@ export default class ValidateScreen extends React.Component {
   };
 
   completeSignup = () => {
+    // TODO: Get the code;
+    const verificationCode = this.state.codes.join('');
+    const phone = this.state.attributes.phone;
+    this.handleVerification(phone, verificationCode);
     this.setState({showModal: true});
-    console.log('Sign me up!');
+    
   };
 
   handleResend = () => {

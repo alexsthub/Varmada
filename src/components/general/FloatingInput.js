@@ -100,7 +100,7 @@ export default class FloatingInput extends React.Component {
       <View>
         {this.props.error ? (
           <View style={styles.error}>
-            <Text style={styles.errorText}>{this.props.error}</Text>
+            <Text style={styles.errorText}>*{this.props.error}</Text>
           </View>
         ) : null}
 

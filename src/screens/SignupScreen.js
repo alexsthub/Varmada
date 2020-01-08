@@ -15,7 +15,7 @@ import CustomButton from '../components/general/CustomButton';
 import Header from '../components/general/Header';
 
 // TODO: Handle errors
-// TODO: Implement my own error handling.
+// TODO: Implement my own error handling. (Start with first name and last name)
 
 // TODO: Go back to signin isn't actually at the bottom because of the goddamn scrollview.
 // TODO: Do a check if all textvalues are valid, otherwise show error above
@@ -24,7 +24,7 @@ import Header from '../components/general/Header';
 export default class SignupScreen extends React.Component {
   constructor(props) {
     super(props);
-    this.state = {firstName: '', lastName: '', phone: '', password: ''};
+    this.state = {firstName: '', lastName: '', phone: '', password: '', errors:['', '', '', '']};
   }
 
   onChangePhone = text => {
@@ -54,8 +54,19 @@ export default class SignupScreen extends React.Component {
     this.props.navigation.navigate('LoginScreen');
   };
 
+  checkFieldErrors = () => {
+    let errors = this.state.errors;
+    if (this.state.firstName === '') {
+      errors[0] = 'Please enter your first name'
+    }
+    if (this.state.lastName === '') {
+      errors[1] = 'Please enter your last name';
+    }
+  }
+
   handleSignup = () => {
     const phoneNumber = '+1' + this.state.phone.replace(/[(\-) ]/g, '')
+    this.checkFieldErrors();
     Auth.signUp({
       username: phoneNumber,
       password: this.state.password,
@@ -99,7 +110,7 @@ export default class SignupScreen extends React.Component {
               onChangeText={text => this.setState({firstName: text})}
               onSubmitEditing={() => this.lastName.getInnerRef().focus()}
               returnKeyType={'next'}
-              // error={'*This textfield is fucking empty'}
+              error={this.state.errors[0] !== '' ? this.state.errors[0] : null}
             />
 
             <View style={styles.inputDivider}></View>
@@ -112,6 +123,7 @@ export default class SignupScreen extends React.Component {
               onChangeText={text => this.setState({lastName: text})}
               onSubmitEditing={() => this.phone.getInnerRef().focus()}
               returnKeyType={'next'}
+              error={this.state.errors[1] !== '' ? this.state.errors[1] : null}
             />
 
             <View style={styles.inputDivider}></View>
