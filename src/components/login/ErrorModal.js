@@ -1,5 +1,11 @@
 import React from 'react';
-import {StyleSheet, View, Text, TouchableOpacity, Dimensions} from 'react-native';
+import {
+  StyleSheet,
+  View,
+  Text,
+  TouchableOpacity,
+  Dimensions,
+} from 'react-native';
 import Modal from 'react-native-modal';
 import PropTypes from 'prop-types';
 
@@ -35,18 +41,19 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     borderRadius: 20,
     borderWidth: 0.5,
-    width: Dimensions.get('window').width * .8,
+    width: Dimensions.get('window').width * 0.8,
   },
   modalTitle: {
     fontWeight: 'bold',
     fontSize: 24,
-    marginHorizontal: 5
+    marginHorizontal: 5,
+    marginTop: 10,
   },
   modalDescription: {
     fontSize: 18,
     textAlign: 'center',
     paddingVertical: 10,
-    marginHorizontal: 5
+    marginHorizontal: 5,
   },
   modalButton: {
     borderTopWidth: 0.5,
@@ -57,9 +64,9 @@ const styles = StyleSheet.create({
   },
   modalButtonText: {
     fontSize: 18,
-    fontWeight: 'bold'
-  }
-})
+    fontWeight: 'bold',
+  },
+});
 
 ErrorModal.propTypes = {
   showModal: PropTypes.bool,
@@ -70,8 +77,8 @@ ErrorModal.propTypes = {
   animationInTiming: PropTypes.number,
   animationOutTiming: PropTypes.number,
   backgdropOpacity: PropTypes.number,
-  closeModal: PropTypes.func
-}
+  closeModal: PropTypes.func,
+};
 
 ErrorModal.defaultProps = {
   showModal: false,
@@ -82,4 +89,4 @@ ErrorModal.defaultProps = {
   animationInTiming: 200,
   animationOutTiming: 200,
   backdropOpacity: 0.4,
-}
+};

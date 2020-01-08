@@ -13,6 +13,7 @@ import styles from '../constants/styles/loginStyles';
 
 import {Auth} from 'aws-amplify';
 import SmsListener from 'react-native-android-sms-listener';
+import {isEmpty} from 'lodash';
 
 import DigitInput from '../components/login/DigitInput';
 import ErrorModal from '../components/login/ErrorModal';
@@ -20,8 +21,6 @@ import Header from '../components/general/Header';
 import CustomButton from '../components/general/CustomButton';
 
 // TODO: Send sms permissions to signup part?
-// TODO: Handle manual confirmation
-// TODO: Handle errors?
 // TODO: Maybe just set the user to state. don't need to access from navigation props.
 
 // TODO: Can probably get rid of the editable thing if it is wrapped in touchable without feedback? Fix it?
@@ -72,14 +71,29 @@ export default class ValidateScreen extends React.Component {
     }
   }
 
+  // TODO: Custom error handling to see if code is long enough
   handleVerification = (username, verificationCode) => {
-    Auth.confirmSignUp(username, verificationCode)
-      .then(() => {
-        this.props.navigation.navigate('MainDrawer');
-      })
-      .catch(error => {
-        console.log(error);
-      });
+    if (verificationCode.length < this.number_cells) {
+      const customError = {
+        title: 'Invalid Code Length',
+        message: `Verification code needs to be ${this.number_cells} digits. Please try again.`,
+      };
+      this.setState({error: customError});
+    } else {
+      Auth.confirmSignUp(username, verificationCode)
+        .then(() => {
+          this.props.navigation.navigate('MainDrawer');
+        })
+        .catch(error => {
+          if (error.code === 'CodeMismatchException') {
+            const customError = {
+              title: 'Invalid Code',
+              message: error.message,
+            };
+            this.setState({error: customError});
+          }
+        });
+    }
   };
 
   async requestReadSmsPermission() {
@@ -180,10 +194,9 @@ export default class ValidateScreen extends React.Component {
 
   completeSignup = () => {
     const verificationCode = this.state.codes.join('');
-    const phone = this.state.attributes.phone;
+    const phone = this.props.navigation.getParam('user', 'default').user
+      .username;
     this.handleVerification(phone, verificationCode);
-    // TODO: If error, show modal with correct info
-    // this.setState({showModal: true});
   };
 
   handleResend = () => {
@@ -199,7 +212,7 @@ export default class ValidateScreen extends React.Component {
   };
 
   closeModal = () => {
-    this.setState({showModal: false});
+    this.setState({error: {}});
   };
 
   render() {
@@ -224,9 +237,9 @@ export default class ValidateScreen extends React.Component {
         source={require('../assets/loginGradient.jpg')}
         style={styles.background}>
         <ErrorModal
-          showModal={this.state.showModal}
-          title={'Wrong Code'}
-          description={'The 6 digit code you entered is incorrect. Try again'}
+          showModal={!isEmpty(this.state.error)}
+          title={this.state.error.title}
+          description={this.state.error.message}
           buttonText={'Ok'}
           closeModal={this.closeModal}
         />
