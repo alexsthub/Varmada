@@ -6,11 +6,16 @@ import {
   ScrollView,
   TouchableOpacity,
 } from 'react-native';
+import {Auth} from 'aws-amplify';
+
 import styles from '../constants/styles/loginStyles';
 
 import FloatingInput from '../components/general/FloatingInput';
 import CustomButton from '../components/general/CustomButton';
 import Header from '../components/general/Header';
+
+// TODO: Handle errors
+// TODO: Implement my own error handling. (Start with first name and last name)
 
 // TODO: Go back to signin isn't actually at the bottom because of the goddamn scrollview.
 // TODO: Do a check if all textvalues are valid, otherwise show error above
@@ -19,7 +24,7 @@ import Header from '../components/general/Header';
 export default class SignupScreen extends React.Component {
   constructor(props) {
     super(props);
-    this.state = {firstName: '', lastName: '', phone: '', password: ''};
+    this.state = {firstName: '', lastName: '', phone: '', password: '', errors:['', '', '', '']};
   }
 
   onChangePhone = text => {
@@ -49,9 +54,35 @@ export default class SignupScreen extends React.Component {
     this.props.navigation.navigate('LoginScreen');
   };
 
-  // TODO: Try to sign up and assign errors here
+  checkFieldErrors = () => {
+    let errors = this.state.errors;
+    if (this.state.firstName === '') {
+      errors[0] = 'Please enter your first name'
+    }
+    if (this.state.lastName === '') {
+      errors[1] = 'Please enter your last name';
+    }
+  }
+
   handleSignup = () => {
-    this.props.navigation.navigate('ValidateScreen', {phone: this.state.phone});
+    const phoneNumber = '+1' + this.state.phone.replace(/[(\-) ]/g, '')
+    this.checkFieldErrors();
+    Auth.signUp({
+      username: phoneNumber,
+      password: this.state.password,
+      attributes: {
+        phone_number: phoneNumber,
+        name: this.state.firstName,
+        family_name: this.state.lastName
+      }
+    })
+    .then((user) => {
+      console.log(user);
+      this.props.navigation.navigate('ValidateScreen', {user: user});
+    })
+    .catch((error) => {
+      console.log(error);
+    })
   };
 
   render() {
@@ -59,7 +90,10 @@ export default class SignupScreen extends React.Component {
       <ImageBackground
         source={require('../assets/loginGradient.jpg')}
         style={styles.background}>
-        <ScrollView style={{flex: 1}}>
+        <ScrollView 
+          style={{flex: 1}}
+          showsVerticalScrollIndicator={false}
+          keyboardShouldPersistTaps={'handled'}>
           <View style={styles.container}>
             <Header
               headerText={'Create Account'}
@@ -75,7 +109,8 @@ export default class SignupScreen extends React.Component {
               labelColorBlur={'#FFFFFF'}
               onChangeText={text => this.setState({firstName: text})}
               onSubmitEditing={() => this.lastName.getInnerRef().focus()}
-              error={'*This textfield is fucking empty'}
+              returnKeyType={'next'}
+              error={this.state.errors[0] !== '' ? this.state.errors[0] : null}
             />
 
             <View style={styles.inputDivider}></View>
@@ -87,6 +122,8 @@ export default class SignupScreen extends React.Component {
               labelColorBlur={'#FFFFFF'}
               onChangeText={text => this.setState({lastName: text})}
               onSubmitEditing={() => this.phone.getInnerRef().focus()}
+              returnKeyType={'next'}
+              error={this.state.errors[1] !== '' ? this.state.errors[1] : null}
             />
 
             <View style={styles.inputDivider}></View>
@@ -100,6 +137,7 @@ export default class SignupScreen extends React.Component {
               labelColorBlur={'#FFFFFF'}
               onChangeText={this.onChangePhone}
               onSubmitEditing={() => this.password.getInnerRef().focus()}
+              returnKeyType={'next'}
             />
 
             <View style={styles.inputDivider}></View>
@@ -110,6 +148,7 @@ export default class SignupScreen extends React.Component {
               label={'Password'}
               labelColorBlur={'#FFFFFF'}
               secureText={true}
+              showPasswordIcon={true}
               onChangeText={text => this.setState({password: text})}
               onSubmitEditing={this.handleSignup}
             />

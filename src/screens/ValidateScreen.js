@@ -11,12 +11,18 @@ import {
 } from 'react-native';
 import styles from '../constants/styles/loginStyles';
 
+import {Auth} from 'aws-amplify';
 import SmsListener from 'react-native-android-sms-listener';
 
 import DigitInput from '../components/login/DigitInput';
 import ErrorModal from '../components/login/ErrorModal';
 import Header from '../components/general/Header';
 import CustomButton from '../components/general/CustomButton';
+
+// TODO: Send sms permissions to signup part?
+// TODO: Handle manual confirmation
+// TODO: Handle errors?
+// TODO: Maybe just set the user to state. don't need to access from navigation props.
 
 // TODO: Can probably get rid of the editable thing if it is wrapped in touchable without feedback? Fix it?
 export default class ValidateScreen extends React.Component {
@@ -29,6 +35,7 @@ export default class ValidateScreen extends React.Component {
       username: '',
       showModal: false,
       error: {},
+      user: {}
     };
   }
 
@@ -40,24 +47,37 @@ export default class ValidateScreen extends React.Component {
     return editableArray;
   };
 
-  componentDidMount() {
-    if (Platform.OS === 'android') {
-      this.requestReadSmsPermission();
-      this.subscription = SmsListener.addListener(message => {
-        console.info(message);
-        // TODO: Parse the message and set the state, then call on the submit function
-        this.setState({codes: ['1', '2', '3', '4', '5', '6']}, () =>
-          console.log('call function here'),
-        );
-      });
-    }
-  }
+  // componentDidMount() {
+  //   if (Platform.OS === 'android') {
+  //     this.requestReadSmsPermission();
+  //     this.subscription = SmsListener.addListener(message => {
+  //       let verificationCodeRegex = /Your verification code is ([\d]{6})/;
+  //       if (verificationCodeRegex.test(message.body)) {
+  //         let verificationCode = message.body.match(verificationCodeRegex)[1];
+  //         const codes = verificationCode.split('');
+  //         this.setState({codes: codes}, () => {
+  //           this.handleVerification(this.props.navigation.getParam('user', 'default').user.username, verificationCode);
+  //         });
+  //       }
+  //     });
+  //   }
+  // }
 
   componentWillUnmount() {
     if (this.subscription) {
       this.subscription.remove();
     }
   }
+
+  handleVerification = (username, verificationCode) => {
+    Auth.confirmSignUp(username, verificationCode)
+      .then(() => {
+        this.props.navigation.navigate('MainDrawer');
+      })
+      .catch(error => {
+        console.log(error);
+      });
+  };
 
   async requestReadSmsPermission() {
     try {
@@ -156,12 +176,20 @@ export default class ValidateScreen extends React.Component {
   };
 
   completeSignup = () => {
+    // TODO: Get the code;
+    const verificationCode = this.state.codes.join('');
+    const phone = this.state.attributes.phone;
+    this.handleVerification(phone, verificationCode);
     this.setState({showModal: true});
-    console.log('Sign me up!');
+    
   };
 
   handleResend = () => {
-    console.log('Resend code!');
+    Auth.resendSignUp(this.props.navigation.getParam('user', 'default').user.username).then(() => {
+      console.log('code resent successfully');
+    }).catch(e => {
+      console.log(e);
+    });
   };
 
   closeModal = () => {
@@ -210,7 +238,7 @@ export default class ValidateScreen extends React.Component {
                   Enter the code
                 </Text>
                 <Text style={{fontSize: 16}}>
-                  Sent to: {this.props.navigation.getParam('phone', 'default')}
+                  Sent to: {this.props.navigation.getParam('user', 'default').user.username}
                 </Text>
               </View>
 
