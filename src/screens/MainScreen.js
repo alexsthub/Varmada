@@ -13,7 +13,7 @@ export default class MainScreen extends React.Component {
     this.props.navigation.navigate('LoginScreen');
   };
   handlePickup = () => {
-    this.props.navigation.navigate('PickupScreen');
+    this.props.navigation.navigate('Request');
   };
 
   //how do i space this text apart.
@@ -26,7 +26,8 @@ export default class MainScreen extends React.Component {
           <Text
             style={{
               textAlign: 'center',
-              fontSize: 20, marginTop: 30
+              fontSize: 20,
+              marginTop: 30,
             }}>
             You don't have any pickups scheduled right now
           </Text>

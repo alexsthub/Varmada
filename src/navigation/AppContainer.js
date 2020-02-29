@@ -23,13 +23,15 @@ import EditFieldScreen from '../screens/navscreens/EditFieldScreen';
 import NotificationSettingsScreen from '../screens/NotificationSettingsScreen';
 import SecuritySettingsScreen from '../screens/SecuritySettingsScreen';
 
+// Request Screens
+import RequestTitle from '../screens/request/RequestTitle';
 
 const WIDTH = Dimensions.get('window').width;
 
 const DrawerConfig = {
   drawerWidth: WIDTH * 0.5,
-  contentComponent: (props) => {
-    return <LeftNav {...props}/>;
+  contentComponent: props => {
+    return <LeftNav {...props} />;
   },
 };
 
@@ -39,21 +41,28 @@ const MainDrawer = createDrawerNavigator(
       screen: MainScreen,
     },
     Pickups: {
-      screen: MyPickupScreen
+      screen: MyPickupScreen,
     },
     MyAddresses: {
-      screen: MyAddressScreen
+      screen: MyAddressScreen,
     },
     PaymentMethods: {
-      screen: PaymentMethodScreen
+      screen: PaymentMethodScreen,
     },
     AccountSettings: {
       screen: SettingsScreen,
-      navigationOptions: {}
+      navigationOptions: {},
     },
   },
   DrawerConfig,
 );
+
+const RequestNavigator = createStackNavigator({
+  Title: {
+    screen: RequestTitle,
+    navigationOptions: {headerTransparent: true},
+  },
+});
 
 const AppNavigator = createStackNavigator(
   {
@@ -79,27 +88,31 @@ const AppNavigator = createStackNavigator(
     },
     EditAccountScreen: {
       screen: EditAccountScreen,
-      navigationOptions: {title: 'Edit Profile'}
+      navigationOptions: {title: 'Edit Profile'},
     },
     EditFieldScreen: {
       screen: EditFieldScreen,
-      navigationOptions: {headerTransparent: true}
+      navigationOptions: {headerTransparent: true},
     },
     NotificationSettingsScreen: {
       screen: NotificationSettingsScreen,
-      navigationOptions: {title: 'Notification Settings'}
+      navigationOptions: {title: 'Notification Settings'},
     },
     SecuritySettingsScreen: {
       screen: SecuritySettingsScreen,
-      navigationOptions: {title: 'Security'}
+      navigationOptions: {title: 'Security'},
     },
     PaymentAddScreen: {
       screen: PaymentAddScreen,
-      navigationOptions: {headerTransparent: true}
-    }
+      navigationOptions: {headerTransparent: true},
+    },
+    Request: {
+      screen: RequestNavigator,
+      navigationOptions: {headerTransparent: true},
+    },
   },
   {
-    initialRouteName: 'LoginScreen',
+    initialRouteName: 'MainDrawer',
   },
 );
 export default createAppContainer(AppNavigator);

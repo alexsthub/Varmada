@@ -20,7 +20,6 @@ export default class FloatingInput extends React.Component {
     this.state = {
       active: false,
       secureTextEntry: this.props.secureText,
-      fadeValue: new Animated.Value(0),
       labelSlideValue: new Animated.Value(150),
     };
   }
@@ -43,11 +42,6 @@ export default class FloatingInput extends React.Component {
 
   blurAnimation = () => {
     if (this.props.value.length === 0) {
-      Animated.timing(this.state.fadeValue, {
-        toValue: 0,
-        duration: 300,
-      }).start();
-
       Animated.timing(this.state.labelSlideValue, {
         toValue: 150,
         duration: 150,
@@ -56,11 +50,6 @@ export default class FloatingInput extends React.Component {
   };
 
   focusAnimation = () => {
-    Animated.timing(this.state.fadeValue, {
-      toValue: 150,
-      duration: 300,
-    }).start();
-
     Animated.timing(this.state.labelSlideValue, {
       toValue: 0,
       duration: 150,
@@ -82,15 +71,6 @@ export default class FloatingInput extends React.Component {
   };
 
   render() {
-    const interpolateColor = this.state.fadeValue.interpolate({
-      inputRange: [0, 150],
-      outputRange: [
-        this.props.rgbaBackgroundColorBlur,
-        this.props.rgbaBackgroundColorFocus,
-      ],
-    });
-    const animatedBackground = {backgroundColor: interpolateColor};
-
     const interpolateTop = this.state.labelSlideValue.interpolate({
       inputRange: [0, 150],
       outputRange: [0, 18],
@@ -107,10 +87,9 @@ export default class FloatingInput extends React.Component {
         <Animated.View
           style={[
             styles.field,
+            this.props.fieldStyle,
             this.props.error ? styles.errorField : null,
-            animatedBackground,
           ]}>
-
           {this.props.icon ? (
             <View style={{justifyContent: 'center', marginLeft: 10}}>
               <FontAwesomeIcon icon={this.props.icon} />
@@ -122,17 +101,26 @@ export default class FloatingInput extends React.Component {
               style={[
                 styles.label,
                 animatedTop,
-                {left: this.props.inputStyle && this.props.inputStyle.paddingHorizontal ? this.props.inputStyle.paddingHorizontal : styles.input.paddingHorizontal}
+                {
+                  left:
+                    this.props.inputStyle &&
+                    this.props.inputStyle.paddingHorizontal
+                      ? this.props.inputStyle.paddingHorizontal
+                      : styles.input.paddingHorizontal,
+                },
               ]}>
               <Text
-                style={{
-                  fontSize: !this.state.active
-                    ? this.props.labelSizeBlur
-                    : this.props.labelSizeFocus,
-                  color: !this.state.active
-                    ? this.props.labelColorBlur
-                    : this.props.labelColorFocus,
-                }}>
+                style={[
+                  {
+                    fontSize: !this.state.active
+                      ? this.props.labelSizeBlur
+                      : this.props.labelSizeFocus,
+                    color: !this.state.active
+                      ? this.props.labelColorBlur
+                      : this.props.labelColorFocus,
+                  },
+                  this.props.labelStyle,
+                ]}>
                 {this.props.label}
               </Text>
             </Animated.View>
@@ -177,7 +165,7 @@ const styles = StyleSheet.create({
   input: {
     flex: 8,
     paddingVertical: 0,
-    paddingHorizontal: 16,
+    paddingHorizontal: 0,
     height: 56,
     backgroundColor: 'transparent',
     fontSize: 16,
@@ -235,11 +223,9 @@ FloatingInput.defaultProps = {
   onChangeText: () => {},
   blurOnSubmit: false,
   labelSizeBlur: 16,
-  labelSizeFocus: 14,
+  labelSizeFocus: 16,
   labelColorBlur: '#000000',
   labelColorFocus: '#83a4d4',
-  rgbaBackgroundColorBlur: 'rgba(92,99,110,0.7)',
-  rgbaBackgroundColorFocus: 'rgba(255,255,255,1)',
   showPasswordIcon: false,
   secureText: false,
 };
