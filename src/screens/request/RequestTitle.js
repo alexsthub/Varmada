@@ -37,6 +37,12 @@ export default class RequestTitle extends React.Component {
     // TODO: Need to do this if they hit the back button as well...
   };
 
+  handleContinue = () => {
+    const {title} = this.state;
+    // TODO: Send to some database or some shit
+    this.props.navigation.navigate('Image');
+  };
+
   render() {
     return (
       <View style={{marginHorizontal: 40}}>
@@ -65,9 +71,7 @@ export default class RequestTitle extends React.Component {
           behavior={'position'}>
           <TouchableNativeFeedback
             background={TouchableNativeFeedback.Ripple('lightgray')}
-            onPress={() => {
-              console.log('HELLO');
-            }}>
+            onPress={this.handleContinue}>
             <View
               style={{
                 backgroundColor: '#F8B500',
