@@ -40,6 +40,7 @@ export default class RequestTitle extends React.Component {
   handleContinue = () => {
     const {title} = this.state;
     // TODO: Send to some database or some shit
+    // TODO: handle if it does not exist
     this.props.navigation.navigate('Image');
   };
 
