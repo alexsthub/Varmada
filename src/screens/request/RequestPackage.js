@@ -49,51 +49,82 @@ export default class RequestPackage extends React.Component {
     this.state = {};
   }
 
+  // TODO: Return this to the previous
+  handlePress = (e, index) => {
+    console.log(packageList[index]);
+  };
+
   render() {
     return (
-      <View style={{marginHorizontal: 40}}>
+      <View style={{marginHorizontal: 40, flex: 1}}>
         <Header
           headerText={'Request a pickup'}
           subHeaderText={'Select a container'}
         />
 
-        <View style={{marginTop: 40}} />
-        <Packaging title={'Bubble shit'} dimensions={'6" x 9"'} price={1.5} />
+        <View style={styles.listContainer}>
+          <FlatList
+            data={packageList}
+            renderItem={({item, index}) => (
+              <Packaging
+                title={item.name}
+                dimensions={item.dimensions}
+                price={item.price}
+                onPress={(e, index) => this.handlePress(e, index)}
+                index={index}
+              />
+            )}
+            ItemSeparatorComponent={() => <View style={{marginVertical: 8}} />}
+            keyExtractor={item => item.name}
+          />
+        </View>
       </View>
     );
   }
 }
 
+const styles = StyleSheet.create({
+  listContainer: {
+    marginBottom: 20,
+    marginTop: 20,
+    flex: 1,
+  },
+});
+
 class Packaging extends React.Component {
   render() {
     return (
-      <View
-        style={{
-          flexDirection: 'row',
-          paddingVertical: 10,
-          paddingHorizontal: 15,
-          backgroundColor: 'green',
-        }}>
-        <View>
-          <Image
-            style={{height: 100, width: 100}}
-            source={require('../../assets/packaging/mailer.png')}
-          />
-        </View>
-
+      <TouchableNativeFeedback
+        background={TouchableNativeFeedback.Ripple('lightgray')}
+        onPress={e => this.props.onPress(e, this.props.index)}>
         <View
           style={{
-            flexDirection: 'column',
-            justifyContent: 'center',
-            paddingLeft: 20,
+            flexDirection: 'row',
+            paddingVertical: 10,
+            paddingHorizontal: 15,
+            backgroundColor: 'green',
           }}>
-          <Text style={{fontWeight: 'bold', fontSize: 16}}>
-            {this.props.title}
-          </Text>
-          <Text>{this.props.dimensions}</Text>
-          <Text>{'$' + this.props.price.toString()}</Text>
+          <View>
+            <Image
+              style={{height: 100, width: 100}}
+              source={require('../../assets/packaging/mailer.png')}
+            />
+          </View>
+
+          <View
+            style={{
+              flexDirection: 'column',
+              justifyContent: 'center',
+              paddingLeft: 20,
+            }}>
+            <Text style={{fontWeight: 'bold', fontSize: 16}}>
+              {this.props.title}
+            </Text>
+            <Text>{this.props.dimensions}</Text>
+            <Text>{'$' + this.props.price.toString()}</Text>
+          </View>
         </View>
-      </View>
+      </TouchableNativeFeedback>
     );
   }
 }
