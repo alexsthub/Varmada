@@ -27,6 +27,7 @@ import SecuritySettingsScreen from '../screens/SecuritySettingsScreen';
 import RequestTitle from '../screens/request/RequestTitle';
 import RequestImage from '../screens/request/RequestImage';
 import RequestServices from '../screens/request/RequestServices';
+import RequestPackage from '../screens/request/RequestPackage';
 
 const WIDTH = Dimensions.get('window').width;
 
@@ -70,6 +71,10 @@ const RequestNavigator = createStackNavigator({
   },
   Services: {
     screen: RequestServices,
+    navigationOptions: {headerTransparent: true},
+  },
+  Package: {
+    screen: RequestPackage,
     navigationOptions: {headerTransparent: true},
   },
 });

@@ -21,7 +21,7 @@ export default class RequestServices extends React.Component {
   };
 
   handlePackaging = () => {
-    // Navigate to new page
+    this.props.navigation.navigate('Package');
   };
 
   handleContinue = () => {
