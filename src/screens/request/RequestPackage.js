@@ -79,6 +79,7 @@ export default class RequestPackage extends React.Component {
             )}
             ItemSeparatorComponent={() => <View style={{marginVertical: 8}} />}
             keyExtractor={item => item.name}
+            showsVerticalScrollIndicator={false}
           />
         </View>
       </View>

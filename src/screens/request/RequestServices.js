@@ -1,12 +1,5 @@
 import React from 'react';
-import {
-  StyleSheet,
-  View,
-  Text,
-  TouchableNativeFeedback,
-  Image,
-  KeyboardAvoidingView,
-} from 'react-native';
+import {StyleSheet, View, Text, TouchableNativeFeedback} from 'react-native';
 
 import Header from '../../components/general/Header';
 

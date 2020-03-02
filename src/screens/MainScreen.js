@@ -1,5 +1,5 @@
 import React from 'react';
-import {StyleSheet, View, Text, StatusBar} from 'react-native';
+import {StyleSheet, View, Text, Image} from 'react-native';
 import CustomButton from '../components/general/CustomButton';
 import LeftNavButton from '../components/leftNav/leftNavButton';
 
@@ -18,7 +18,6 @@ export default class MainScreen extends React.Component {
     this.props.navigation.navigate('Request');
   };
 
-  //how do i space this text apart.
   render() {
     return (
       <View style={{flex: 1}}>
@@ -33,6 +32,28 @@ export default class MainScreen extends React.Component {
             containerStyle={{marginTop: 20, paddingLeft: 20}}
             headerStyle={{fontSize: 18}}
           />
+          <View style={{marginHorizontal: 40, marginTop: 20}}>
+            <View style={{flexDirection: 'row'}}>
+              <Image style={{width: 80, height: 80, backgroundColor: 'gray'}} />
+              <View
+                style={{
+                  flexDirection: 'column',
+                  justifyContent: 'center',
+                  paddingLeft: 15,
+                }}>
+                <Text style={{fontWeight: 'bold', fontSize: 20}}>
+                  Laptop Charger
+                </Text>
+                <Text style={{fontSize: 16}}>
+                  Sent on January 13, 2020 to Fedex
+                </Text>
+                <Text
+                  style={{fontSize: 16, fontWeight: 'bold', color: 'darkgray'}}>
+                  In Progress
+                </Text>
+              </View>
+            </View>
+          </View>
           <View style={{flex: 1, flexDirection: 'column-reverse'}}>
             <CustomButton
               text={'Request a pickup'}
@@ -48,9 +69,6 @@ export default class MainScreen extends React.Component {
             />
           </View>
         </View>
-
-        {/* // TODO: Where do i put this... also what color? */}
-        <StatusBar backgroundColor="#F8B500" barStyle="light-content" />
       </View>
     );
   }
