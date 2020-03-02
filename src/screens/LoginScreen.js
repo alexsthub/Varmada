@@ -140,6 +140,7 @@ export default class LoginScreen extends React.Component {
               onChangeText={this.onChangePhone}
               blurOnSubmit={false}
               icon={faPhone}
+              returnKeyType={'next'}
               onSubmitEditing={() => this.password.getInnerRef().focus()}
             />
 

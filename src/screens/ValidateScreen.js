@@ -247,8 +247,8 @@ export default class ValidateScreen extends React.Component {
         <ScrollView keyboardShouldPersistTaps={'always'} style={{flex: 1}}>
           <View style={styles.container}>
             <Header
-              headerText={'Verify Account'}
-              subHeaderText={'One last step'}
+              headerText={'Sign Up'}
+              subHeaderText={'Verify your account'}
             />
 
             <View style={{marginTop: 20}}>

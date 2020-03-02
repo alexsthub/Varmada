@@ -93,16 +93,14 @@ export default class SignupScreen extends React.Component {
 
   render() {
     return (
-      <ImageBackground
-        source={require('../assets/loginGradient.jpg')}
-        style={styles.background}>
+      <View style={{flex: 1, backgroundColor: '#F8B500'}}>
         <ScrollView
           style={{flex: 1}}
           showsVerticalScrollIndicator={false}
           keyboardShouldPersistTaps={'handled'}>
           <View style={styles.container}>
             <Header
-              headerText={'Create Account'}
+              headerText={'Sign Up'}
               subHeaderText={'Join the community'}
             />
 
@@ -112,7 +110,10 @@ export default class SignupScreen extends React.Component {
               ref={r => (this.firstName = r)}
               value={this.state.firstName}
               label={'First Name'}
-              labelColorBlur={'#FFFFFF'}
+              labelColorBlur={'#000000'}
+              labelColorFocus={'#000000'}
+              labelStyle={{fontWeight: 'bold'}}
+              fieldStyle={{borderBottomWidth: 1}}
               onChangeText={text => this.setState({firstName: text})}
               onSubmitEditing={() => this.lastName.getInnerRef().focus()}
               returnKeyType={'next'}
@@ -126,7 +127,10 @@ export default class SignupScreen extends React.Component {
               ref={r => (this.lastName = r)}
               value={this.state.lastName}
               label={'Last Name'}
-              labelColorBlur={'#FFFFFF'}
+              labelColorBlur={'#000000'}
+              labelColorFocus={'#000000'}
+              labelStyle={{fontWeight: 'bold'}}
+              fieldStyle={{borderBottomWidth: 1}}
               onChangeText={text => this.setState({lastName: text})}
               onSubmitEditing={() => this.phone.getInnerRef().focus()}
               returnKeyType={'next'}
@@ -142,7 +146,10 @@ export default class SignupScreen extends React.Component {
               label={'Phone Number'}
               keyboardType={'numeric'}
               maxLength={14}
-              labelColorBlur={'#FFFFFF'}
+              labelColorBlur={'#000000'}
+              labelColorFocus={'#000000'}
+              labelStyle={{fontWeight: 'bold'}}
+              fieldStyle={{borderBottomWidth: 1}}
               onChangeText={this.onChangePhone}
               blurOnSubmit={false}
               onSubmitEditing={() => this.password.getInnerRef().focus()}
@@ -155,7 +162,10 @@ export default class SignupScreen extends React.Component {
               ref={r => (this.password = r)}
               value={this.state.password}
               label={'Password'}
-              labelColorBlur={'#FFFFFF'}
+              labelColorBlur={'#000000'}
+              labelColorFocus={'#000000'}
+              labelStyle={{fontWeight: 'bold'}}
+              fieldStyle={{borderBottomWidth: 1}}
               secureText={true}
               showPasswordIcon={true}
               onChangeText={text => this.setState({password: text})}
@@ -193,15 +203,17 @@ export default class SignupScreen extends React.Component {
                 marginBottom: 15,
               }}>
               <TouchableOpacity onPress={this.returnToSignin}>
-                <Text style={{color: 'white'}}>
-                  Already An Account?{' '}
-                  <Text style={{color: 'white'}}>Sign In</Text>
+                <Text style={{color: 'black', fontWeight: 'bold'}}>
+                  Already have an account?{' '}
+                  <Text style={{color: 'white', fontWeight: 'bold'}}>
+                    Sign In
+                  </Text>
                 </Text>
               </TouchableOpacity>
             </View>
           </View>
         </ScrollView>
-      </ImageBackground>
+      </View>
     );
   }
 }

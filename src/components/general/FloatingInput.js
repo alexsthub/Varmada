@@ -101,13 +101,6 @@ export default class FloatingInput extends React.Component {
               style={[
                 styles.label,
                 animatedTop,
-                {
-                  left:
-                    this.props.inputStyle &&
-                    this.props.inputStyle.paddingHorizontal
-                      ? this.props.inputStyle.paddingHorizontal
-                      : styles.input.paddingHorizontal,
-                },
                 {left: this.props.icon ? 10 : 0},
               ]}>
               <Text
@@ -131,7 +124,7 @@ export default class FloatingInput extends React.Component {
               style={[
                 styles.input,
                 this.state.active ? styles.activeInput : null,
-                this.props.inputStyle ? this.props.inputStyle : null,
+                this.props.icon ? styles.iconInput : null,
               ]}
               value={this.props.value}
               keyboardType={this.props.keyboardType}
@@ -176,6 +169,9 @@ const styles = StyleSheet.create({
   activeInput: {
     paddingTop: 24,
     paddingBottom: 8,
+  },
+  iconInput: {
+    paddingLeft: 5,
   },
   label: {
     position: 'absolute',
