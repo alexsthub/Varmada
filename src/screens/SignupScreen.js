@@ -181,7 +181,6 @@ export default class SignupScreen extends React.Component {
             <CustomButton
               text={'Sign Up'}
               onPress={this.handleSignup}
-              textStyle={{color: '#000000'}}
               buttonStyle={{elevation: 10}}
             />
 

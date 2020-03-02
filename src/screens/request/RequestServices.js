@@ -13,7 +13,19 @@ import Header from '../../components/general/Header';
 export default class RequestServices extends React.Component {
   constructor(props) {
     super(props);
-    this.state = {};
+    this.state = {packaging: null};
+  }
+
+  componentDidMount() {
+    console.log('MOUNTING');
+    const packaging = this.props.navigation.getParam('stuff', null);
+    if (packaging) {
+      this.setState({packaging: packaging});
+      console.log('PACKAGE?');
+      console.log(packaging);
+    } else {
+      console.log('Problem');
+    }
   }
 
   handleLabels = () => {

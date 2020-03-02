@@ -10,6 +10,7 @@ import {
 
 import Header from '../../components/general/Header';
 
+// TODO: Pull from a DB
 const packageList = [
   {
     name: 'Bubble Mailer - Size 0',
@@ -51,7 +52,9 @@ export default class RequestPackage extends React.Component {
 
   // TODO: Return this to the previous
   handlePress = (e, index) => {
-    console.log(packageList[index]);
+    const packaging = packageList[index];
+    console.log(packaging);
+    this.props.navigation.navigate('Services', {stuff: packaging});
   };
 
   render() {

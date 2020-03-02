@@ -91,7 +91,7 @@ export default class FloatingInput extends React.Component {
             this.props.error ? styles.errorField : null,
           ]}>
           {this.props.icon ? (
-            <View style={{justifyContent: 'center', marginLeft: 10}}>
+            <View style={{justifyContent: 'center'}}>
               <FontAwesomeIcon icon={this.props.icon} />
             </View>
           ) : null}
@@ -108,6 +108,7 @@ export default class FloatingInput extends React.Component {
                       ? this.props.inputStyle.paddingHorizontal
                       : styles.input.paddingHorizontal,
                 },
+                {left: this.props.icon ? 10 : 0},
               ]}>
               <Text
                 style={[

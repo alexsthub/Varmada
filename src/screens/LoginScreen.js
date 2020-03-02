@@ -78,13 +78,13 @@ export default class LoginScreen extends React.Component {
       username: '+1' + this.state.phone.replace(/[(\-) ]/g, ''),
       password: this.state.password,
     })
-    .then(user => {
-      console.log(user);
-      this.props.navigation.navigate('MainDrawer');
-    })
-    .catch(err => {
-      console.log(err);
-    });
+      .then(user => {
+        console.log(user);
+        this.props.navigation.navigate('MainDrawer');
+      })
+      .catch(err => {
+        console.log(err);
+      });
   };
 
   handleSignup = () => {
@@ -93,8 +93,10 @@ export default class LoginScreen extends React.Component {
 
   render() {
     const logoContainer = !this.state.keyboardOpen ? (
-      <View style={styles.logoContainer}>
-        <View style={styles.logo} />
+      <View style={{marginTop: 100, alignItems: 'center'}}>
+        <Text style={{fontSize: 60, fontWeight: 'bold', fontStyle: 'italic'}}>
+          Varmada
+        </Text>
       </View>
     ) : null;
 
@@ -106,7 +108,7 @@ export default class LoginScreen extends React.Component {
 
     // TODO: Google image is pretty messed up.
     const googleSignIn = !this.state.keyboardOpen ? (
-      <TouchableOpacity style={{alignItems: 'center'}}>
+      <TouchableOpacity style={{alignItems: 'center', marginTop: 20}}>
         <Image
           style={{height: 53, overflow: 'hidden'}}
           source={require('../assets/googleSigninButton.png')}
@@ -116,16 +118,14 @@ export default class LoginScreen extends React.Component {
     ) : null;
 
     return (
-      <ImageBackground
-        source={require('../assets/loginGradient.jpg')}
-        style={styles.background}>
+      <View style={{flex: 1, backgroundColor: '#F8B500'}}>
         <ScrollView
           showsVerticalScrollIndicator={false}
           keyboardShouldPersistTaps={'handled'}>
           <View style={styles.container}>
             {logoContainer}
 
-            <View style={{marginTop: 80}}></View>
+            <View style={{marginTop: 40}}></View>
 
             <FloatingInput
               ref={r => (this.phone = r)}
@@ -133,7 +133,10 @@ export default class LoginScreen extends React.Component {
               label={'Phone'}
               keyboardType={'numeric'}
               maxLength={14}
-              labelColorBlur={'#FFFFFF'}
+              labelColorBlur={'#000000'}
+              labelColorFocus={'#000000'}
+              labelStyle={{fontWeight: 'bold'}}
+              fieldStyle={{borderBottomWidth: 1}}
               onChangeText={this.onChangePhone}
               blurOnSubmit={false}
               icon={faPhone}
@@ -146,7 +149,10 @@ export default class LoginScreen extends React.Component {
               ref={r => (this.password = r)}
               value={this.state.password}
               label={'Password'}
-              labelColorBlur={'#FFFFFF'}
+              labelColorBlur={'#000000'}
+              labelColorFocus={'#000000'}
+              labelStyle={{fontWeight: 'bold'}}
+              fieldStyle={{borderBottomWidth: 1}}
               onChangeText={text => this.setState({password: text})}
               blurOnSubmit={false}
               icon={faLock}
@@ -154,34 +160,32 @@ export default class LoginScreen extends React.Component {
               secureText={true}
               onSubmitEditing={this.handleLogin}
             />
+            <TouchableOpacity style={{alignItems: 'flex-end'}}>
+              <Text style={styles.clickableText}>Forgot Password?</Text>
+            </TouchableOpacity>
 
             <View style={styles.inputDivider}></View>
 
             <CustomButton
               text={'Login'}
               onPress={this.handleLogin}
-              textStyle={{color: '#000000'}}
               buttonStyle={{elevation: 10}}
+              containerStyle={{width: '60%', alignSelf: 'center'}}
             />
 
-            <TouchableOpacity style={{alignItems: 'flex-end'}}>
-              <Text style={styles.clickableText}>Forgot Password?</Text>
-            </TouchableOpacity>
-
-            {orText}
             {googleSignIn}
           </View>
         </ScrollView>
 
         <View style={styles.signUpContainer}>
           <TouchableOpacity onPress={this.handleSignup}>
-            <Text style={{color: 'white'}}>
+            <Text style={{color: 'black', fontWeight: 'bold'}}>
               Don't Have An Account?{' '}
-              <Text style={{color: 'white'}}>Sign Up</Text>
+              <Text style={{color: 'white', fontWeight: 'bold'}}>Sign Up</Text>
             </Text>
           </TouchableOpacity>
         </View>
-      </ImageBackground>
+      </View>
     );
   }
 }
