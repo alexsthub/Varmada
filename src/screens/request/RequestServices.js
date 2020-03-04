@@ -30,7 +30,7 @@ export default class RequestServices extends React.Component {
   };
 
   handleContinue = () => {
-    // Navigate to new page
+    this.props.navigation.navigate('Address');
   };
 
   render() {
