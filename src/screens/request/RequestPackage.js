@@ -106,7 +106,8 @@ class Packaging extends React.Component {
             flexDirection: 'row',
             paddingVertical: 10,
             paddingHorizontal: 15,
-            backgroundColor: 'green',
+            elevation: 5,
+            backgroundColor: '#f7f7f7',
           }}>
           <View>
             <Image

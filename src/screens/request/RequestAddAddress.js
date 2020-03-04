@@ -5,7 +5,7 @@ import Header from '../../components/general/Header';
 
 import {GooglePlacesAutocomplete} from 'react-native-google-places-autocomplete';
 
-// TODO: Use googleplacesautocomplete AHSIDUHASIUHI
+// TODO: Maybe get rid of this screen and make it like uber...
 export default class RequestAddAddress extends React.Component {
   constructor(props) {
     super(props);
@@ -19,6 +19,7 @@ export default class RequestAddAddress extends React.Component {
           headerText={'Request a pickup'}
           subHeaderText={'Add an address'}
         />
+
         <GooglePlacesAutocomplete
           placeholder="Search"
           minLength={2}
@@ -33,7 +34,6 @@ export default class RequestAddAddress extends React.Component {
           getDefaultValue={() => ''}
           query={{
             // available options: https://developers.google.com/places/web-service/autocomplete
-            key: 'AIzaSyCSg5dzB2mcUNt2c0pnze6uTdWrpi5amFU',
             language: 'en',
             types: 'address',
           }}
