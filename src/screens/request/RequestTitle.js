@@ -6,6 +6,7 @@ import {
   TouchableNativeFeedback,
   BackHandler,
   KeyboardAvoidingView,
+  Animated,
 } from 'react-native';
 
 import Header from '../../components/general/Header';
@@ -14,7 +15,10 @@ import FloatingInput from '../../components/general/FloatingInput';
 export default class RequestTitle extends React.Component {
   constructor(props) {
     super(props);
-    this.state = {title: ''};
+    this.state = {
+      title: '',
+      fadeValue: new Animated.Value(0),
+    };
   }
 
   componentDidMount() {
@@ -44,7 +48,27 @@ export default class RequestTitle extends React.Component {
     this.props.navigation.navigate('Image');
   };
 
+  handleChangeText = text => {
+    if (text === '' && this.state.fadeValue._value === 150) {
+      Animated.timing(this.state.fadeValue, {
+        toValue: 0,
+        duration: 300,
+      }).start();
+    } else if (text !== '' && this.state.fadeValue._value === 0) {
+      Animated.timing(this.state.fadeValue, {
+        toValue: 150,
+        duration: 300,
+      }).start();
+    }
+    this.setState({title: text});
+  };
+
   render() {
+    const animatedBackground = this.state.fadeValue.interpolate({
+      inputRange: [0, 150],
+      outputRange: ['#FFFFFF', '#F8B500'],
+    });
+
     return (
       <View style={{marginHorizontal: 40}}>
         <Header
@@ -60,34 +84,33 @@ export default class RequestTitle extends React.Component {
             labelColorFocus={'#000000'}
             labelStyle={{fontWeight: 'bold'}}
             fieldStyle={{borderBottomWidth: 1}}
-            onChangeText={text => this.setState({title: text})}
-            onSubmitEditing={() => {}}
+            onChangeText={this.handleChangeText}
             blurOnSubmit={false}
           />
         </View>
 
-        {/* POSITION, height, padding */}
         <KeyboardAvoidingView
           style={{marginTop: 80, width: '60%', alignSelf: 'center'}}
           behavior={'position'}>
           <TouchableNativeFeedback
             background={TouchableNativeFeedback.Ripple('lightgray')}
-            onPress={this.handleContinue}>
-            <View
+            onPress={this.handleContinue}
+            disabled={this.state.title === '' ? true : false}>
+            <Animated.View
               style={{
-                backgroundColor: '#F8B500',
+                backgroundColor: animatedBackground,
+                borderWidth: this.state.title === '' ? 1 : null,
+                borderColor: this.state.title === '' ? '#F8B500' : null,
                 elevation: 10,
                 padding: 20,
                 justifyContent: 'center',
                 alignItems: 'center',
               }}>
               <Text style={{fontWeight: 'bold', fontSize: 16}}>Continue</Text>
-            </View>
+            </Animated.View>
           </TouchableNativeFeedback>
         </KeyboardAvoidingView>
       </View>
     );
   }
 }
-
-const styles = StyleSheet.create({});

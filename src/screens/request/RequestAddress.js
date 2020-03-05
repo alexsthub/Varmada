@@ -4,7 +4,7 @@ import {
   View,
   Text,
   TouchableNativeFeedback,
-  Picker,
+  FlatList,
 } from 'react-native';
 
 import Header from '../../components/general/Header';
@@ -13,11 +13,12 @@ import SwipeUpDown from 'react-native-swipe-up-down';
 import {GooglePlacesAutocomplete} from 'react-native-google-places-autocomplete';
 
 import FeatherIcon from 'react-native-vector-icons/Feather';
+import EntypoIcon from 'react-native-vector-icons/Entypo';
 
 // Test input
 const shit = [
   {
-    address: '1785 53rd Loop SE',
+    address: '1785 53rd Loop Southeast',
     city: 'Tumwater',
     countryCode: ' USA',
     name: '1785 53rd Loop Southeast',
@@ -38,25 +39,47 @@ const shit = [
 
 class Address extends React.Component {
   render() {
+    const addressObj = this.props.address;
+    const {address, city, name, state} = addressObj;
+    let subText;
+    if (name === address) {
+      subText = `${city},  ${state}`;
+    } else {
+      subText = `${address} ${city}, ${state}`;
+    }
+
     return (
-      <View
-        style={{
-          flexDirection: 'row',
-          alignItems: 'center',
-          paddingVertical: 10,
-        }}>
-        <View style={{paddingHorizontal: 10}}>
-          <Text>Icon</Text>
+      <TouchableNativeFeedback
+        background={TouchableNativeFeedback.Ripple('lightgray')}
+        onPress={e => this.props.onPress(e, this.props.index)}>
+        <View
+          style={{
+            flexDirection: 'row',
+            alignItems: 'center',
+            paddingVertical: 10,
+            elevation: 5,
+            backgroundColor: '#F7F7F7',
+          }}>
+          <View style={{paddingHorizontal: 10}}>
+            <EntypoIcon
+              style={{
+                color: '#000000',
+              }}
+              name={'location-pin'}
+              size={40}
+            />
+          </View>
+          <View style={{flexDirection: 'column', paddingLeft: 10}}>
+            <Text style={{fontWeight: 'bold'}}>{name}</Text>
+            <Text style={{color: 'gray'}}>{subText}</Text>
+          </View>
         </View>
-        <View style={{flexDirection: 'column', paddingLeft: 10}}>
-          <Text style={{fontWeight: 'bold'}}>Name</Text>
-          <Text style={{color: 'gray'}}>Details</Text>
-        </View>
-      </View>
+      </TouchableNativeFeedback>
     );
   }
 }
 
+// TODO: How the fuck do i get the swipe up and down to work now
 export default class RequestAddress extends React.Component {
   constructor(props) {
     super(props);
@@ -71,8 +94,10 @@ export default class RequestAddress extends React.Component {
     this.props.navigation.navigate('AddAddress');
   };
 
-  // TODO: Icon on the left, to the right. (Name, Address + city + state)
-  // TODO: If the name === address, (Name, city + state)
+  handlePress = (e, index) => {
+    console.log(this.state.addresses[index]);
+    this.props.navigation.navigate('Additional');
+  };
 
   render() {
     return (
@@ -83,7 +108,20 @@ export default class RequestAddress extends React.Component {
             subHeaderText={'Select a pickup address'}
           />
 
-          <Address />
+          <FlatList
+            data={this.state.addresses}
+            renderItem={({item, index}) => (
+              <Address
+                address={item}
+                index={index}
+                onPress={(e, index) => this.handlePress(e, index)}
+              />
+            )}
+            ItemSeparatorComponent={() => <View style={{marginVertical: 8}} />}
+            keyExtractor={item => item.placeID}
+            showsVerticalScrollIndicator={false}
+            contentContainerStyle={{marginTop: 20}}
+          />
 
           {/* <TouchableNativeFeedback
             background={TouchableNativeFeedback.Ripple('lightgray')}
@@ -114,7 +152,7 @@ export default class RequestAddress extends React.Component {
             borderTopRightRadius: 20,
             borderTopLeftRadius: 20,
           }}>
-          <View style={{marginHorizontal: 15, marginTop: 20}}>
+          <View style={{marginHorizontal: 20, marginTop: 20}}>
             <Text style={{fontSize: 18, fontWeight: 'bold'}}>
               Need to add another address?
             </Text>

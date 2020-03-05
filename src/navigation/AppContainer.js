@@ -30,6 +30,8 @@ import RequestServices from '../screens/request/RequestServices';
 import RequestPackage from '../screens/request/RequestPackage';
 import RequestAddress from '../screens/request/RequestAddress';
 import RequestAddAddress from '../screens/request/RequestAddAddress';
+import RequestAdditional from '../screens/request/RequestAdditional';
+import RequestReview from '../screens/request/RequestReview';
 
 const WIDTH = Dimensions.get('window').width;
 
@@ -85,6 +87,14 @@ const RequestNavigator = createStackNavigator({
   },
   AddAddress: {
     screen: RequestAddAddress,
+    navigationOptions: {headerTransparent: true},
+  },
+  Additional: {
+    screen: RequestAdditional,
+    navigationOptions: {headerTransparent: true},
+  },
+  Review: {
+    screen: RequestReview,
     navigationOptions: {headerTransparent: true},
   },
 });
