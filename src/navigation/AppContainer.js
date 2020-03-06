@@ -8,7 +8,6 @@ import {createDrawerNavigator} from 'react-navigation-drawer';
 import LoginScreen from '../screens/LoginScreen';
 import SignupScreen from '../screens/SignupScreen';
 import ValidateScreen from '../screens/ValidateScreen';
-import PickupScreen from '../screens/PickupScreen';
 
 import MainScreen from '../screens/MainScreen';
 import LeftNav from '../components/leftNav/leftNav';
@@ -26,6 +25,7 @@ import SecuritySettingsScreen from '../screens/SecuritySettingsScreen';
 // Request Screens
 import RequestTitle from '../screens/request/RequestTitle';
 import RequestImage from '../screens/request/RequestImage';
+import SelectCarrierScreen from '../screens/request/SelectCarrierScreen';
 import RequestServices from '../screens/request/RequestServices';
 import RequestPackage from '../screens/request/RequestPackage';
 import RequestAddress from '../screens/request/RequestAddress';
@@ -72,6 +72,10 @@ const RequestNavigator = createStackNavigator({
   },
   Image: {
     screen: RequestImage,
+    navigationOptions: {headerTransparent: true},
+  },
+  Carrier: {
+    screen: SelectCarrierScreen,
     navigationOptions: {headerTransparent: true},
   },
   Services: {
@@ -122,10 +126,6 @@ const AppNavigator = createStackNavigator(
       screen: MainDrawer,
       navigationOptions: {header: null},
     },
-    PickupScreen: {
-      screen: PickupScreen,
-      navigationOptions: {headerTransparent: true},
-    },
     EditAccountScreen: {
       screen: EditAccountScreen,
       navigationOptions: {title: 'Edit Profile'},
@@ -156,7 +156,7 @@ const AppNavigator = createStackNavigator(
     },
   },
   {
-    initialRouteName: 'LoginScreen',
+    initialRouteName: 'MainDrawer',
   },
 );
 export default createAppContainer(AppNavigator);
