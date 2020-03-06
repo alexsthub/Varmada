@@ -8,7 +8,8 @@ import {createDrawerNavigator} from 'react-navigation-drawer';
 import LoginScreen from '../screens/LoginScreen';
 import SignupScreen from '../screens/SignupScreen';
 import ValidateScreen from '../screens/ValidateScreen';
-import PickupScreen from '../screens/PickupScreen';
+import SelectCarrierScreen from '../screens/SelectCarrierScreen';
+import DescribePackageScreen from '../screens/DescribePackageScreen';
 
 import MainScreen from '../screens/MainScreen';
 import LeftNav from '../components/leftNav/leftNav';
@@ -73,8 +74,12 @@ const AppNavigator = createStackNavigator(
       screen: MainDrawer,
       navigationOptions: {header: null},
     },
-    PickupScreen: {
-      screen: PickupScreen,
+    SelectCarrierScreen: {
+      screen: SelectCarrierScreen,
+      navigationOptions: {headerTransparent: true},
+    },
+    DescribePackageScreen: {
+      screen: DescribePackageScreen,
       navigationOptions: {headerTransparent: true},
     },
     EditAccountScreen: {
