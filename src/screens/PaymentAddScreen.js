@@ -1,11 +1,5 @@
 import React from 'react';
-import {
-  StyleSheet,
-  View,
-  Text,
-  TouchableOpacity,
-  Platform,
-} from 'react-native';
+import {StyleSheet, View, Text, TouchableOpacity, Platform} from 'react-native';
 
 import Icon from 'react-native-vector-icons/FontAwesome';
 import FeatherIcon from 'react-native-vector-icons/Feather';
@@ -69,7 +63,10 @@ export default class PaymentAddScreen extends React.Component {
   };
 
   formatCardNumber = text => {
-    const v = text.replace(/\s+/g, '').replace(/[^0-9]/gi, '').replace(/\D/g,'');
+    const v = text
+      .replace(/\s+/g, '')
+      .replace(/[^0-9]/gi, '')
+      .replace(/\D/g, '');
     const matches = v.match(/\d{4,16}/g);
     const match = (matches && matches[0]) || '';
     const parts = [];
@@ -115,7 +112,6 @@ export default class PaymentAddScreen extends React.Component {
             <Icon name={'credit-card'} size={30} />
             <View style={styles.cardNumberInput}>
               <FloatingInput
-                inputStyle={{paddingHorizontal: 5}}
                 label={'Card Number'}
                 value={this.state.cardNumber}
                 labelColorBlur={'gray'}
@@ -133,7 +129,9 @@ export default class PaymentAddScreen extends React.Component {
 
             <TouchableOpacity
               style={styles.cardNumberRightIcon}
-              onPress={this.state.cardNumber === '' ? this.scanCard : this.clearText}>
+              onPress={
+                this.state.cardNumber === '' ? this.scanCard : this.clearText
+              }>
               {this.state.cardNumber === '' ? (
                 <FeatherIcon name={'camera'} size={20} />
               ) : (
@@ -146,7 +144,6 @@ export default class PaymentAddScreen extends React.Component {
           <View style={styles.rowContainer}>
             <View style={{flex: 2, borderBottomWidth: 1, borderColor: 'gray'}}>
               <FloatingInput
-                inputStyle={{paddingHorizontal: 5}}
                 ref={r => (this.exp = r)}
                 label={'MM/YY'}
                 labelColorBlur={'gray'}
@@ -166,7 +163,6 @@ export default class PaymentAddScreen extends React.Component {
 
             <View style={{flex: 2, borderBottomWidth: 1, borderColor: 'gray'}}>
               <FloatingInput
-                inputStyle={{paddingHorizontal: 5}}
                 ref={r => (this.cvv = r)}
                 label={'CVV'}
                 labelColorBlur={'gray'}
@@ -191,7 +187,6 @@ export default class PaymentAddScreen extends React.Component {
 
             <View style={{flex: 4, borderBottomWidth: 1, borderColor: 'gray'}}>
               <FloatingInput
-                inputStyle={{paddingHorizontal: 5}}
                 ref={r => (this.zip = r)}
                 label={'Zip Code'}
                 labelColorBlur={'gray'}
@@ -207,10 +202,10 @@ export default class PaymentAddScreen extends React.Component {
           </View>
 
           <View style={styles.rowContainer}>
-            <TouchableOpacity style={{borderBottomWidth: 1, borderColor: 'gray', flex: 1}}>
-              <FloatingInput 
-                inputStyle={{paddingHorizontal: 5}}
-                label={'Country'} 
+            <TouchableOpacity
+              style={{borderBottomWidth: 1, borderColor: 'gray', flex: 1}}>
+              <FloatingInput
+                label={'Country'}
                 labelColorBlur={'gray'}
                 rgbaBackgroundColorBlur={'rgba(255,255,255,0.6)'}
                 rgbaBackgroundColorFocus={'rgba(255,255,255,1)'}
@@ -256,7 +251,7 @@ const styles = StyleSheet.create({
   rowContainer: {
     flexDirection: 'row',
     alignItems: 'center',
-    paddingVertical: 5
+    paddingVertical: 5,
   },
   cardNumberInput: {
     borderBottomWidth: 1,
@@ -270,6 +265,6 @@ const styles = StyleSheet.create({
     right: 0,
     justifyContent: 'center',
     alignItems: 'center',
-    paddingLeft: 10
+    paddingLeft: 10,
   },
 });

@@ -8,23 +8,14 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     flexDirection: 'column',
-    marginHorizontal: 40,
-  },
-  logoContainer: {
-    alignItems: 'center',
-    marginTop: 40
-  },
-  logo: {
-    width: 120,
-    height: 120,
-    borderRadius: 60,
-    backgroundColor: 'gray'
+    marginHorizontal: 60,
   },
   inputDivider: {
-    marginVertical: 10,
+    marginVertical: 20,
   },
   clickableText: {
     color: 'white',
+    fontWeight: 'bold',
   },
   signUpContainer: {
     position: 'absolute',
@@ -36,7 +27,7 @@ const styles = StyleSheet.create({
   // SignUpScreen Unique
   noticeContainer: {
     flexDirection: 'row',
-    flexWrap: 'wrap'
+    flexWrap: 'wrap',
   },
   highlightText: {
     color: '#007bff',
