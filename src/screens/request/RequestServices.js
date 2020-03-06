@@ -10,15 +10,15 @@ export default class RequestServices extends React.Component {
   }
 
   componentDidMount() {
-    console.log('MOUNTING');
-    const packaging = this.props.navigation.getParam('stuff', null);
-    if (packaging) {
-      this.setState({packaging: packaging});
-      console.log('PACKAGE?');
-      console.log(packaging);
-    } else {
-      console.log('Problem');
-    }
+    // console.log('MOUNTING');
+    // const packaging = this.props.navigation.getParam('stuff', null);
+    // if (packaging) {
+    //   this.setState({packaging: packaging});
+    //   console.log('PACKAGE?');
+    //   console.log(packaging);
+    // } else {
+    //   console.log('Problem');
+    // }
   }
 
   handleLabels = () => {

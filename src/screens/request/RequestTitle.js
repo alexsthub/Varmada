@@ -12,6 +12,8 @@ import {
 import Header from '../../components/general/Header';
 import FloatingInput from '../../components/general/FloatingInput';
 
+// TODO: Maybe we can have a little progress bar at the top that shows the steps
+// TODO: Title --> Picture --> Carrier --> etc.
 export default class RequestTitle extends React.Component {
   constructor(props) {
     super(props);
@@ -43,6 +45,7 @@ export default class RequestTitle extends React.Component {
 
   handleContinue = () => {
     const title = this.state.title;
+    if (title === '') return;
     // TODO: Send to some database or some shit
     // TODO: handle if it does not exist
     this.props.navigation.navigate('Image');
@@ -54,7 +57,7 @@ export default class RequestTitle extends React.Component {
         toValue: 0,
         duration: 300,
       }).start();
-    } else if (text !== '' && this.state.fadeValue._value === 0) {
+    } else if (text !== '' && this.state.fadeValue._value < 150) {
       Animated.timing(this.state.fadeValue, {
         toValue: 150,
         duration: 300,
@@ -85,6 +88,7 @@ export default class RequestTitle extends React.Component {
             labelStyle={{fontWeight: 'bold'}}
             fieldStyle={{borderBottomWidth: 1}}
             onChangeText={this.handleChangeText}
+            onSubmitEditing={this.handleContinue}
             blurOnSubmit={false}
           />
         </View>

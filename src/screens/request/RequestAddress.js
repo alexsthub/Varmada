@@ -96,7 +96,7 @@ export default class RequestAddress extends React.Component {
 
   handlePress = (e, index) => {
     console.log(this.state.addresses[index]);
-    this.props.navigation.navigate('Additional');
+    this.props.navigation.navigate('Time');
   };
 
   render() {

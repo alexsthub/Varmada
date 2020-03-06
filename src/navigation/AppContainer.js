@@ -31,6 +31,7 @@ import RequestPackage from '../screens/request/RequestPackage';
 import RequestAddress from '../screens/request/RequestAddress';
 import RequestAddAddress from '../screens/request/RequestAddAddress';
 import RequestAdditional from '../screens/request/RequestAdditional';
+import RequestTime from '../screens/request/RequestTime';
 import RequestReview from '../screens/request/RequestReview';
 
 const WIDTH = Dimensions.get('window').width;
@@ -93,6 +94,10 @@ const RequestNavigator = createStackNavigator({
     screen: RequestAdditional,
     navigationOptions: {headerTransparent: true},
   },
+  Time: {
+    screen: RequestTime,
+    navigationOptions: {headerTransparent: true},
+  },
   Review: {
     screen: RequestReview,
     navigationOptions: {headerTransparent: true},
@@ -147,7 +152,7 @@ const AppNavigator = createStackNavigator(
     },
   },
   {
-    initialRouteName: 'MainDrawer',
+    initialRouteName: 'LoginScreen',
   },
 );
 export default createAppContainer(AppNavigator);
