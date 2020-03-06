@@ -44,7 +44,7 @@ export default class RequestImage extends React.Component {
     const {image} = this.state;
     // TODO: Send to some database or some shit
     // TODO: handle if it does not exist
-    this.props.navigation.navigate('Services');
+    this.props.navigation.navigate('Carrier');
   };
 
   render() {
