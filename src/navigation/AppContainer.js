@@ -156,7 +156,7 @@ const AppNavigator = createStackNavigator(
     },
   },
   {
-    initialRouteName: 'MainDrawer',
+    initialRouteName: 'Address',
   },
 );
 export default createAppContainer(AppNavigator);

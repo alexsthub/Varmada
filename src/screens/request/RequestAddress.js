@@ -5,12 +5,15 @@ import {
   Text,
   TouchableNativeFeedback,
   FlatList,
+  Animated,
+  Dimensions,
 } from 'react-native';
 
 import Header from '../../components/general/Header';
 
-import SwipeUpDown from 'react-native-swipe-up-down';
+import SlidingUpPanel from 'rn-sliding-up-panel';
 import {GooglePlacesAutocomplete} from 'react-native-google-places-autocomplete';
+import PropTypes from 'prop-types';
 
 import FeatherIcon from 'react-native-vector-icons/Feather';
 import EntypoIcon from 'react-native-vector-icons/Entypo';
@@ -79,11 +82,13 @@ class Address extends React.Component {
   }
 }
 
+const {height} = Dimensions.get('window');
 // TODO: How the fuck do i get the swipe up and down to work now
+// TODO: border radius is fucking broken
 export default class RequestAddress extends React.Component {
   constructor(props) {
     super(props);
-    this.state = {addresses: []};
+    this.state = {addresses: [], draggedValue: new Animated.Value(180)};
   }
 
   componentDidMount() {
@@ -95,14 +100,32 @@ export default class RequestAddress extends React.Component {
   };
 
   handlePress = (e, index) => {
-    console.log(this.state.addresses[index]);
+    // const selectedAddress = this.state.addresses[index];
+    // console.log(selectedAddress);
     this.props.navigation.navigate('Time');
   };
 
   render() {
+    const {top, bottom} = this.props.draggableRange;
+
+    const textTranslateY = this.state.draggedValue.interpolate({
+      inputRange: [bottom, top],
+      outputRange: [0, 8],
+      extrapolate: 'clamp',
+    });
+
+    const borderRadiusAnim = this.state.draggedValue.interpolate({
+      inputRange: [bottom, top],
+      outputRange: [20, 0],
+    });
+    const borderRadiusStyle = {
+      borderTopLeftRadius: borderRadiusAnim,
+      borderTopRightRadius: borderRadiusAnim,
+    };
+
     return (
-      <View style={{flex: 1}}>
-        <View style={{flex: 4, marginHorizontal: 40}}>
+      <View style={styles.container}>
+        <View style={{marginHorizontal: 40}}>
           <Header
             headerText={'Request a pickup'}
             subHeaderText={'Select a pickup address'}
@@ -122,127 +145,129 @@ export default class RequestAddress extends React.Component {
             showsVerticalScrollIndicator={false}
             contentContainerStyle={{marginTop: 20}}
           />
-
-          {/* <TouchableNativeFeedback
-            background={TouchableNativeFeedback.Ripple('lightgray')}
-            onPress={this.addAddress}>
-            <View
-              style={{
-                flexDirection: 'row',
-                justifyContent: 'space-between',
-                marginTop: 20,
-                backgroundColor: '#F7F7F7',
-                elevation: 10,
-                padding: 10,
-              }}>
-              <Text style={{fontWeight: 'bold'}}>Add a new address</Text>
-              <View style={{}}>
-                <Text>></Text>
-              </View>
-            </View>
-          </TouchableNativeFeedback> */}
         </View>
 
-        {/* would be the miniView */}
-        <View
-          style={{
-            flex: 1,
-            backgroundColor: '#F7F7F7',
-            elevation: 10,
-            borderTopRightRadius: 20,
-            borderTopLeftRadius: 20,
-          }}>
-          <View style={{marginHorizontal: 20, marginTop: 20}}>
-            <Text style={{fontSize: 18, fontWeight: 'bold'}}>
-              Need to add another address?
-            </Text>
-            <GooglePlacesAutocomplete
-              placeholder="Search"
-              editable={false}
-              minLength={2}
-              autoFocus={false}
-              returnKeyType={'search'}
-              listViewDisplayed="auto"
-              fetchDetails={true}
-              getDefaultValue={() => ''}
-              placeholder={'Where should we go?'}
-              renderDescription={row => row.description}
-              renderLeftButton={() => (
-                <FeatherIcon
-                  style={{
-                    color: '#000000',
-                    paddingLeft: 15,
+        <SlidingUpPanel
+          ref={c => (this._panel = c)}
+          draggableRange={this.props.draggableRange}
+          animatedValue={this.state.draggedValue}
+          height={height + 180}
+          friction={0.4}
+          allowMomentum={true}>
+          <View style={styles.panel}>
+            <View style={styles.panelHeader}>
+              <Animated.View
+                style={{
+                  transform: [{translateY: textTranslateY}],
+                }}>
+                <Text style={styles.textHeader}>
+                  Need to add another address?
+                </Text>
+                <GooglePlacesAutocomplete
+                  placeholder="Search"
+                  editable={false}
+                  minLength={2}
+                  autoFocus={false}
+                  returnKeyType={'search'}
+                  listViewDisplayed="auto"
+                  fetchDetails={true}
+                  getDefaultValue={() => ''}
+                  placeholder={'Where should we go?'}
+                  renderDescription={row => row.description}
+                  renderLeftButton={() => (
+                    <FeatherIcon
+                      style={styles.autocompleteIcon}
+                      name={'search'}
+                      size={20}
+                    />
+                  )}
+                  onPress={(data, details = null) => {
+                    console.log(data, details);
                   }}
-                  name={'search'}
-                  size={20}
+                  query={{
+                    // TODO: Remove this line when you push
+                    key: '',
+                    language: 'en',
+                    types: 'address',
+                  }}
+                  styles={autocompleteStyle}
+                  nearbyPlacesAPI="GooglePlacesSearch"
+                  GooglePlacesDetailsQuery={{
+                    fields: 'formatted_address',
+                  }}
+                  debounce={50}
+                  predefinedPlacesAlwaysVisible={false}
+                  enablePoweredByContainer={false}
+                  suppressDefaultStyles={true}
                 />
-              )}
-              onPress={(data, details = null) => {
-                console.log(data, details);
-              }}
-              query={{
-                // available options: https://developers.google.com/places/web-service/autocomplete
-                // TODO: Remove this line when you push
-                key: '',
-                language: 'en',
-                types: 'address',
-              }}
-              styles={{
-                container: {
-                  // flex: 1,
-                  marginTop: 10,
-                  elevation: 5,
-                  borderRadius: 10,
-                  backgroundColor: '#FFFFFF',
-                },
-                textInputContainer: {
-                  height: 44,
-                  flexDirection: 'row',
-                  alignItems: 'center',
-                },
-                textInput: {
-                  height: 28,
-                  borderRadius: 5,
-                  paddingVertical: 4.5,
-                  paddingHorizontal: 10,
-                  fontSize: 15,
-                  flex: 1,
-                },
-                description: {
-                  fontWeight: 'bold',
-                },
-              }}
-              nearbyPlacesAPI="GooglePlacesSearch"
-              GooglePlacesDetailsQuery={{
-                // available options for GooglePlacesDetails API : https://developers.google.com/places/web-service/details
-                fields: 'formatted_address',
-              }}
-              debounce={100} // debounce the requests in ms. Set to 0 to remove debounce. By default 0ms.
-              predefinedPlacesAlwaysVisible={false}
-              enablePoweredByContainer={false}
-              suppressDefaultStyles={true}
-            />
-          </View>
-        </View>
-
-        {/* <SwipeUpDown
-          hasRef={ref => (this.swipeUpDownRef = ref)}
-          itemMini={
-            <View style={{alignItems: 'center', paddingVertical: 40}}>
-              <Text>----------</Text>
-              <Text style={{marginTop: 10}}>Need to add another address?</Text>
+              </Animated.View>
             </View>
-          }
-          itemFull={<Text>Fuck</Text>} // Pass props component when show full
-          onShowMini={() => console.log('mini')}
-          onShowFull={() => console.log('full')}
-          onMoveDown={() => console.log('down')}
-          onMoveUp={() => console.log('up')}
-          disablePressToShow={false} // Press item mini to show full
-          style={{backgroundColor: 'green', elevation: 11}} // style for swipe
-          animation={'linear'}
-        /> */}
+          </View>
+        </SlidingUpPanel>
       </View>
     );
   }
 }
+
+RequestAddress.propTypes = {
+  draggableRange: PropTypes.object,
+};
+
+RequestAddress.defaultProps = {
+  draggableRange: {top: height + 180 - 64, bottom: 180},
+};
+
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    backgroundColor: '#ffffff',
+  },
+  panel: {
+    flex: 1,
+    backgroundColor: 'white',
+    position: 'relative',
+  },
+  panelHeader: {
+    height: 180,
+    padding: 24,
+    flex: 1,
+    backgroundColor: '#393e46',
+    elevation: 10,
+    borderTopRightRadius: 20,
+    borderTopLeftRadius: 20,
+  },
+  textHeader: {
+    fontSize: 18,
+    fontWeight: 'bold',
+    color: '#FFFFFF',
+  },
+  autocompleteIcon: {
+    color: '#000000',
+    paddingLeft: 15,
+  },
+});
+
+const autocompleteStyle = {
+  container: {
+    marginTop: 10,
+    elevation: 5,
+    borderRadius: 10,
+    backgroundColor: '#FFFFFF',
+  },
+  textInputContainer: {
+    height: 44,
+    flexDirection: 'row',
+    alignItems: 'center',
+  },
+  textInput: {
+    height: 28,
+    borderRadius: 5,
+    paddingVertical: 4.5,
+    paddingHorizontal: 10,
+    fontSize: 15,
+    flex: 1,
+  },
+  description: {
+    fontWeight: 'bold',
+  },
+};
