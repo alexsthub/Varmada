@@ -4,9 +4,11 @@ import {
   View,
   Text,
   TouchableNativeFeedback,
+  TouchableWithoutFeedback,
   FlatList,
   Animated,
   Dimensions,
+  StatusBar,
 } from 'react-native';
 
 import Header from '../../components/general/Header';
@@ -105,6 +107,13 @@ export default class RequestAddress extends React.Component {
     this.props.navigation.navigate('Time');
   };
 
+  // TODO: How do i know when it snapped to the top?
+  handleDragEnd = (position, number) => {
+    if (position > (height - StatusBar.currentHeight) / 2) {
+      console.log('made it to the top?');
+    }
+  };
+
   render() {
     const {top, bottom} = this.props.draggableRange;
 
@@ -149,11 +158,13 @@ export default class RequestAddress extends React.Component {
 
         <SlidingUpPanel
           ref={c => (this._panel = c)}
-          draggableRange={this.props.draggableRange}
+          draggableRange={{top: height - StatusBar.currentHeight, bottom: 180}}
           animatedValue={this.state.draggedValue}
           height={height + 180}
           friction={0.4}
-          allowMomentum={true}>
+          allowMomentum={true}
+          snappingPoints={[height]}
+          onDragEnd={this.handleDragEnd}>
           <View style={styles.panelHeader}>
             <Animated.View
               style={{
@@ -212,7 +223,7 @@ RequestAddress.propTypes = {
 };
 
 RequestAddress.defaultProps = {
-  draggableRange: {top: height + 24, bottom: 180},
+  draggableRange: {top: height, bottom: 180},
 };
 
 const styles = StyleSheet.create({
@@ -226,12 +237,14 @@ const styles = StyleSheet.create({
     position: 'relative',
   },
   panelHeader: {
+    height: 180,
     padding: 24,
     flex: 1,
     backgroundColor: '#393e46',
     elevation: 10,
     borderTopRightRadius: 20,
     borderTopLeftRadius: 20,
+    // position: 'relative',
   },
   textHeader: {
     fontSize: 18,
