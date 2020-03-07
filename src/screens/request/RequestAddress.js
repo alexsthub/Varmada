@@ -114,14 +114,14 @@ export default class RequestAddress extends React.Component {
       extrapolate: 'clamp',
     });
 
-    const borderRadiusAnim = this.state.draggedValue.interpolate({
-      inputRange: [bottom, top],
-      outputRange: [20, 0],
-    });
-    const borderRadiusStyle = {
-      borderTopLeftRadius: borderRadiusAnim,
-      borderTopRightRadius: borderRadiusAnim,
-    };
+    // const borderRadiusAnim = this.state.draggedValue.interpolate({
+    //   inputRange: [bottom, top],
+    //   outputRange: [20, 0],
+    // });
+    // const borderRadiusStyle = {
+    //   borderTopLeftRadius: borderRadiusAnim,
+    //   borderTopRightRadius: borderRadiusAnim,
+    // };
 
     return (
       <View style={styles.container}>
@@ -154,54 +154,52 @@ export default class RequestAddress extends React.Component {
           height={height + 180}
           friction={0.4}
           allowMomentum={true}>
-          <View style={styles.panel}>
-            <View style={styles.panelHeader}>
-              <Animated.View
-                style={{
-                  transform: [{translateY: textTranslateY}],
-                }}>
-                <Text style={styles.textHeader}>
-                  Need to add another address?
-                </Text>
-                <GooglePlacesAutocomplete
-                  placeholder="Search"
-                  editable={false}
-                  minLength={2}
-                  autoFocus={false}
-                  returnKeyType={'search'}
-                  listViewDisplayed="auto"
-                  fetchDetails={true}
-                  getDefaultValue={() => ''}
-                  placeholder={'Where should we go?'}
-                  renderDescription={row => row.description}
-                  renderLeftButton={() => (
-                    <FeatherIcon
-                      style={styles.autocompleteIcon}
-                      name={'search'}
-                      size={20}
-                    />
-                  )}
-                  onPress={(data, details = null) => {
-                    console.log(data, details);
-                  }}
-                  query={{
-                    // TODO: Remove this line when you push
-                    key: '',
-                    language: 'en',
-                    types: 'address',
-                  }}
-                  styles={autocompleteStyle}
-                  nearbyPlacesAPI="GooglePlacesSearch"
-                  GooglePlacesDetailsQuery={{
-                    fields: 'formatted_address',
-                  }}
-                  debounce={50}
-                  predefinedPlacesAlwaysVisible={false}
-                  enablePoweredByContainer={false}
-                  suppressDefaultStyles={true}
-                />
-              </Animated.View>
-            </View>
+          <View style={styles.panelHeader}>
+            <Animated.View
+              style={{
+                transform: [{translateY: textTranslateY}],
+              }}>
+              <Text style={styles.textHeader}>
+                Need to add another address?
+              </Text>
+              <GooglePlacesAutocomplete
+                placeholder="Search"
+                editable={false}
+                minLength={2}
+                autoFocus={false}
+                returnKeyType={'search'}
+                listViewDisplayed="auto"
+                fetchDetails={true}
+                getDefaultValue={() => ''}
+                placeholder={'Where should we go?'}
+                renderDescription={row => row.description}
+                renderLeftButton={() => (
+                  <FeatherIcon
+                    style={styles.autocompleteIcon}
+                    name={'search'}
+                    size={20}
+                  />
+                )}
+                onPress={(data, details = null) => {
+                  console.log(data, details);
+                }}
+                query={{
+                  // TODO: Remove this line when you push
+                  key: '',
+                  language: 'en',
+                  types: 'address',
+                }}
+                styles={autocompleteStyle}
+                nearbyPlacesAPI="GooglePlacesSearch"
+                GooglePlacesDetailsQuery={{
+                  fields: 'formatted_address',
+                }}
+                debounce={50}
+                predefinedPlacesAlwaysVisible={false}
+                enablePoweredByContainer={false}
+                suppressDefaultStyles={true}
+              />
+            </Animated.View>
           </View>
         </SlidingUpPanel>
       </View>
@@ -214,7 +212,7 @@ RequestAddress.propTypes = {
 };
 
 RequestAddress.defaultProps = {
-  draggableRange: {top: height + 180 - 64, bottom: 180},
+  draggableRange: {top: height + 24, bottom: 180},
 };
 
 const styles = StyleSheet.create({
@@ -224,11 +222,10 @@ const styles = StyleSheet.create({
   },
   panel: {
     flex: 1,
-    backgroundColor: 'white',
+    backgroundColor: 'green',
     position: 'relative',
   },
   panelHeader: {
-    height: 180,
     padding: 24,
     flex: 1,
     backgroundColor: '#393e46',
