@@ -17,7 +17,9 @@ export default class RequestReview extends React.Component {
     };
   }
   render() {
-    const {time, date} = this.props.navigation.state.params;
+    console.log(this.props.navigation.state.params)
+    const {addressObj, carrier, time, date} = this.props.navigation.state.params;
+    console.log(addressObj)
     return (
       <View style={{marginHorizontal: 40}}>
         <Header
@@ -26,6 +28,14 @@ export default class RequestReview extends React.Component {
         />
         <Text style={{fontWeight: 'bold'}}>
           Pickup: {date}, {time}
+        </Text>
+        <Text style={{fontWeight: 'bold'}}>From</Text>
+        <Text>{addressObj.address}</Text>
+        <Text>{addressObj.city}, {addressObj.state}</Text>
+        <Text>{addressObj.countryCode}</Text>
+        <Text style={{fontWeight: 'bold'}}>To</Text>
+        <Text>
+          {carrier}
         </Text>
         <Picker
           selectedValue={this.state.payment}
@@ -40,6 +50,26 @@ export default class RequestReview extends React.Component {
         <Text>Packaging: </Text>
         <Text>Sales Tax: </Text>
         <Text>Order Total: </Text>
+        <TouchableNativeFeedback
+          background={TouchableNativeFeedback.Ripple('lightgray')}
+          // onPress={this.handleContinue}
+        >
+          <View
+            style={{
+              backgroundColor: '#F8B500',
+              elevation: 10,
+              padding: 20,
+              justifyContent: 'center',
+              alignItems: 'center',
+            }}>
+            <Text style={{fontWeight: 'bold', fontSize: 16}}>
+              Confirm Request
+            </Text>
+          </View>
+        </TouchableNativeFeedback>
+        <Text style={{textAlign: 'center'}}>
+          You won’t be charged until after the pickup has been dropped off.
+        </Text>
       </View>
     );
   }
