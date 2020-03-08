@@ -17,7 +17,10 @@ export default class RequestTime extends React.Component {
   }
 
   handleContinue = () => {
-    this.props.navigation.navigate('Review');
+    this.props.navigation.navigate('Review', {
+      time: "some-time",
+      date: "some-date",
+    });
   };
 
   render() {
