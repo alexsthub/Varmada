@@ -85,12 +85,17 @@ class Address extends React.Component {
 }
 
 const {height} = Dimensions.get('window');
-// TODO: How the fuck do i get the swipe up and down to work now
 // TODO: border radius is fucking broken
+// TODO: Shits the bed when the keyboard comes up
+// TODO: Touchable thing isn't all of
 export default class RequestAddress extends React.Component {
   constructor(props) {
     super(props);
-    this.state = {addresses: [], draggedValue: new Animated.Value(180)};
+    this.state = {
+      addresses: [],
+      draggedValue: new Animated.Value(180),
+      sliderOpen: false,
+    };
   }
 
   componentDidMount() {
@@ -107,11 +112,28 @@ export default class RequestAddress extends React.Component {
     this.props.navigation.navigate('Time');
   };
 
-  // TODO: How do i know when it snapped to the top?
-  handleDragEnd = (position, number) => {
-    if (position > (height - StatusBar.currentHeight) / 2) {
-      console.log('made it to the top?');
+  handleDragEnd = position => {
+    if (position === this.props.draggableRange.top) {
+      this.setState({sliderOpen: true});
+    } else {
+      this.setState({sliderOpen: false});
     }
+  };
+
+  handleBackButton = () => {
+    if (this.state.sliderOpen) {
+      this._panel.hide();
+      this.setState({sliderOpen: false});
+      return true;
+    } else {
+      return false;
+    }
+  };
+
+  handleTouchSlidingWindow = () => {
+    console.log('touched');
+    this._panel.show(this.props.draggableRange.top);
+    this.setState({sliderOpen: true});
   };
 
   render() {
@@ -163,53 +185,61 @@ export default class RequestAddress extends React.Component {
           height={height + 180}
           friction={0.4}
           allowMomentum={true}
-          snappingPoints={[height]}
-          onDragEnd={this.handleDragEnd}>
+          snappingPoints={[this.props.draggableRange.top]}
+          onMomentumDragEnd={this.handleDragEnd}
+          onBackButtonPress={this.handleBackButton}>
           <View style={styles.panelHeader}>
             <Animated.View
               style={{
                 transform: [{translateY: textTranslateY}],
               }}>
-              <Text style={styles.textHeader}>
-                Need to add another address?
-              </Text>
-              <GooglePlacesAutocomplete
-                placeholder="Search"
-                editable={false}
-                minLength={2}
-                autoFocus={false}
-                returnKeyType={'search'}
-                listViewDisplayed="auto"
-                fetchDetails={true}
-                getDefaultValue={() => ''}
-                placeholder={'Where should we go?'}
-                renderDescription={row => row.description}
-                renderLeftButton={() => (
-                  <FeatherIcon
-                    style={styles.autocompleteIcon}
-                    name={'search'}
-                    size={20}
+              <TouchableWithoutFeedback
+                style={{backgroundColor: 'green'}}
+                onPress={this.handleTouchSlidingWindow}
+                disabled={this.state.sliderOpen}>
+                <View style={{backgroundColor: 'green'}}>
+                  <Text style={styles.textHeader}>
+                    Need to add another address?
+                  </Text>
+                  <GooglePlacesAutocomplete
+                    placeholder="Search"
+                    editable={this.state.sliderOpen}
+                    minLength={2}
+                    autoFocus={false}
+                    returnKeyType={'search'}
+                    listViewDisplayed="auto"
+                    fetchDetails={true}
+                    getDefaultValue={() => ''}
+                    placeholder={'Where should we go?'}
+                    renderDescription={row => row.description}
+                    renderLeftButton={() => (
+                      <FeatherIcon
+                        style={styles.autocompleteIcon}
+                        name={'search'}
+                        size={20}
+                      />
+                    )}
+                    onPress={(data, details = null) => {
+                      console.log(data, details);
+                    }}
+                    query={{
+                      // TODO: Remove this line when you push
+                      key: '',
+                      language: 'en',
+                      types: 'address',
+                    }}
+                    styles={autocompleteStyle}
+                    nearbyPlacesAPI="GooglePlacesSearch"
+                    GooglePlacesDetailsQuery={{
+                      fields: 'formatted_address',
+                    }}
+                    debounce={50}
+                    predefinedPlacesAlwaysVisible={false}
+                    enablePoweredByContainer={false}
+                    suppressDefaultStyles={true}
                   />
-                )}
-                onPress={(data, details = null) => {
-                  console.log(data, details);
-                }}
-                query={{
-                  // TODO: Remove this line when you push
-                  key: '',
-                  language: 'en',
-                  types: 'address',
-                }}
-                styles={autocompleteStyle}
-                nearbyPlacesAPI="GooglePlacesSearch"
-                GooglePlacesDetailsQuery={{
-                  fields: 'formatted_address',
-                }}
-                debounce={50}
-                predefinedPlacesAlwaysVisible={false}
-                enablePoweredByContainer={false}
-                suppressDefaultStyles={true}
-              />
+                </View>
+              </TouchableWithoutFeedback>
             </Animated.View>
           </View>
         </SlidingUpPanel>
@@ -223,7 +253,7 @@ RequestAddress.propTypes = {
 };
 
 RequestAddress.defaultProps = {
-  draggableRange: {top: height, bottom: 180},
+  draggableRange: {top: height - StatusBar.currentHeight, bottom: 180},
 };
 
 const styles = StyleSheet.create({
@@ -241,10 +271,10 @@ const styles = StyleSheet.create({
     padding: 24,
     flex: 1,
     backgroundColor: '#393e46',
-    elevation: 10,
+    elevation: 5,
     borderTopRightRadius: 20,
     borderTopLeftRadius: 20,
-    // position: 'relative',
+    position: 'relative',
   },
   textHeader: {
     fontSize: 18,
