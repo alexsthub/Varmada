@@ -61,7 +61,7 @@ class Address extends React.Component {
           style={{
             flexDirection: 'row',
             alignItems: 'center',
-            paddingVertical: 10,
+            paddingVertical: 15,
             elevation: 5,
             backgroundColor: '#F7F7F7',
           }}>
@@ -85,9 +85,9 @@ class Address extends React.Component {
 }
 
 const {height} = Dimensions.get('window');
-// TODO: border radius is fucking broken
 // TODO: Shits the bed when the keyboard comes up
-// TODO: Touchable thing isn't all of
+// TODO: Doesn't go over the back arrow :/ when the view is up
+// TODO: IDK how to change the base height
 export default class RequestAddress extends React.Component {
   constructor(props) {
     super(props);
@@ -107,8 +107,9 @@ export default class RequestAddress extends React.Component {
   };
 
   handlePress = (e, index) => {
-    // const selectedAddress = this.state.addresses[index];
-    // console.log(selectedAddress);
+    // TODO: Add to db
+    const selectedAddress = this.state.addresses[index];
+    console.log(selectedAddress);
     this.props.navigation.navigate('Time');
   };
 
@@ -139,20 +140,14 @@ export default class RequestAddress extends React.Component {
   render() {
     const {top, bottom} = this.props.draggableRange;
 
-    const textTranslateY = this.state.draggedValue.interpolate({
+    const borderRadiusAnim = this.state.draggedValue.interpolate({
       inputRange: [bottom, top],
-      outputRange: [0, 8],
-      extrapolate: 'clamp',
+      outputRange: [25, 0],
     });
-
-    // const borderRadiusAnim = this.state.draggedValue.interpolate({
-    //   inputRange: [bottom, top],
-    //   outputRange: [20, 0],
-    // });
-    // const borderRadiusStyle = {
-    //   borderTopLeftRadius: borderRadiusAnim,
-    //   borderTopRightRadius: borderRadiusAnim,
-    // };
+    const borderRadiusStyle = {
+      borderTopLeftRadius: borderRadiusAnim,
+      borderTopRightRadius: borderRadiusAnim,
+    };
 
     return (
       <View style={styles.container}>
@@ -180,68 +175,62 @@ export default class RequestAddress extends React.Component {
 
         <SlidingUpPanel
           ref={c => (this._panel = c)}
-          draggableRange={{top: height - StatusBar.currentHeight, bottom: 180}}
+          draggableRange={this.props.draggableRange}
           animatedValue={this.state.draggedValue}
-          height={height + 180}
+          height={this.props.draggableRange.top}
           friction={0.4}
           allowMomentum={true}
           snappingPoints={[this.props.draggableRange.top]}
           onMomentumDragEnd={this.handleDragEnd}
           onBackButtonPress={this.handleBackButton}>
-          <View style={styles.panelHeader}>
-            <Animated.View
-              style={{
-                transform: [{translateY: textTranslateY}],
-              }}>
-              <TouchableWithoutFeedback
-                style={{backgroundColor: 'green'}}
-                onPress={this.handleTouchSlidingWindow}
-                disabled={this.state.sliderOpen}>
-                <View style={{backgroundColor: 'green'}}>
-                  <Text style={styles.textHeader}>
-                    Need to add another address?
-                  </Text>
-                  <GooglePlacesAutocomplete
-                    placeholder="Search"
-                    editable={this.state.sliderOpen}
-                    minLength={2}
-                    autoFocus={false}
-                    returnKeyType={'search'}
-                    listViewDisplayed="auto"
-                    fetchDetails={true}
-                    getDefaultValue={() => ''}
-                    placeholder={'Where should we go?'}
-                    renderDescription={row => row.description}
-                    renderLeftButton={() => (
-                      <FeatherIcon
-                        style={styles.autocompleteIcon}
-                        name={'search'}
-                        size={20}
-                      />
-                    )}
-                    onPress={(data, details = null) => {
-                      console.log(data, details);
-                    }}
-                    query={{
-                      // TODO: Remove this line when you push
-                      key: '',
-                      language: 'en',
-                      types: 'address',
-                    }}
-                    styles={autocompleteStyle}
-                    nearbyPlacesAPI="GooglePlacesSearch"
-                    GooglePlacesDetailsQuery={{
-                      fields: 'formatted_address',
-                    }}
-                    debounce={50}
-                    predefinedPlacesAlwaysVisible={false}
-                    enablePoweredByContainer={false}
-                    suppressDefaultStyles={true}
+          <TouchableWithoutFeedback
+            onPress={this.handleTouchSlidingWindow}
+            disabled={this.state.sliderOpen}>
+            {/* <View style={styles.panel}> */}
+            <Animated.View style={[styles.panelHeader, borderRadiusStyle]}>
+              <Text style={styles.textHeader}>
+                Need to add another address?
+              </Text>
+              <GooglePlacesAutocomplete
+                placeholder="Search"
+                editable={this.state.sliderOpen}
+                minLength={2}
+                autoFocus={false}
+                returnKeyType={'search'}
+                listViewDisplayed="auto"
+                fetchDetails={true}
+                getDefaultValue={() => ''}
+                placeholder={'Where should we go?'}
+                renderDescription={row => row.description}
+                renderLeftButton={() => (
+                  <FeatherIcon
+                    style={styles.autocompleteIcon}
+                    name={'search'}
+                    size={20}
                   />
-                </View>
-              </TouchableWithoutFeedback>
+                )}
+                onPress={(data, details = null) => {
+                  console.log(data, details);
+                }}
+                query={{
+                  // TODO: Remove this line when you push
+                  key: '',
+                  language: 'en',
+                  types: 'address',
+                }}
+                styles={autocompleteStyle}
+                nearbyPlacesAPI="GooglePlacesSearch"
+                GooglePlacesDetailsQuery={{
+                  fields: 'formatted_address',
+                }}
+                debounce={50}
+                predefinedPlacesAlwaysVisible={false}
+                enablePoweredByContainer={false}
+                suppressDefaultStyles={true}
+              />
             </Animated.View>
-          </View>
+            {/* </View> */}
+          </TouchableWithoutFeedback>
         </SlidingUpPanel>
       </View>
     );
@@ -263,7 +252,6 @@ const styles = StyleSheet.create({
   },
   panel: {
     flex: 1,
-    backgroundColor: 'green',
     position: 'relative',
   },
   panelHeader: {
@@ -274,7 +262,6 @@ const styles = StyleSheet.create({
     elevation: 5,
     borderTopRightRadius: 20,
     borderTopLeftRadius: 20,
-    position: 'relative',
   },
   textHeader: {
     fontSize: 18,
