@@ -3,7 +3,6 @@ import {
   StyleSheet,
   View,
   Text,
-  TouchableNativeFeedback,
   TouchableWithoutFeedback,
   FlatList,
   Animated,
@@ -12,13 +11,12 @@ import {
 } from 'react-native';
 
 import Header from '../../components/general/Header';
+import AddressBox from '../../components/general/AddressBox';
 
 import SlidingUpPanel from 'rn-sliding-up-panel';
 import {GooglePlacesAutocomplete} from 'react-native-google-places-autocomplete';
-import PropTypes from 'prop-types';
 
 import FeatherIcon from 'react-native-vector-icons/Feather';
-import EntypoIcon from 'react-native-vector-icons/Entypo';
 
 // Test input
 const shit = [
@@ -42,98 +40,7 @@ const shit = [
   },
 ];
 
-class Address extends React.Component {
-  render() {
-    const addressObj = this.props.address;
-    const {address, city, name, state} = addressObj;
-    let subText;
-    if (name === address) {
-      subText = `${city},  ${state}`;
-    } else {
-      subText = `${address} ${city}, ${state}`;
-    }
-
-    return (
-      <TouchableNativeFeedback
-        background={TouchableNativeFeedback.Ripple('lightgray')}
-        onPress={e => this.props.onPress(e, this.props.index)}>
-        <View
-          style={{
-            flexDirection: 'row',
-            alignItems: 'center',
-            paddingVertical: 15,
-            elevation: 5,
-            backgroundColor: '#F7F7F7',
-          }}>
-          <View style={{paddingHorizontal: 10}}>
-            <EntypoIcon
-              style={{
-                color: '#000000',
-              }}
-              name={'location-pin'}
-              size={40}
-            />
-          </View>
-          <View style={{flexDirection: 'column', paddingLeft: 10}}>
-            <Text style={{fontWeight: 'bold'}}>{name}</Text>
-            <Text style={{color: 'gray'}}>{subText}</Text>
-          </View>
-        </View>
-      </TouchableNativeFeedback>
-    );
-  }
-}
-
 const {height} = Dimensions.get('window');
-// const styles = {
-//   container: {
-//     flex: 1,
-//     backgroundColor: 'green',
-//     alignItems: 'center',
-//     justifyContent: 'center',
-//   },
-//   test: {
-//     flex: 1,
-//     backgroundColor: 'lightblue',
-//   },
-//   panel: {
-//     flex: 1,
-//     backgroundColor: 'white',
-//     position: 'relative',
-//   },
-//   panelHeader: {
-//     height: 100,
-//     backgroundColor: '#b197fc',
-//     justifyContent: 'flex-end',
-//     padding: 24,
-//   },
-//   textHeader: {
-//     fontSize: 28,
-//     color: '#FFF',
-//   },
-//   icon: {
-//     alignItems: 'center',
-//     justifyContent: 'center',
-//     position: 'absolute',
-//     top: -24,
-//     right: 18,
-//     width: 48,
-//     height: 48,
-//     zIndex: 1,
-//   },
-//   iconBg: {
-//     backgroundColor: '#2b8a3e',
-//     position: 'absolute',
-//     top: -24,
-//     right: 18,
-//     width: 48,
-//     height: 48,
-//     borderRadius: 24,
-//     zIndex: 1,
-//   },
-// };
-
-// TODO: Shits the bed when the keyboard comes up
 // TODO: Doesn't go over the back arrow :/ when the view is up
 export default class RequestAddress extends React.Component {
   constructor(props) {
@@ -160,10 +67,46 @@ export default class RequestAddress extends React.Component {
     this.props.navigation.navigate('Time');
   };
 
+  // TODO: Parser doesn't work for all inputs.
+  // TODO: Autocomplete listview doesn't close when i set the state
+  handleAutocompletePress = (data, details = null) => {
+    console.log(data);
+    console.log(details);
+    const formattedAddress = details.formatted_address.split(',');
+    const address = {
+      name: data.structured_formatting.main_text
+        ? data.structured_formatting.main_text
+        : formattedAddress[0].trim(),
+      placeID: data.place_id,
+      address: formattedAddress[0].trim(),
+      city: formattedAddress[1].trim(),
+      state: formattedAddress[2]
+        .trim()
+        .split(' ')[0]
+        .trim(),
+      zip: formattedAddress[2]
+        .trim()
+        .split(' ')[1]
+        .trim(),
+      countryCode: formattedAddress[3],
+    };
+    console.log(address);
+    const newAddresses = this.state.addresses.concat(address);
+    // this.setState({addresses: newAddresses}, () => {
+    //   this._panel.hide();
+    // });
+  };
+
+  handleDragStart = () => {
+    if (this.state.sliderOpen) {
+      this.autocomplete.triggerBlur();
+    }
+  };
+
   handleDragEnd = position => {
     if (position === this.top) {
       this.setState({sliderOpen: true});
-      // this.autocomplete.triggerFocus();
+      this.autocomplete.triggerFocus();
     } else {
       this.setState({sliderOpen: false});
     }
@@ -180,52 +123,18 @@ export default class RequestAddress extends React.Component {
   };
 
   handleTouchSlidingWindow = () => {
-    console.log('touched');
     this._panel.show(this.top);
     this.setState({sliderOpen: true}, () => {
-      // this.autocomplete.triggerFocus();
+      this.autocomplete.triggerFocus();
     });
   };
 
-  // _draggedValue = new Animated.Value(100);
+  handleFocus = () => {
+    this._panel.show(this.top);
+    this.setState({sliderOpen: true});
+  };
 
   render() {
-    //   const {top, bottom} = this.props.draggableRange;
-
-    //   const textTranslateY = this._draggedValue.interpolate({
-    //     inputRange: [bottom, top],
-    //     outputRange: [0, 8],
-    //     extrapolate: 'clamp',
-    //   });
-    //   console.log(this.props.draggableRange);
-
-    //   return (
-    //     <View style={styles.container}>
-    //       <Text onPress={() => this._panel.show(360)}>Show panel</Text>
-    //       <SlidingUpPanel
-    //         ref={c => (this._panel = c)}
-    //         draggableRange={{top: height - StatusBar.currentHeight, bottom: 100}}
-    //         animatedValue={this._draggedValue}
-    //         snappingPoints={[180]}
-    //         height={height + 100}
-    //         friction={0.5}>
-    //         <View style={styles.panel}>
-    //           <View style={styles.panelHeader}>
-    //             <Animated.View
-    //               style={{
-    //                 transform: [{translateY: textTranslateY}],
-    //               }}>
-    //               <Text style={styles.textHeader}>Sliding Up Panel</Text>
-    //             </Animated.View>
-    //           </View>
-    //           <View style={styles.test}>
-    //             <Text>Bottom sheet content</Text>
-    //           </View>
-    //         </View>
-    //       </SlidingUpPanel>
-    //     </View>
-    //   );
-
     const draggableRange = {top: height - StatusBar.currentHeight, bottom: 120};
     this.top = draggableRange.top;
     this.bottom = draggableRange.bottom;
@@ -250,7 +159,7 @@ export default class RequestAddress extends React.Component {
           <FlatList
             data={this.state.addresses}
             renderItem={({item, index}) => (
-              <Address
+              <AddressBox
                 address={item}
                 index={index}
                 onPress={(e, index) => this.handlePress(e, index)}
@@ -271,21 +180,22 @@ export default class RequestAddress extends React.Component {
           friction={0.4}
           allowMomentum={true}
           snappingPoints={[this.top]}
+          onDragStart={this.handleDragStart}
           onMomentumDragEnd={this.handleDragEnd}
           onBackButtonPress={this.handleBackButton}
           avoidKeyboard={false}>
           <TouchableWithoutFeedback
             onPress={this.handleTouchSlidingWindow}
             disabled={this.state.sliderOpen}>
-            {/* <View style={styles.panel}> */}
             <Animated.View style={[styles.panelHeader, borderRadiusStyle]}>
+              <View style={styles.panelIcon} />
               <Text style={styles.textHeader}>
                 Need to add another address?
               </Text>
               <GooglePlacesAutocomplete
                 ref={c => (this.autocomplete = c)}
                 placeholder="Search"
-                editable={this.state.sliderOpen}
+                textInputProps={{onFocus: this.handleFocus}}
                 minLength={2}
                 autoFocus={false}
                 returnKeyType={'search'}
@@ -301,27 +211,23 @@ export default class RequestAddress extends React.Component {
                     size={20}
                   />
                 )}
-                onPress={(data, details = null) => {
-                  console.log(data, details);
-                }}
+                onPress={this.handleAutocompletePress}
                 query={{
-                  // TODO: Remove this line when you push
+                  // TODO: Remove this key when you push. Probably use secrets manager later.
                   key: '',
                   language: 'en',
-                  types: 'address',
                 }}
                 styles={autocompleteStyle}
                 nearbyPlacesAPI="GooglePlacesSearch"
                 GooglePlacesDetailsQuery={{
                   fields: 'formatted_address',
                 }}
-                debounce={50}
+                debounce={100}
                 predefinedPlacesAlwaysVisible={false}
                 enablePoweredByContainer={false}
                 suppressDefaultStyles={true}
               />
             </Animated.View>
-            {/* </View> */}
           </TouchableWithoutFeedback>
         </SlidingUpPanel>
       </View>
@@ -334,13 +240,20 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: '#ffffff',
   },
-  panel: {
-    flex: 1,
-    position: 'relative',
+  panelIcon: {
+    backgroundColor: 'lightgray',
+    height: 4,
+    width: 50,
+    alignSelf: 'center',
+    borderRadius: 5,
+    elevation: 1,
+    marginBottom: 5,
   },
   panelHeader: {
     height: 120,
-    padding: 24,
+    paddingHorizontal: 24,
+    paddingBottom: 24,
+    paddingTop: 8,
     flex: 1,
     backgroundColor: '#393e46',
     elevation: 5,
@@ -380,5 +293,10 @@ const autocompleteStyle = {
   },
   description: {
     fontWeight: 'bold',
+  },
+  row: {
+    padding: 13,
+    height: 44,
+    flexDirection: 'row',
   },
 };
