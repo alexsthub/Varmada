@@ -52,12 +52,30 @@ export default class RequestReview extends React.Component {
           onValueChange={itemValue => this.setState({payment: itemValue})}>
           <Picker.Item label="Venmo" value="Venmo" />
         </Picker>
-        <Text>Items (1):</Text>
-        <Text>Delivery Fee: </Text>
-        <Text>Printing: </Text>
-        <Text>Packaging: </Text>
-        <Text>Sales Tax: </Text>
-        <Text style={styles.orderTotal}>Order Total: </Text>
+        <View style={styles.container}>
+          <Text>Items (1):</Text>
+          <Text>$3.00</Text>
+        </View>
+        <View style={styles.container}>
+          <Text>Delivery Fee:</Text>
+          <Text>$1.00</Text>
+        </View>
+        <View style={styles.container}>
+          <Text>Printing:</Text>
+          <Text>$0.50</Text>
+        </View>
+        <View style={styles.container}>
+          <Text>Packaging:</Text>
+          <Text>$2.00</Text>
+        </View>
+        <View style={styles.container}>
+          <Text>Sales Tax:</Text>
+          <Text>$0.75</Text>
+        </View>
+        <View style={styles.container}>
+          <Text style={styles.orderTotal}>Order Total:</Text>
+          <Text style={[styles.orderTotal, styles.price]}>$7.25</Text>
+        </View>
         <TouchableNativeFeedback
           background={TouchableNativeFeedback.Ripple('lightgray')}
           // onPress={this.handleContinue}
@@ -84,10 +102,17 @@ export default class RequestReview extends React.Component {
 }
 
 const styles = StyleSheet.create({
+  container: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+  },
   orderTotal: {
     fontWeight: 'bold',
     fontSize: 20,
     marginVertical: 15,
+  },
+  price: {
+    color: '#f8b500'
   },
   warning: {
     textAlign: 'center',
