@@ -145,13 +145,9 @@ const AppNavigator = createStackNavigator(
       screen: RequestNavigator,
       navigationOptions: {header: null},
     },
-    Address: {
-      screen: RequestAddress,
-      navigationOptions: {headerTransparent: true},
-    },
   },
   {
-    initialRouteName: 'Address',
+    initialRouteName: 'LoginScreen',
   },
 );
 export default createAppContainer(AppNavigator);

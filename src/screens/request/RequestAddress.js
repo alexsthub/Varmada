@@ -49,6 +49,7 @@ export default class RequestAddress extends React.Component {
       addresses: [],
       draggedValue: new Animated.Value(120),
       sliderOpen: false,
+      autocompleteText: '',
     };
   }
 
@@ -68,7 +69,6 @@ export default class RequestAddress extends React.Component {
   };
 
   // TODO: Parser doesn't work for all inputs.
-  // TODO: Autocomplete listview doesn't close when i set the state
   handleAutocompletePress = (data, details = null) => {
     console.log(data);
     console.log(details);
@@ -92,9 +92,9 @@ export default class RequestAddress extends React.Component {
     };
     console.log(address);
     const newAddresses = this.state.addresses.concat(address);
-    // this.setState({addresses: newAddresses}, () => {
-    //   this._panel.hide();
-    // });
+    this.setState({addresses: newAddresses, autocompleteText: ''}, () => {
+      this._panel.hide();
+    });
   };
 
   handleDragStart = () => {
@@ -108,14 +108,14 @@ export default class RequestAddress extends React.Component {
       this.setState({sliderOpen: true});
       this.autocomplete.triggerFocus();
     } else {
-      this.setState({sliderOpen: false});
+      this.setState({sliderOpen: false, autocompleteText: ''});
     }
   };
 
   handleBackButton = () => {
     if (this.state.sliderOpen) {
       this._panel.hide();
-      this.setState({sliderOpen: false});
+      this.setState({sliderOpen: false, autocompleteText: ''});
       return true;
     } else {
       return false;
@@ -132,6 +132,10 @@ export default class RequestAddress extends React.Component {
   handleFocus = () => {
     this._panel.show(this.top);
     this.setState({sliderOpen: true});
+  };
+
+  handleTextChange = text => {
+    this.setState({autocompleteText: text});
   };
 
   render() {
@@ -194,12 +198,16 @@ export default class RequestAddress extends React.Component {
               </Text>
               <GooglePlacesAutocomplete
                 ref={c => (this.autocomplete = c)}
+                text={this.state.autocompleteText}
                 placeholder="Search"
-                textInputProps={{onFocus: this.handleFocus}}
+                textInputProps={{
+                  onFocus: this.handleFocus,
+                  onChangeText: this.handleTextChange,
+                }}
                 minLength={2}
                 autoFocus={false}
                 returnKeyType={'search'}
-                listViewDisplayed="auto"
+                listViewDisplayed={this.state.sliderOpen}
                 fetchDetails={true}
                 getDefaultValue={() => ''}
                 placeholder={'Where should we go?'}
