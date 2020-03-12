@@ -17,10 +17,8 @@ export default class RequestTime extends React.Component {
   }
 
   handleContinue = () => {
-    // console.log(this.props.navigation.params)
     const {addressObj, carrier} = this.props.navigation.state.params;
     const date = new Date();
-    // console.log(this.props.navigation.getParam("addressObj"));
     this.props.navigation.navigate('Review', {
       addressObj: this.props.navigation.getParam("addressObj"),
       carrier: this.props.navigation.getParam("carrier"),

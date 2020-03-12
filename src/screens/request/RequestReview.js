@@ -17,9 +17,12 @@ export default class RequestReview extends React.Component {
     };
   }
   render() {
-    console.log(this.props.navigation.state.params)
-    const {addressObj, carrier, time, date} = this.props.navigation.state.params;
-    console.log(addressObj)
+    const {
+      addressObj,
+      carrier,
+      time,
+      date,
+    } = this.props.navigation.state.params;
     return (
       <View style={{marginHorizontal: 40}}>
         <Header
@@ -31,12 +34,13 @@ export default class RequestReview extends React.Component {
         </Text>
         <Text style={{fontWeight: 'bold'}}>From</Text>
         <Text>{addressObj.address}</Text>
-        <Text>{addressObj.city}, {addressObj.state}</Text>
+        <Text>
+          {addressObj.city}, {addressObj.state}
+        </Text>
         <Text>{addressObj.countryCode}</Text>
         <Text style={{fontWeight: 'bold'}}>To</Text>
-        <Text>
-          {carrier}
-        </Text>
+        <Text>{carrier}</Text>
+        <Text style={{fontWeight: 'bold'}}>Pay With:</Text>
         <Picker
           selectedValue={this.state.payment}
           style={{height: 50, width: '100%'}}
