@@ -65,7 +65,10 @@ export default class RequestAddress extends React.Component {
     // TODO: Add to db
     const selectedAddress = this.state.addresses[index];
     console.log(selectedAddress);
-    this.props.navigation.navigate('Time');
+    this.props.navigation.navigate('Time', {
+      addressObj: this.state.addresses[index],
+      carrier: this.props.navigation.getParam("carrier")
+    });
   };
 
   // TODO: Parser doesn't work for all inputs.
