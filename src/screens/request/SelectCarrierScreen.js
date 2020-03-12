@@ -6,10 +6,19 @@ import LeftNavButton from '../../components/leftNav/leftNavButton';
 export default class SelectCarrierScreen extends React.Component {
   constructor(props) {
     super(props);
+    this.state = {
+      carrier: ""
+    }
+  }
+  changeCarrier = (updatedCarrier) => {
+    this.setState({carrier: updatedCarrier});
   }
 
   describePackage = () => {
-    this.props.navigation.navigate('Services');
+    console.log(this.state.carrier)
+    this.props.navigation.navigate('Services', {
+      carrier: this.state.carrier
+    });
   };
 
   render() {
@@ -19,21 +28,21 @@ export default class SelectCarrierScreen extends React.Component {
           <Text style={styles.title}>Select Your Carrier</Text>
           <View style={styles.grid}>
             <View style={styles.carrier}>
-              <CheckBox style={styles.checkbox} />
+              <CheckBox style={styles.checkbox} onChange={() => this.changeCarrier("USPS") }/>
               <Image
                 style={styles.image}
                 source={require('../../assets/usps.png')}
               />
             </View>
             <View style={styles.carrier}>
-              <CheckBox style={styles.checkbox} />
+              <CheckBox style={styles.checkbox} onChange={() => this.changeCarrier("UPS") }/>
               <Image
                 style={styles.image}
                 source={require('../../assets/ups.png')}
               />
             </View>
             <View style={styles.carrier}>
-              <CheckBox style={styles.checkbox} />
+              <CheckBox style={styles.checkbox} onChange={() => this.changeCarrier("FedEx") }/>
               <Image
                 style={styles.image}
                 source={require('../../assets/fedex.png')}
