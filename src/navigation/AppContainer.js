@@ -29,7 +29,6 @@ import SelectCarrierScreen from '../screens/request/SelectCarrierScreen';
 import RequestServices from '../screens/request/RequestServices';
 import RequestPackage from '../screens/request/RequestPackage';
 import RequestAddress from '../screens/request/RequestAddress';
-import RequestAddAddress from '../screens/request/RequestAddAddress';
 import RequestAdditional from '../screens/request/RequestAdditional';
 import RequestTime from '../screens/request/RequestTime';
 import RequestReview from '../screens/request/RequestReview';
@@ -90,10 +89,6 @@ const RequestNavigator = createStackNavigator({
     screen: RequestAddress,
     navigationOptions: {headerTransparent: true},
   },
-  AddAddress: {
-    screen: RequestAddAddress,
-    navigationOptions: {headerTransparent: true},
-  },
   Additional: {
     screen: RequestAdditional,
     navigationOptions: {headerTransparent: true},
@@ -152,7 +147,7 @@ const AppNavigator = createStackNavigator(
     },
   },
   {
-    initialRouteName: 'MainDrawer',
+    initialRouteName: 'LoginScreen',
   },
 );
 export default createAppContainer(AppNavigator);
