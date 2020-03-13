@@ -2,38 +2,62 @@ import React from 'react';
 import {Image, View, Text, CheckBox, StyleSheet} from 'react-native';
 import CustomButton from '../../components/general/CustomButton';
 import LeftNavButton from '../../components/leftNav/leftNavButton';
+import { RadioButton } from 'react-native-paper';
+
+
 
 export default class SelectCarrierScreen extends React.Component {
   constructor(props) {
     super(props);
+    this.state = {checked: ''};
   }
 
   describePackage = () => {
     this.props.navigation.navigate('Services');
   };
 
+
   render() {
+    const { checked } = this.state;
     return (
       <View style={{flex: 1}}>
         <View style={styles.container}>
           <Text style={styles.title}>Select Your Carrier</Text>
           <View style={styles.grid}>
             <View style={styles.carrier}>
-              <CheckBox style={styles.checkbox} />
+              <RadioButton
+                value="first"
+                status={checked === 'first' ? 'checked' : 'unchecked'}
+                onPress={() => { this.setState({ checked: 'first' }); }}
+                color="black"
+                uncheckedColor="black"
+              />
               <Image
                 style={styles.image}
                 source={require('../../assets/usps.png')}
               />
             </View>
             <View style={styles.carrier}>
-              <CheckBox style={styles.checkbox} />
+              <RadioButton
+                  value="second"
+                  status={checked === 'second' ? 'checked' : 'unchecked'}
+                  onPress={() => { this.setState({ checked: 'second' }); }}
+                  color="black"
+                  uncheckedColor="black"
+              />
               <Image
                 style={styles.image}
                 source={require('../../assets/ups.png')}
               />
             </View>
             <View style={styles.carrier}>
-              <CheckBox style={styles.checkbox} />
+              <RadioButton
+                value="third"
+                status={checked === 'third' ? 'checked' : 'unchecked'}
+                onPress={() => { this.setState({ checked: 'third' }); }}
+                color="black"
+                uncheckedColor="black"
+              />
               <Image
                 style={styles.image}
                 source={require('../../assets/fedex.png')}
@@ -66,6 +90,7 @@ const styles = StyleSheet.create({
 
   grid: {
     height: 450,
+    borderWidth: 1
   },
 
   carrier: {
