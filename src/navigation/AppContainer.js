@@ -90,10 +90,6 @@ const RequestNavigator = createStackNavigator({
     screen: RequestAddress,
     navigationOptions: {headerTransparent: true},
   },
-  AddAddress: {
-    screen: RequestAddAddress,
-    navigationOptions: {headerTransparent: true},
-  },
   AddLabel: {
     screen: RequestAddLabel,
     navigationOptions: {headerTransparent: true},
