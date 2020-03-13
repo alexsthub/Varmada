@@ -4,58 +4,69 @@ import {
   View,
   Text,
   TouchableNativeFeedback,
-  Animated,
-  Modal
+  Modal,
 } from 'react-native';
 import CalendarPicker from 'react-native-calendar-picker';
-import { RadioButton } from 'react-native-paper';
+import {RadioButton} from 'react-native-paper';
 
 import Header from '../../components/general/Header';
+import DateCarousel from '../../components/general/DateCarousel';
 // import { Modal } from 'react-native-paper';
 
-// TODO: Fill this shit out
 export default class RequestTime extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
       selectedStartDate: new Date(),
       modalVisible: false,
-      checked: ""
+      checked: '',
     };
-    this.onDateChange = this.onDateChange.bind(this);
   }
 
   handleContinue = () => {
     const {addressObj, carrier} = this.props.navigation.state.params;
     const date = new Date();
     this.props.navigation.navigate('Review', {
-      addressObj: this.props.navigation.getParam("addressObj"),
-      carrier: this.props.navigation.getParam("carrier"),
+      addressObj: this.props.navigation.getParam('addressObj'),
+      carrier: this.props.navigation.getParam('carrier'),
       // filler for now
       time: `${date.getHours()}:${date.getMinutes()}`,
       date: `${date.getMonth()}/${date.getDate()}/${date.getFullYear()}`,
     });
   };
 
-  onDateChange(date) {
+  onDateChange = date => {
     this.setState({
       selectedStartDate: date,
     });
-  }
+  };
 
-  setModalVisible(visible) {
+  setModalVisible = visible => {
     this.setState({modalVisible: visible});
-  }
+  };
 
   render() {
-    const { selectedStartDate } = this.state;
-    const startDate = selectedStartDate.toString().substring(0, 3) + ", " + selectedStartDate.toString().substring(4, 15);
-    const minDate = new Date();  // Today
-    const { checked } = this.state;
+    const {selectedStartDate} = this.state;
+    const startDate =
+      selectedStartDate.toString().substring(0, 3) +
+      ', ' +
+      selectedStartDate.toString().substring(4, 15);
+    const minDate = new Date();
+    const {checked} = this.state;
+
     return (
       <View style={{flex: 1}}>
         <View style={styles.container}>
-          <Text style={styles.title}>Select Pickup DateTime</Text>
+          <Header
+            headerText={'Request a pickup'}
+            subHeaderText={'Select a date and time'}
+          />
+          <DateCarousel
+            // lastDate={'2019-07-20'}
+            numberOfDays={60}
+            paginate
+            onDateSelect={date => console.log(date)}
+          />
 
           <TouchableNativeFeedback
             background={TouchableNativeFeedback.Ripple('lightgray')}
@@ -71,66 +82,70 @@ export default class RequestTime extends React.Component {
                 justifyContent: 'center',
                 alignItems: 'center',
               }}>
-              <Text style={{fontWeight: 'bold', fontSize: 16}}>Change Date</Text>
+              <Text style={{fontWeight: 'bold', fontSize: 16}}>
+                Change Date
+              </Text>
             </View>
           </TouchableNativeFeedback>
-          
+
           {/* Calendar Modal */}
 
-            <Modal 
-              animationType="fade"
-              visible={this.state.modalVisible}
-              transparent={false}
-            >
-              <View style={styles.modal}>
-                <CalendarPicker
-                  onDateChange={this.onDateChange}
-                  minDate={minDate}
-                  selectedStartDate={this.state.selectedStartDate}
-                />
-                <View style={styles.modalButtons}>
-                  <TouchableNativeFeedback
-                    background={TouchableNativeFeedback.Ripple('lightgray')}
-                    onPress={() => {
-                      this.setModalVisible(!this.state.modalVisible);
+          <Modal
+            animationType="fade"
+            visible={this.state.modalVisible}
+            transparent={false}>
+            <View style={styles.modal}>
+              <CalendarPicker
+                onDateChange={this.onDateChange}
+                minDate={minDate}
+                selectedStartDate={this.state.selectedStartDate}
+              />
+              <View style={styles.modalButtons}>
+                <TouchableNativeFeedback
+                  background={TouchableNativeFeedback.Ripple('lightgray')}
+                  onPress={() => {
+                    this.setModalVisible(!this.state.modalVisible);
+                  }}>
+                  <View
+                    style={{
+                      padding: 10,
+                      justifyContent: 'center',
+                      alignItems: 'center',
                     }}>
-                    <View
-                      style={{
-                        padding: 10,
-                        justifyContent: 'center',
-                        alignItems: 'center',
-                      }}>
-                      <Text style={{fontWeight: 'bold', fontSize: 16}}>Cancel</Text>
-                    </View>
-                  </TouchableNativeFeedback>
-                  <TouchableNativeFeedback
-                    background={TouchableNativeFeedback.Ripple('lightgray')}
-                    onPress={() => {
-                      this.setModalVisible(!this.state.modalVisible);
+                    <Text style={{fontWeight: 'bold', fontSize: 16}}>
+                      Cancel
+                    </Text>
+                  </View>
+                </TouchableNativeFeedback>
+                <TouchableNativeFeedback
+                  background={TouchableNativeFeedback.Ripple('lightgray')}
+                  onPress={() => {
+                    this.setModalVisible(!this.state.modalVisible);
+                  }}>
+                  <View
+                    style={{
+                      padding: 10,
+                      justifyContent: 'center',
+                      alignItems: 'center',
                     }}>
-                    <View
-                      style={{
-                        padding: 10,
-                        justifyContent: 'center',
-                        alignItems: 'center',
-                      }}>
-                      <Text style={{fontWeight: 'bold', fontSize: 16}}>OK</Text>
-                    </View>
-                  </TouchableNativeFeedback>
-                </View>
+                    <Text style={{fontWeight: 'bold', fontSize: 16}}>OK</Text>
+                  </View>
+                </TouchableNativeFeedback>
               </View>
-              
-            </Modal>
-          
+            </View>
+          </Modal>
+
           {/* Time Selector */}
-          
+
           <View style={styles.carrier}>
             <RadioButton
-                value="12:00AM - 2:00AM"
-                status={checked === '12:00AM - 2:00AM' ? 'checked' : 'unchecked'}
-                onPress={() => { this.setState({ checked: '12:00AM - 2:00AM' }); }}
-                color="black"
-                uncheckedColor="black"
+              value="12:00AM - 2:00AM"
+              status={checked === '12:00AM - 2:00AM' ? 'checked' : 'unchecked'}
+              onPress={() => {
+                this.setState({checked: '12:00AM - 2:00AM'});
+              }}
+              color="black"
+              uncheckedColor="black"
             />
             <Text>12:00AM - 2:00AM</Text>
             <Text style={styles.price}>$5.00</Text>
@@ -138,11 +153,13 @@ export default class RequestTime extends React.Component {
 
           <View style={styles.carrier}>
             <RadioButton
-                value="2:00AM - 4:00AM"
-                status={checked === '2:00AM - 4:00AM' ? 'checked' : 'unchecked'}
-                onPress={() => { this.setState({ checked: '2:00AM - 4:00AM' }); }}
-                color="black"
-                uncheckedColor="black"
+              value="2:00AM - 4:00AM"
+              status={checked === '2:00AM - 4:00AM' ? 'checked' : 'unchecked'}
+              onPress={() => {
+                this.setState({checked: '2:00AM - 4:00AM'});
+              }}
+              color="black"
+              uncheckedColor="black"
             />
             <Text>2:00AM - 4:00AM</Text>
             <Text style={styles.price}>$5.00</Text>
@@ -150,11 +167,13 @@ export default class RequestTime extends React.Component {
 
           <View style={styles.carrier}>
             <RadioButton
-                value="4:00AM - 6:00AM"
-                status={checked === '4:00AM - 6:00AM' ? 'checked' : 'unchecked'}
-                onPress={() => { this.setState({ checked: '4:00AM - 6:00AM' }); }}
-                color="black"
-                uncheckedColor="black"
+              value="4:00AM - 6:00AM"
+              status={checked === '4:00AM - 6:00AM' ? 'checked' : 'unchecked'}
+              onPress={() => {
+                this.setState({checked: '4:00AM - 6:00AM'});
+              }}
+              color="black"
+              uncheckedColor="black"
             />
             <Text>4:00AM - 6:00AM</Text>
             <Text style={styles.price}>$5.00</Text>
@@ -162,11 +181,13 @@ export default class RequestTime extends React.Component {
 
           <View style={styles.carrier}>
             <RadioButton
-                value="6:00AM - 8:00AM"
-                status={checked === '6:00AM - 8:00AM' ? 'checked' : 'unchecked'}
-                onPress={() => { this.setState({ checked: '6:00AM - 8:00AM' }); }}
-                color="black"
-                uncheckedColor="black"
+              value="6:00AM - 8:00AM"
+              status={checked === '6:00AM - 8:00AM' ? 'checked' : 'unchecked'}
+              onPress={() => {
+                this.setState({checked: '6:00AM - 8:00AM'});
+              }}
+              color="black"
+              uncheckedColor="black"
             />
             <Text>6:00AM - 8:00AM</Text>
             <Text style={styles.price}>$5.00</Text>
@@ -174,11 +195,13 @@ export default class RequestTime extends React.Component {
 
           <View style={styles.carrier}>
             <RadioButton
-                value="8:00AM - 10:00AM"
-                status={checked === '8:00AM - 10:00AM' ? 'checked' : 'unchecked'}
-                onPress={() => { this.setState({ checked: '8:00AM - 10:00AM' }); }}
-                color="black"
-                uncheckedColor="black"
+              value="8:00AM - 10:00AM"
+              status={checked === '8:00AM - 10:00AM' ? 'checked' : 'unchecked'}
+              onPress={() => {
+                this.setState({checked: '8:00AM - 10:00AM'});
+              }}
+              color="black"
+              uncheckedColor="black"
             />
             <Text>8:00AM - 10:00AM</Text>
             <Text style={styles.price}>$4.00</Text>
@@ -186,11 +209,13 @@ export default class RequestTime extends React.Component {
 
           <View style={styles.carrier}>
             <RadioButton
-                value="10:00AM - 12:00PM"
-                status={checked === '10:00AM - 12:00PM' ? 'checked' : 'unchecked'}
-                onPress={() => { this.setState({ checked: '10:00AM - 12:00PM' }); }}
-                color="black"
-                uncheckedColor="black"
+              value="10:00AM - 12:00PM"
+              status={checked === '10:00AM - 12:00PM' ? 'checked' : 'unchecked'}
+              onPress={() => {
+                this.setState({checked: '10:00AM - 12:00PM'});
+              }}
+              color="black"
+              uncheckedColor="black"
             />
             <Text>10:00AM - 12:00PM</Text>
             <Text style={styles.price}>$4.00</Text>
@@ -198,11 +223,13 @@ export default class RequestTime extends React.Component {
 
           <View style={styles.carrier}>
             <RadioButton
-                value="12:00PM - 2:00PM"
-                status={checked === '12:00PM - 2:00PM' ? 'checked' : 'unchecked'}
-                onPress={() => { this.setState({ checked: '12:00PM - 2:00PM' }); }}
-                color="black"
-                uncheckedColor="black"
+              value="12:00PM - 2:00PM"
+              status={checked === '12:00PM - 2:00PM' ? 'checked' : 'unchecked'}
+              onPress={() => {
+                this.setState({checked: '12:00PM - 2:00PM'});
+              }}
+              color="black"
+              uncheckedColor="black"
             />
             <Text>12:00PM - 2:00PM</Text>
             <Text style={styles.price}>$3.00</Text>
@@ -210,11 +237,13 @@ export default class RequestTime extends React.Component {
 
           <View style={styles.carrier}>
             <RadioButton
-                value="2:00PM - 4:00PM"
-                status={checked === '2:00PM - 4:00PM' ? 'checked' : 'unchecked'}
-                onPress={() => { this.setState({ checked: '2:00PM - 4:00PM' }); }}
-                color="black"
-                uncheckedColor="black"
+              value="2:00PM - 4:00PM"
+              status={checked === '2:00PM - 4:00PM' ? 'checked' : 'unchecked'}
+              onPress={() => {
+                this.setState({checked: '2:00PM - 4:00PM'});
+              }}
+              color="black"
+              uncheckedColor="black"
             />
             <Text>2:00PM - 4:00PM</Text>
             <Text style={styles.price}>$3.00</Text>
@@ -222,11 +251,13 @@ export default class RequestTime extends React.Component {
 
           <View style={styles.carrier}>
             <RadioButton
-                value="4:00PM - 6:00PM"
-                status={checked === '4:00PM - 6:00PM' ? 'checked' : 'unchecked'}
-                onPress={() => { this.setState({ checked: '4:00PM - 6:00PM' }); }}
-                color="black"
-                uncheckedColor="black"
+              value="4:00PM - 6:00PM"
+              status={checked === '4:00PM - 6:00PM' ? 'checked' : 'unchecked'}
+              onPress={() => {
+                this.setState({checked: '4:00PM - 6:00PM'});
+              }}
+              color="black"
+              uncheckedColor="black"
             />
             <Text>4:00PM - 6:00PM</Text>
             <Text style={styles.price}>$4.00</Text>
@@ -234,11 +265,13 @@ export default class RequestTime extends React.Component {
 
           <View style={styles.carrier}>
             <RadioButton
-                value="6:00PM - 8:00PM"
-                status={checked === '6:00PM - 8:00PM' ? 'checked' : 'unchecked'}
-                onPress={() => { this.setState({ checked: '6:00PM - 8:00PM' }); }}
-                color="black"
-                uncheckedColor="black"
+              value="6:00PM - 8:00PM"
+              status={checked === '6:00PM - 8:00PM' ? 'checked' : 'unchecked'}
+              onPress={() => {
+                this.setState({checked: '6:00PM - 8:00PM'});
+              }}
+              color="black"
+              uncheckedColor="black"
             />
             <Text>6:00PM - 8:00PM</Text>
             <Text style={styles.price}>$4.50</Text>
@@ -246,11 +279,13 @@ export default class RequestTime extends React.Component {
 
           <View style={styles.carrier}>
             <RadioButton
-                value="8:00PM - 10:00PM"
-                status={checked === '8:00PM - 10:00PM' ? 'checked' : 'unchecked'}
-                onPress={() => { this.setState({ checked: '8:00PM - 10:00PM' }); }}
-                color="black"
-                uncheckedColor="black"
+              value="8:00PM - 10:00PM"
+              status={checked === '8:00PM - 10:00PM' ? 'checked' : 'unchecked'}
+              onPress={() => {
+                this.setState({checked: '8:00PM - 10:00PM'});
+              }}
+              color="black"
+              uncheckedColor="black"
             />
             <Text>8:00PM - 10:00PM</Text>
             <Text style={styles.price}>$5.00</Text>
@@ -258,11 +293,13 @@ export default class RequestTime extends React.Component {
 
           <View style={styles.carrier}>
             <RadioButton
-                value="10:00PM - 12:00AM"
-                status={checked === '10:00PM - 12:00AM' ? 'checked' : 'unchecked'}
-                onPress={() => { this.setState({ checked: '10:00PM - 12:00AM' }); }}
-                color="black"
-                uncheckedColor="black"
+              value="10:00PM - 12:00AM"
+              status={checked === '10:00PM - 12:00AM' ? 'checked' : 'unchecked'}
+              onPress={() => {
+                this.setState({checked: '10:00PM - 12:00AM'});
+              }}
+              color="black"
+              uncheckedColor="black"
             />
             <Text>10:00PM - 12:00AM</Text>
             <Text style={styles.price}>$5.00</Text>
@@ -270,8 +307,8 @@ export default class RequestTime extends React.Component {
 
           <View style={styles.datetimeDisplay}>
             <Text style={styles.text}>Pickup Date:</Text>
-            <Text style={styles.text}>{ startDate }</Text>
-            <Text style={styles.text}>{ checked }</Text>
+            <Text style={styles.text}>{startDate}</Text>
+            <Text style={styles.text}>{checked}</Text>
           </View>
         </View>
 
@@ -294,11 +331,9 @@ export default class RequestTime extends React.Component {
   }
 }
 
-
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    flexDirection: 'column',
     marginHorizontal: 40,
   },
 
@@ -308,11 +343,11 @@ const styles = StyleSheet.create({
     marginTop: 200,
     margin: 15,
     borderColor: 'black',
-    borderWidth: 0.5
+    borderWidth: 0.5,
   },
 
   modalButtons: {
-    flexDirection: 'row'
+    flexDirection: 'row',
   },
 
   datetimeDisplay: {
@@ -323,12 +358,12 @@ const styles = StyleSheet.create({
 
   text: {
     fontWeight: 'bold',
-    fontSize: 16
+    fontSize: 16,
   },
 
   price: {
     marginLeft: 'auto',
-    marginRight: 10
+    marginRight: 10,
   },
 
   title: {
@@ -338,7 +373,7 @@ const styles = StyleSheet.create({
 
   grid: {
     height: 450,
-    borderWidth: 1
+    borderWidth: 1,
   },
 
   carrier: {
