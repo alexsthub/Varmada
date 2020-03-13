@@ -3,17 +3,20 @@ import {
   StyleSheet,
   View,
   Text,
-  TouchableNativeFeedback,
+  TouchableWithoutFeedback,
   FlatList,
+  Animated,
+  Dimensions,
+  StatusBar,
 } from 'react-native';
 
 import Header from '../../components/general/Header';
+import AddressBox from '../../components/general/AddressBox';
 
-import SwipeUpDown from 'react-native-swipe-up-down';
+import SlidingUpPanel from 'rn-sliding-up-panel';
 import {GooglePlacesAutocomplete} from 'react-native-google-places-autocomplete';
 
 import FeatherIcon from 'react-native-vector-icons/Feather';
-import EntypoIcon from 'react-native-vector-icons/Entypo';
 
 // Test input
 const shit = [
@@ -37,53 +40,17 @@ const shit = [
   },
 ];
 
-class Address extends React.Component {
-  render() {
-    const addressObj = this.props.address;
-    const {address, city, name, state} = addressObj;
-    let subText;
-    if (name === address) {
-      subText = `${city},  ${state}`;
-    } else {
-      subText = `${address} ${city}, ${state}`;
-    }
-
-    return (
-      <TouchableNativeFeedback
-        background={TouchableNativeFeedback.Ripple('lightgray')}
-        onPress={e => this.props.onPress(e, this.props.index)}>
-        <View
-          style={{
-            flexDirection: 'row',
-            alignItems: 'center',
-            paddingVertical: 10,
-            elevation: 5,
-            backgroundColor: '#F7F7F7',
-          }}>
-          <View style={{paddingHorizontal: 10}}>
-            <EntypoIcon
-              style={{
-                color: '#000000',
-              }}
-              name={'location-pin'}
-              size={40}
-            />
-          </View>
-          <View style={{flexDirection: 'column', paddingLeft: 10}}>
-            <Text style={{fontWeight: 'bold'}}>{name}</Text>
-            <Text style={{color: 'gray'}}>{subText}</Text>
-          </View>
-        </View>
-      </TouchableNativeFeedback>
-    );
-  }
-}
-
-// TODO: How the fuck do i get the swipe up and down to work now
+const {height} = Dimensions.get('window');
+// TODO: Doesn't go over the back arrow :/ when the view is up
 export default class RequestAddress extends React.Component {
   constructor(props) {
     super(props);
-    this.state = {addresses: []};
+    this.state = {
+      addresses: [],
+      draggedValue: new Animated.Value(120),
+      sliderOpen: false,
+      autocompleteText: '',
+    };
   }
 
   componentDidMount() {
@@ -95,14 +62,102 @@ export default class RequestAddress extends React.Component {
   };
 
   handlePress = (e, index) => {
-    console.log(this.state.addresses[index]);
-    this.props.navigation.navigate('Time');
+    // TODO: Add to db
+    const selectedAddress = this.state.addresses[index];
+    console.log(selectedAddress);
+    this.props.navigation.navigate('Time', {
+      addressObj: this.state.addresses[index],
+      carrier: this.props.navigation.getParam("carrier")
+    });
+  };
+
+  // TODO: Parser doesn't work for all inputs.
+  handleAutocompletePress = (data, details = null) => {
+    console.log(data);
+    console.log(details);
+    const formattedAddress = details.formatted_address.split(',');
+    const address = {
+      name: data.structured_formatting.main_text
+        ? data.structured_formatting.main_text
+        : formattedAddress[0].trim(),
+      placeID: data.place_id,
+      address: formattedAddress[0].trim(),
+      city: formattedAddress[1].trim(),
+      state: formattedAddress[2]
+        .trim()
+        .split(' ')[0]
+        .trim(),
+      zip: formattedAddress[2]
+        .trim()
+        .split(' ')[1]
+        .trim(),
+      countryCode: formattedAddress[3],
+    };
+    console.log(address);
+    const newAddresses = this.state.addresses.concat(address);
+    this.setState({addresses: newAddresses, autocompleteText: ''}, () => {
+      this._panel.hide();
+    });
+  };
+
+  handleDragStart = () => {
+    if (this.state.sliderOpen) {
+      this.autocomplete.triggerBlur();
+    }
+  };
+
+  handleDragEnd = position => {
+    if (position === this.top) {
+      this.setState({sliderOpen: true});
+      this.autocomplete.triggerFocus();
+    } else {
+      this.setState({sliderOpen: false, autocompleteText: ''});
+    }
+  };
+
+  handleBackButton = () => {
+    if (this.state.sliderOpen) {
+      this._panel.hide();
+      this.setState({sliderOpen: false, autocompleteText: ''});
+      return true;
+    } else {
+      return false;
+    }
+  };
+
+  handleTouchSlidingWindow = () => {
+    this._panel.show(this.top);
+    this.setState({sliderOpen: true}, () => {
+      this.autocomplete.triggerFocus();
+    });
+  };
+
+  handleFocus = () => {
+    this._panel.show(this.top);
+    this.setState({sliderOpen: true});
+  };
+
+  handleTextChange = text => {
+    this.setState({autocompleteText: text});
   };
 
   render() {
+    const draggableRange = {top: height - StatusBar.currentHeight, bottom: 120};
+    this.top = draggableRange.top;
+    this.bottom = draggableRange.bottom;
+
+    const borderRadiusAnim = this.state.draggedValue.interpolate({
+      inputRange: [this.bottom, this.top],
+      outputRange: [25, 0],
+    });
+    const borderRadiusStyle = {
+      borderTopLeftRadius: borderRadiusAnim,
+      borderTopRightRadius: borderRadiusAnim,
+    };
+
     return (
-      <View style={{flex: 1}}>
-        <View style={{flex: 4, marginHorizontal: 40}}>
+      <View style={styles.container}>
+        <View style={{marginHorizontal: 40}}>
           <Header
             headerText={'Request a pickup'}
             subHeaderText={'Select a pickup address'}
@@ -111,7 +166,7 @@ export default class RequestAddress extends React.Component {
           <FlatList
             data={this.state.addresses}
             renderItem={({item, index}) => (
-              <Address
+              <AddressBox
                 address={item}
                 index={index}
                 onPress={(e, index) => this.handlePress(e, index)}
@@ -122,127 +177,137 @@ export default class RequestAddress extends React.Component {
             showsVerticalScrollIndicator={false}
             contentContainerStyle={{marginTop: 20}}
           />
-
-          {/* <TouchableNativeFeedback
-            background={TouchableNativeFeedback.Ripple('lightgray')}
-            onPress={this.addAddress}>
-            <View
-              style={{
-                flexDirection: 'row',
-                justifyContent: 'space-between',
-                marginTop: 20,
-                backgroundColor: '#F7F7F7',
-                elevation: 10,
-                padding: 10,
-              }}>
-              <Text style={{fontWeight: 'bold'}}>Add a new address</Text>
-              <View style={{}}>
-                <Text>></Text>
-              </View>
-            </View>
-          </TouchableNativeFeedback> */}
         </View>
 
-        {/* would be the miniView */}
-        <View
-          style={{
-            flex: 1,
-            backgroundColor: '#F7F7F7',
-            elevation: 10,
-            borderTopRightRadius: 20,
-            borderTopLeftRadius: 20,
-          }}>
-          <View style={{marginHorizontal: 20, marginTop: 20}}>
-            <Text style={{fontSize: 18, fontWeight: 'bold'}}>
-              Need to add another address?
-            </Text>
-            <GooglePlacesAutocomplete
-              placeholder="Search"
-              editable={false}
-              minLength={2}
-              autoFocus={false}
-              returnKeyType={'search'}
-              listViewDisplayed="auto"
-              fetchDetails={true}
-              getDefaultValue={() => ''}
-              placeholder={'Where should we go?'}
-              renderDescription={row => row.description}
-              renderLeftButton={() => (
-                <FeatherIcon
-                  style={{
-                    color: '#000000',
-                    paddingLeft: 15,
-                  }}
-                  name={'search'}
-                  size={20}
-                />
-              )}
-              onPress={(data, details = null) => {
-                console.log(data, details);
-              }}
-              query={{
-                // available options: https://developers.google.com/places/web-service/autocomplete
-                // TODO: Remove this line when you push
-                key: '',
-                language: 'en',
-                types: 'address',
-              }}
-              styles={{
-                container: {
-                  // flex: 1,
-                  marginTop: 10,
-                  elevation: 5,
-                  borderRadius: 10,
-                  backgroundColor: '#FFFFFF',
-                },
-                textInputContainer: {
-                  height: 44,
-                  flexDirection: 'row',
-                  alignItems: 'center',
-                },
-                textInput: {
-                  height: 28,
-                  borderRadius: 5,
-                  paddingVertical: 4.5,
-                  paddingHorizontal: 10,
-                  fontSize: 15,
-                  flex: 1,
-                },
-                description: {
-                  fontWeight: 'bold',
-                },
-              }}
-              nearbyPlacesAPI="GooglePlacesSearch"
-              GooglePlacesDetailsQuery={{
-                // available options for GooglePlacesDetails API : https://developers.google.com/places/web-service/details
-                fields: 'formatted_address',
-              }}
-              debounce={100} // debounce the requests in ms. Set to 0 to remove debounce. By default 0ms.
-              predefinedPlacesAlwaysVisible={false}
-              enablePoweredByContainer={false}
-              suppressDefaultStyles={true}
-            />
-          </View>
-        </View>
-
-        {/* <SwipeUpDown
-          hasRef={ref => (this.swipeUpDownRef = ref)}
-          itemMini={
-            <View style={{alignItems: 'center', paddingVertical: 40}}>
-              <Text>----------</Text>
-              <Text style={{marginTop: 10}}>Need to add another address?</Text>
-            </View>
-          }
-          itemFull={<Text>Fuck</Text>} // Pass props component when show full
-          onShowMini={() => console.log('mini')}
-          onShowFull={() => console.log('full')}
-          onMoveDown={() => console.log('down')}
-          onMoveUp={() => console.log('up')}
-          disablePressToShow={false} // Press item mini to show full
-          style={{backgroundColor: 'green', elevation: 11}} // style for swipe
-          animation={'linear'}
-        /> */}
+        <SlidingUpPanel
+          ref={c => (this._panel = c)}
+          draggableRange={draggableRange}
+          animatedValue={this.state.draggedValue}
+          height={this.top}
+          friction={0.4}
+          allowMomentum={true}
+          snappingPoints={[this.top]}
+          onDragStart={this.handleDragStart}
+          onMomentumDragEnd={this.handleDragEnd}
+          onBackButtonPress={this.handleBackButton}
+          avoidKeyboard={false}>
+          <TouchableWithoutFeedback
+            onPress={this.handleTouchSlidingWindow}
+            disabled={this.state.sliderOpen}>
+            <Animated.View style={[styles.panelHeader, borderRadiusStyle]}>
+              <View style={styles.panelIcon} />
+              <Text style={styles.textHeader}>
+                Need to add another address?
+              </Text>
+              <GooglePlacesAutocomplete
+                ref={c => (this.autocomplete = c)}
+                text={this.state.autocompleteText}
+                placeholder="Search"
+                textInputProps={{
+                  onFocus: this.handleFocus,
+                  onChangeText: this.handleTextChange,
+                }}
+                minLength={2}
+                autoFocus={false}
+                returnKeyType={'search'}
+                listViewDisplayed={this.state.sliderOpen}
+                fetchDetails={true}
+                getDefaultValue={() => ''}
+                placeholder={'Where should we go?'}
+                renderDescription={row => row.description}
+                renderLeftButton={() => (
+                  <FeatherIcon
+                    style={styles.autocompleteIcon}
+                    name={'search'}
+                    size={20}
+                  />
+                )}
+                onPress={this.handleAutocompletePress}
+                query={{
+                  // TODO: Remove this key when you push. Probably use secrets manager later.
+                  key: '',
+                  language: 'en',
+                }}
+                styles={autocompleteStyle}
+                nearbyPlacesAPI="GooglePlacesSearch"
+                GooglePlacesDetailsQuery={{
+                  fields: 'formatted_address',
+                }}
+                debounce={100}
+                predefinedPlacesAlwaysVisible={false}
+                enablePoweredByContainer={false}
+                suppressDefaultStyles={true}
+              />
+            </Animated.View>
+          </TouchableWithoutFeedback>
+        </SlidingUpPanel>
       </View>
     );
   }
 }
+
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    backgroundColor: '#ffffff',
+  },
+  panelIcon: {
+    backgroundColor: 'lightgray',
+    height: 4,
+    width: 50,
+    alignSelf: 'center',
+    borderRadius: 5,
+    elevation: 1,
+    marginBottom: 5,
+  },
+  panelHeader: {
+    height: 120,
+    paddingHorizontal: 24,
+    paddingBottom: 24,
+    paddingTop: 8,
+    flex: 1,
+    backgroundColor: '#393e46',
+    elevation: 5,
+    borderTopRightRadius: 20,
+    borderTopLeftRadius: 20,
+  },
+  textHeader: {
+    fontSize: 18,
+    fontWeight: 'bold',
+    color: '#FFFFFF',
+  },
+  autocompleteIcon: {
+    color: '#000000',
+    paddingLeft: 15,
+  },
+});
+
+const autocompleteStyle = {
+  container: {
+    marginTop: 10,
+    elevation: 5,
+    borderRadius: 10,
+    backgroundColor: '#FFFFFF',
+  },
+  textInputContainer: {
+    height: 44,
+    flexDirection: 'row',
+    alignItems: 'center',
+  },
+  textInput: {
+    height: 28,
+    borderRadius: 5,
+    paddingVertical: 4.5,
+    paddingHorizontal: 10,
+    fontSize: 15,
+    flex: 1,
+  },
+  description: {
+    fontWeight: 'bold',
+  },
+  row: {
+    padding: 13,
+    height: 44,
+    flexDirection: 'row',
+  },
+};

@@ -6,6 +6,7 @@ import Header from '../../components/general/Header';
 export default class RequestServices extends React.Component {
   constructor(props) {
     super(props);
+    console.log(this.props.navigation.getParam("carrier"))
     this.state = {packaging: null};
   }
 
@@ -31,7 +32,9 @@ export default class RequestServices extends React.Component {
   };
 
   handleContinue = () => {
-    this.props.navigation.navigate('Address');
+    this.props.navigation.navigate('Address', {
+      carrier: this.props.navigation.getParam("carrier")
+    });
   };
 
   render() {

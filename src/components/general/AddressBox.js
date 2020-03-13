@@ -1,101 +1,45 @@
-import React, {Component} from 'react';
-import {Text, View, StyleSheet, TouchableOpacity} from 'react-native';
-import PropTypes from 'prop-types';
-import {Colors} from '../../constants/styles';
+import React from 'react';
+import {StyleSheet, View, Text, TouchableNativeFeedback} from 'react-native';
+import EntypoIcon from 'react-native-vector-icons/Entypo';
 
-export default class AddressBox extends Component {
-  constructor(props) {
-    super(props);
-  }
-  //this.props.isDefault ? (backgroundColor = 'red') : null,
+export default class Address extends React.Component {
   render() {
+    const addressObj = this.props.address;
+    const {address, city, name, state} = addressObj;
+    let subText;
+    if (name === address) {
+      subText = `${city},  ${state}`;
+    } else {
+      subText = `${address} ${city}, ${state}`;
+    }
+
     return (
-      <View
-        style={[
-          styles.addressBoxView,
-          {backgroundColor: this.props.isDefault ? '#F8B500' : null},
-        ]}>
-        <View
-          style={{
-            marginHorizontal: 30,
-            width: '60%',
-          }}>
-          <Text style={{fontWeight: 'bold'}}>{this.props.addressTitle}</Text>
-          <Text>{this.props.street}</Text>
-          {this.props.apartment ? <Text>{this.props.apartment}</Text> : null}
-          <Text>
-            {this.props.city}, {this.props.state} {this.props.zipcode}
-          </Text>
-
-          {this.props.isDefault ? null : (
-            <TouchableOpacity
-              //style={[styles.container, this.props.containerStyle, , {backgroundColor: this.props.active ? 'lightgray': null}]}
-              style={[
-                styles.button,
-                this.props.buttonStyle,
-                {backgroundColor: '#F8B500'},
-              ]}
-              onPress={this.props.onPress}>
-              <Text style={styles.text}>Set As Default</Text>
-            </TouchableOpacity>
-          )}
-
-          <View style={styles.addressButtonsContainer}>
-            <View style={{flex: 1}}>
-              <TouchableOpacity
-                style={styles.button}
-                onPress={this.props.onPress}>
-                <Text style={styles.text}>Edit</Text>
-              </TouchableOpacity>
-            </View>
-
-            <View style={styles.divider} />
-
-            <View style={{flex: 1}}>
-              <TouchableOpacity
-                style={styles.button}
-                onPress={this.props.onPress}>
-                <Text style={styles.text}>Delete</Text>
-              </TouchableOpacity>
-            </View>
+      <TouchableNativeFeedback
+        background={TouchableNativeFeedback.Ripple('lightgray')}
+        onPress={e => this.props.onPress(e, this.props.index)}>
+        <View style={styles.container}>
+          <View style={{paddingHorizontal: 10}}>
+            <EntypoIcon style={styles.icon} name={'location-pin'} size={40} />
+          </View>
+          <View style={{flexDirection: 'column', paddingLeft: 10}}>
+            <Text style={{fontWeight: 'bold'}}>{name}</Text>
+            <Text style={{color: 'gray'}}>{subText}</Text>
           </View>
         </View>
-      </View>
+      </TouchableNativeFeedback>
     );
   }
 }
 
 const styles = StyleSheet.create({
-  addressBoxView: {
-    alignItems: 'center',
-    marginVertical: 10,
-  },
-  button: {
-    alignItems: 'center',
-    borderWidth: 0.5,
-    opacity: 0.8,
-    padding: 10,
-    marginTop: 10,
-    backgroundColor: 'white',
-  },
-  text: {
-    color: Colors.defaultColor,
-    fontSize: 24,
-  },
-  addressButtonsContainer: {
+  container: {
     flexDirection: 'row',
+    alignItems: 'center',
+    paddingVertical: 15,
+    elevation: 5,
+    backgroundColor: '#F7F7F7',
   },
-  divider: {
-    marginHorizontal: 8,
+  icon: {
+    color: '#000000',
   },
 });
-
-AddressBox.propTypes = {
-  size: PropTypes.number,
-  backgroundColor: PropTypes.string,
-};
-
-AddressBox.defaultProps = {
-  size: 30,
-  backgroundColor: Colors.boldColor,
-};
