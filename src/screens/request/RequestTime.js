@@ -26,7 +26,15 @@ export default class RequestTime extends React.Component {
   }
 
   handleContinue = () => {
-    this.props.navigation.navigate('Review');
+    const {addressObj, carrier} = this.props.navigation.state.params;
+    const date = new Date();
+    this.props.navigation.navigate('Review', {
+      addressObj: this.props.navigation.getParam("addressObj"),
+      carrier: this.props.navigation.getParam("carrier"),
+      // filler for now
+      time: `${date.getHours()}:${date.getMinutes()}`,
+      date: `${date.getMonth()}/${date.getDate()}/${date.getFullYear()}`,
+    });
   };
 
   onDateChange(date) {

@@ -29,10 +29,10 @@ import RequestCarrier from '../screens/request/RequestCarrier';
 import RequestServices from '../screens/request/RequestServices';
 import RequestPackage from '../screens/request/RequestPackage';
 import RequestAddress from '../screens/request/RequestAddress';
-import RequestAddAddress from '../screens/request/RequestAddAddress';
 import RequestAdditional from '../screens/request/RequestAdditional';
 import RequestTime from '../screens/request/RequestTime';
 import RequestReview from '../screens/request/RequestReview';
+import RequestAddLabel from '../screens/request/RequestAddLabel';
 
 const WIDTH = Dimensions.get('window').width;
 
@@ -90,8 +90,8 @@ const RequestNavigator = createStackNavigator({
     screen: RequestAddress,
     navigationOptions: {headerTransparent: true},
   },
-  AddAddress: {
-    screen: RequestAddAddress,
+  AddLabel: {
+    screen: RequestAddLabel,
     navigationOptions: {headerTransparent: true},
   },
   Additional: {
@@ -152,7 +152,7 @@ const AppNavigator = createStackNavigator(
     },
   },
   {
-    initialRouteName: 'MainDrawer',
+    initialRouteName: 'LoginScreen',
   },
 );
 export default createAppContainer(AppNavigator);
