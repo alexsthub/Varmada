@@ -25,7 +25,7 @@ import SecuritySettingsScreen from '../screens/SecuritySettingsScreen';
 // Request Screens
 import RequestTitle from '../screens/request/RequestTitle';
 import RequestImage from '../screens/request/RequestImage';
-import SelectCarrierScreen from '../screens/request/SelectCarrierScreen';
+import RequestCarrier from '../screens/request/RequestCarrier';
 import RequestServices from '../screens/request/RequestServices';
 import RequestPackage from '../screens/request/RequestPackage';
 import RequestAddress from '../screens/request/RequestAddress';
@@ -75,7 +75,7 @@ const RequestNavigator = createStackNavigator({
     navigationOptions: {headerTransparent: true},
   },
   Carrier: {
-    screen: SelectCarrierScreen,
+    screen: RequestCarrier,
     navigationOptions: {headerTransparent: true},
   },
   Services: {
