@@ -24,6 +24,7 @@ export default class RequestServices extends React.Component {
 
   handleLabels = () => {
     // Navigate to new page
+    this.props.navigation.navigate('AddLabel');
   };
 
   handlePackaging = () => {
