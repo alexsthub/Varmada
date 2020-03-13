@@ -33,7 +33,7 @@ export default class RequestAddLabel extends React.Component {
         const profileImage = {
           uri: response.uri,
           type: response.type,
-          name: 'package.jpg',
+          name: 'shippinglabel.pdf',
         };
         this.setState({image: profileImage});
       }
@@ -46,7 +46,9 @@ export default class RequestAddLabel extends React.Component {
     // TODO: handle if it does not exist
     this.props.navigation.navigate('Services');
   };
-
+  changePage = () => {
+      
+  }
   render() {
     const imageContent = !this.state.image ? (
     <View>
@@ -62,8 +64,15 @@ export default class RequestAddLabel extends React.Component {
         {/* <FeatherIcon style={{color: '#000000'}} name={'camera'} size={40} /> */}
         <Text>Click here to upload a different file</Text>
       </View>
-      <Text style={{marginTop:10}}>ShippingLabel.pdf</Text>
+      <Text style={{marginTop:10}}>File name: {this.state.image.name}</Text>
       <Image style={styles.fileStyle} source={{uri: this.state.image.uri}} />
+      <View style={{marginTop: 10,
+                    backgroundColor: '#f8b500',
+                    elevation: 10,
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    height: 30,
+        }} onPress={this.changePage}><Text>Change page setting</Text></View>
       </View>
     );
 
@@ -81,7 +90,7 @@ export default class RequestAddLabel extends React.Component {
         </TouchableNativeFeedback>
 
         <KeyboardAvoidingView
-          style={{marginTop: 40, width: '60%', alignSelf: 'center'}}
+          style={{marginTop: 20, width: '60%', alignSelf: 'center'}}
           behavior={'position'}>
           <TouchableNativeFeedback
             background={TouchableNativeFeedback.Ripple('lightgray')}
