@@ -8,7 +8,9 @@ import {
 } from 'react-native';
 import moment from 'moment';
 import PropTypes from 'prop-types';
+import LinearGradient from 'react-native-linear-gradient';
 
+// TODO: Make the calendars smaller and have the selected one be in the middle?
 export default class DateCarousel extends React.Component {
   constructor(props) {
     super(props);
@@ -47,7 +49,6 @@ export default class DateCarousel extends React.Component {
   };
 
   dateSelect = props => {
-    // console.log(props);
     const {onDateSelect} = this.props;
     this.setState(
       {selectedDayIndex: props.key},
@@ -79,8 +80,8 @@ export default class DateCarousel extends React.Component {
       dates.push({
         date: date.format('YYYY-MM-DD'),
         day: date.format('D'),
-        day_of_week: date.format('dddd'),
-        month: date.format('MMMM'),
+        day_of_week: date.format('ddd'),
+        month: date.format('MMM'),
         disabled: isDisabled,
       });
       date.add(1, 'days');
@@ -164,9 +165,7 @@ export default class DateCarousel extends React.Component {
     return (
       <View style={{height: constants.DAY_SIZE, width: scrollWidth}}>
         <ScrollView
-          ref={scrollView => {
-            this.scrollView = scrollView;
-          }}
+          ref={scrollView => (this.scrollView = scrollView)}
           horizontal
           snapToInterval={
             paginate && scrollWidth % constants.DAY_SIZE === 0
@@ -178,6 +177,20 @@ export default class DateCarousel extends React.Component {
           <View style={{width: (scrollWidth % constants.DAY_SIZE) / 2}} />
           {days || null}
         </ScrollView>
+        <LinearGradient
+          start={{x: 0, y: 0}}
+          end={{x: 1, y: 0}}
+          style={styles.fadeLeft}
+          colors={['rgba(255, 255, 255, 1.0)', 'rgba(255, 255, 255, 0.2)']}
+          pointerEvents={'none'}
+        />
+        <LinearGradient
+          start={{x: 0, y: 0}}
+          end={{x: 1, y: 0}}
+          style={styles.fadeRight}
+          colors={['rgba(255, 255, 255, 0.2)', 'rgba(255, 255, 255, 1.0)']}
+          pointerEvents={'none'}
+        />
       </View>
     );
   }
@@ -242,14 +255,14 @@ const styles = StyleSheet.create({
   },
   monthContainer: {
     height: 25,
-    backgroundColor: constants.MONTH_BACKGROUND_COLOR,
+    // backgroundColor: constants.MONTH_BACKGROUND_COLOR,
     alignItems: 'center',
     justifyContent: 'center',
   },
   monthText: {
     fontSize: 16,
     textAlign: 'center',
-    color: '#fff',
+    color: '#000000',
   },
   dateContainer: {
     height: 50,
@@ -266,5 +279,20 @@ const styles = StyleSheet.create({
     fontSize: Platform.OS === 'ios' ? 16 : 15,
     textAlign: 'center',
     color: '#000',
+  },
+  fadeLeft: {
+    position: 'absolute',
+    top: 0,
+    width: 50,
+    height: 100,
+    zIndex: 1,
+  },
+  fadeRight: {
+    position: 'absolute',
+    top: 0,
+    right: 0,
+    width: 50,
+    height: 100,
+    zIndex: 1,
   },
 });

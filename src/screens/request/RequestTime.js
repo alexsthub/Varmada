@@ -56,18 +56,21 @@ export default class RequestTime extends React.Component {
 
     return (
       <View style={{flex: 1}}>
-        <View style={styles.container}>
+        <View style={styles.headerContainer}>
           <Header
             headerText={'Request a pickup'}
             subHeaderText={'Select a date and time'}
           />
-          <DateCarousel
-            // lastDate={'2019-07-20'}
-            numberOfDays={60}
-            paginate
-            onDateSelect={date => console.log(date)}
-          />
+        </View>
 
+        <DateCarousel
+          // lastDate={'2019-07-20'}
+          numberOfDays={60}
+          paginate
+          onDateSelect={date => console.log(date)}
+        />
+
+        <View style={styles.container}>
           <TouchableNativeFeedback
             background={TouchableNativeFeedback.Ripple('lightgray')}
             onPress={() => {
@@ -336,7 +339,9 @@ const styles = StyleSheet.create({
     flex: 1,
     marginHorizontal: 40,
   },
-
+  headerContainer: {
+    marginHorizontal: 40,
+  },
   modal: {
     justifyContent: 'center',
     alignItems: 'center',
@@ -345,37 +350,30 @@ const styles = StyleSheet.create({
     borderColor: 'black',
     borderWidth: 0.5,
   },
-
   modalButtons: {
     flexDirection: 'row',
   },
-
   datetimeDisplay: {
     marginBottom: 10,
     justifyContent: 'center',
     alignItems: 'center',
   },
-
   text: {
     fontWeight: 'bold',
     fontSize: 16,
   },
-
   price: {
     marginLeft: 'auto',
     marginRight: 10,
   },
-
   title: {
     textAlign: 'center',
     fontSize: 30,
   },
-
   grid: {
     height: 450,
     borderWidth: 1,
   },
-
   carrier: {
     flex: 1,
     borderColor: 'black',
@@ -385,11 +383,9 @@ const styles = StyleSheet.create({
     // justifyContent: 'center',
     alignItems: 'center',
   },
-
   checkbox: {
     flex: 1,
   },
-
   image: {
     flex: 5,
     height: 140,
