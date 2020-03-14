@@ -177,6 +177,7 @@ export default class DateCarousel extends React.Component {
           <View style={{width: (scrollWidth % constants.DAY_SIZE) / 2}} />
           {days || null}
         </ScrollView>
+
         <LinearGradient
           start={{x: 0, y: 0}}
           end={{x: 1, y: 0}}
@@ -235,8 +236,7 @@ const styles = StyleSheet.create({
     backgroundColor: constants.CALENDAR_BACKGROUND_COLOR,
     height: 100,
     width: 100,
-    flexDirection: 'column',
-    elevation: 3,
+    elevation: 5,
   },
   singleContainerSelected: {
     shadowOpacity: 0.3,

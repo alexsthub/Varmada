@@ -231,6 +231,8 @@ PODS:
   - RNAWSCognito (3.2.1):
     - JKBigInteger2 (= 0.0.5)
     - React
+  - RNDateTimePicker (2.2.3):
+    - React
   - RNGestureHandler (1.5.2):
     - React
   - RNReanimated (1.4.0):
@@ -277,6 +279,7 @@ DEPENDENCIES:
   - ReactCommon/turbomodule/core (from `../node_modules/react-native/ReactCommon`)
   - RNAwesomeCardIO (from `../node_modules/react-native-awesome-card-io`)
   - RNAWSCognito (from `../node_modules/amazon-cognito-identity-js`)
+  - "RNDateTimePicker (from `../node_modules/@react-native-community/datetimepicker`)"
   - RNGestureHandler (from `../node_modules/react-native-gesture-handler`)
   - RNReanimated (from `../node_modules/react-native-reanimated`)
   - RNScreens (from `../node_modules/react-native-screens`)
@@ -350,6 +353,8 @@ EXTERNAL SOURCES:
     :path: "../node_modules/react-native-awesome-card-io"
   RNAWSCognito:
     :path: "../node_modules/amazon-cognito-identity-js"
+  RNDateTimePicker:
+    :path: "../node_modules/@react-native-community/datetimepicker"
   RNGestureHandler:
     :path: "../node_modules/react-native-gesture-handler"
   RNReanimated:
@@ -396,6 +401,7 @@ SPEC CHECKSUMS:
   ReactCommon: 198c7c8d3591f975e5431bec1b0b3b581aa1c5dd
   RNAwesomeCardIO: b1311580f7bd82031c2e5e8829c33f2bf8456085
   RNAWSCognito: 5c0df55a382a2f23ae81ec6e717975880002dd63
+  RNDateTimePicker: 647f891a27a68b44d012fd7c6183844268ab0342
   RNGestureHandler: 946a7691e41df61e2c4b1884deab41a4cdc3afff
   RNReanimated: b2ab0b693dddd2339bd2f300e770f6302d2e960c
   RNScreens: 36f8c83e5e23b6bfd5b912148453d81e335573eb
