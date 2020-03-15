@@ -15,6 +15,7 @@ import DateTimePickerModal from 'react-native-modal-datetime-picker';
 import Header from '../../components/general/Header';
 import DateCarousel from '../../components/general/DateCarousel';
 
+// TODO: Clicking something on the calendar should switch the date carousel as well and slide it
 export default class RequestTime extends React.Component {
   constructor(props) {
     super(props);
@@ -76,6 +77,7 @@ export default class RequestTime extends React.Component {
         </View>
         <DateCarousel
           // lastDate={'2019-07-20'}
+          // selectedDate={}
           numberOfDays={30}
           paginate
           onDateSelect={this.carouselSelect}
@@ -88,6 +90,8 @@ export default class RequestTime extends React.Component {
           onConfirm={this.handleConfirm}
           onCancel={() => this.setState({modalVisible: false})}
         />
+
+        <View style={{marginTop: 20}} />
         <View style={styles.container}>
           {/* Time Selector */}
 

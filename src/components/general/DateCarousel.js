@@ -5,12 +5,16 @@ import {
   Text,
   View,
   TouchableOpacity,
+  Dimensions,
 } from 'react-native';
 import moment from 'moment';
 import PropTypes from 'prop-types';
 import LinearGradient from 'react-native-linear-gradient';
 
-// TODO: Make the calendars smaller and have the selected one be in the middle?
+// TODO: Should i start with current date in the middle with whitespace to the left or just start with current date all the way to the left?
+// TODO: If i did the latter, I should probably get rid of the Left Blur on the first mount
+// TODO: Llysa likes the latter better but I kind of like the former.
+const pageWidth = Dimensions.get('window').width;
 export default class DateCarousel extends React.Component {
   constructor(props) {
     super(props);
@@ -33,18 +37,22 @@ export default class DateCarousel extends React.Component {
     if (this.scrollView) {
       const {width, daysInView} = this.props;
 
-      let scrollViewWidth = constants.DAY_SIZE;
+      let scrollViewWidth = constants.DAY_WIDTH;
       if (width || daysInView) {
-        scrollViewWidth = width || daysInView * constants.DAY_SIZE;
+        scrollViewWidth = width || daysInView * constants.DAY_WIDTH;
       }
-      const xOffset =
-        constants.DAY_SIZE * index +
-        (constants.DAY_SIZE - scrollViewWidth) / 2 +
-        (scrollViewWidth % constants.DAY_SIZE) / 2;
+      let xOffset =
+        constants.DAY_WIDTH * index +
+        (constants.DAY_WIDTH - scrollViewWidth) / 2 +
+        (scrollViewWidth % constants.DAY_WIDTH) / 2;
 
-      const scrollOffset = {x: xOffset, animated: true};
-
-      this.scrollView.scrollTo(scrollOffset);
+      if (xOffset + constants.DAY_WIDTH > pageWidth / 2) {
+        const scrollOffset = {
+          x: xOffset - pageWidth / 2 + constants.DAY_WIDTH / 2,
+          animated: true,
+        };
+        this.scrollView.scrollTo(scrollOffset);
+      }
     }
   };
 
@@ -107,7 +115,7 @@ export default class DateCarousel extends React.Component {
     if (width) {
       scrollWidth = width;
     } else if (daysInView) {
-      scrollWidth = daysInView * constants.DAY_SIZE;
+      scrollWidth = daysInView * constants.DAY_WIDTH;
     }
 
     const daysProps = {
@@ -123,14 +131,12 @@ export default class DateCarousel extends React.Component {
     if (availableDates) {
       days = availableDates.map((val, key) => {
         const isClosedStyle = val.open ? null : styles.closed;
-
-        const isClosedMonthStyle = val.disabled
-          ? styles.monthContainerClosed
-          : null;
-
-        const selectedStyle =
-          selectedDayIndex === key ? styles.singleContainerSelected : null;
-
+        let selectedStyle;
+        let selectedText;
+        if (selectedDayIndex === key) {
+          selectedStyle = styles.singleContainerSelected;
+          selectedText = styles.selectedText;
+        }
         return (
           <TouchableOpacity
             key={key}
@@ -138,23 +144,19 @@ export default class DateCarousel extends React.Component {
             onPress={() =>
               this.dateSelect({key, date: availableDates[key].date})
             }>
-            <View style={[styles.singleContainer, selectedStyle]}>
+            <View style={styles.singleContainer}>
               <View style={[styles.singleDateBox, selectedStyle]}>
-                <View style={[styles.monthContainer, isClosedMonthStyle]}>
-                  <Text style={styles.monthText}>{val.month}</Text>
-                </View>
-                <View style={styles.dateContainer}>
-                  <Text style={[styles.dateText, isClosedStyle]}>
-                    {val.day}
-                  </Text>
-                </View>
-                <View style={styles.dayContainer}>
-                  <Text style={[styles.dayText, isClosedStyle]}>
-                    {val.disabled && disabledText
-                      ? daysProps.disabledText
-                      : val.day_of_week}
-                  </Text>
-                </View>
+                <Text style={[styles.monthText, selectedText]}>
+                  {val.month}
+                </Text>
+                <Text style={[styles.dateText, isClosedStyle, selectedText]}>
+                  {val.day}
+                </Text>
+                <Text style={[styles.dayText, isClosedStyle, selectedText]}>
+                  {val.disabled && disabledText
+                    ? daysProps.disabledText
+                    : val.day_of_week}
+                </Text>
               </View>
             </View>
           </TouchableOpacity>
@@ -163,18 +165,18 @@ export default class DateCarousel extends React.Component {
     }
 
     return (
-      <View style={{height: constants.DAY_SIZE, width: scrollWidth}}>
+      <View style={{height: constants.DAY_WIDTH, width: scrollWidth}}>
         <ScrollView
           ref={scrollView => (this.scrollView = scrollView)}
           horizontal
           snapToInterval={
-            paginate && scrollWidth % constants.DAY_SIZE === 0
+            paginate && scrollWidth % constants.DAY_WIDTH === 0
               ? scrollWidth
-              : constants.DAY_SIZE
+              : constants.DAY_WIDTH
           }
           decelerationRate="fast"
           showsHorizontalScrollIndicator={false}>
-          <View style={{width: (scrollWidth % constants.DAY_SIZE) / 2}} />
+          <View style={{width: (scrollWidth % constants.DAY_WIDTH) / 2}} />
           {days || null}
         </ScrollView>
 
@@ -215,14 +217,14 @@ const constants = {
   MONTH_BACKGROUND_COLOR_DISABLED: '#5a5a5a',
   CALENDAR_BACKGROUND_COLOR: '#fff',
   BORDER_RADIUS: 5,
-  DAY_SIZE: 120,
+  DAY_WIDTH: 100,
+  DAY_HEIGHT: 120,
 };
 
 const styles = StyleSheet.create({
   singleContainer: {
-    height: constants.DAY_SIZE,
-    width: constants.DAY_SIZE,
-    padding: 10,
+    height: constants.DAY_HEIGHT,
+    width: constants.DAY_WIDTH,
     shadowOpacity: 0.1,
     shadowRadius: 4,
     shadowOffset: {
@@ -232,11 +234,11 @@ const styles = StyleSheet.create({
   },
   singleDateBox: {
     borderRadius: constants.BORDER_RADIUS,
-    overflow: 'hidden',
     backgroundColor: constants.CALENDAR_BACKGROUND_COLOR,
-    height: 100,
-    width: 100,
+    overflow: 'hidden',
+    marginHorizontal: 10,
     elevation: 5,
+    alignItems: 'center',
   },
   singleContainerSelected: {
     shadowOpacity: 0.3,
@@ -245,7 +247,8 @@ const styles = StyleSheet.create({
       height: 2,
       width: 2,
     },
-    elevation: 6,
+    elevation: 5,
+    backgroundColor: '#5c636e',
   },
   closed: {
     color: constants.MONTH_BACKGROUND_COLOR_DISABLED,
@@ -253,27 +256,18 @@ const styles = StyleSheet.create({
   monthContainerClosed: {
     backgroundColor: constants.MONTH_BACKGROUND_COLOR_DISABLED,
   },
-  monthContainer: {
-    height: 25,
-    // backgroundColor: constants.MONTH_BACKGROUND_COLOR,
-    alignItems: 'center',
-    justifyContent: 'center',
+  selectedText: {
+    color: '#FFFFFF',
   },
   monthText: {
     fontSize: 16,
     textAlign: 'center',
     color: '#000000',
   },
-  dateContainer: {
-    height: 50,
-  },
   dateText: {
     marginTop: Platform.OS === 'ios' ? 4 : 0,
     fontSize: 38,
     textAlign: 'center',
-  },
-  dayContainer: {
-    height: 25,
   },
   dayText: {
     fontSize: Platform.OS === 'ios' ? 16 : 15,
