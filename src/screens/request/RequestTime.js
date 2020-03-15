@@ -4,7 +4,6 @@ import {
   View,
   Text,
   TouchableNativeFeedback,
-  Modal,
   TouchableOpacity,
 } from 'react-native';
 import {RadioButton} from 'react-native-paper';
@@ -15,12 +14,11 @@ import DateTimePickerModal from 'react-native-modal-datetime-picker';
 import Header from '../../components/general/Header';
 import DateCarousel from '../../components/general/DateCarousel';
 
-// TODO: Clicking something on the calendar should switch the date carousel as well and slide it
 export default class RequestTime extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      selectedDate: moment().format('dddd, MMMM Do YYYY'),
+      selectedDate: moment(),
       modalVisible: false,
       checked: '',
     };
@@ -38,20 +36,14 @@ export default class RequestTime extends React.Component {
     });
   };
 
-  handleConfirm = date => {
+  datepickerSelect = date => {
     const d = moment(date);
-    const selectedDate = d.format('dddd, MMMM Do YYYY');
-    this.setState({modalVisible: false, selectedDate: selectedDate});
-  };
-
-  setModalVisible = visible => {
-    this.setState({modalVisible: visible});
+    this.setState({modalVisible: false, selectedDate: d});
   };
 
   carouselSelect = date => {
     const d = moment(date);
-    const formatDate = d.format('dddd, MMMM Do YYYY');
-    this.setState({selectedDate: formatDate});
+    this.setState({selectedDate: d});
   };
 
   render() {
@@ -77,7 +69,7 @@ export default class RequestTime extends React.Component {
         </View>
         <DateCarousel
           // lastDate={'2019-07-20'}
-          // selectedDate={}
+          selectedDate={this.state.selectedDate}
           numberOfDays={30}
           paginate
           onDateSelect={this.carouselSelect}
@@ -86,15 +78,15 @@ export default class RequestTime extends React.Component {
         <DateTimePickerModal
           isVisible={this.state.modalVisible}
           mode="date"
+          minimumDate={new Date()}
           // value={moment(this.state.selectedDate, 'dddd, MMMM Do YYYY').toDate}
-          onConfirm={this.handleConfirm}
+          onConfirm={this.datepickerSelect}
           onCancel={() => this.setState({modalVisible: false})}
         />
 
         <View style={{marginTop: 20}} />
-        <View style={styles.container}>
-          {/* Time Selector */}
 
+        <View style={styles.container}>
           <View style={styles.carrier}>
             <RadioButton
               value="6:00AM - 8:00AM"
@@ -209,7 +201,9 @@ export default class RequestTime extends React.Component {
 
           <View style={styles.datetimeDisplay}>
             <Text style={styles.text}>Pickup Date:</Text>
-            <Text style={styles.text}>{this.state.selectedDate}</Text>
+            <Text style={styles.text}>
+              {this.state.selectedDate.format('dddd, MMMM Do YYYY')}
+            </Text>
             <Text style={styles.text}>{checked}</Text>
           </View>
         </View>

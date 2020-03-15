@@ -18,20 +18,40 @@ const pageWidth = Dimensions.get('window').width;
 export default class DateCarousel extends React.Component {
   constructor(props) {
     super(props);
-    this.state = {};
+    this.state = {selectedDayIndex: 0};
   }
 
   componentDidMount() {
     const {firstDate, selectedDate} = this.props;
     const first = firstDate ? moment(firstDate) : moment(new Date());
-    const selected = selectedDate ? moment(selectedDate) : first;
-    const selectedDayIndex = moment.duration(selected.diff(first)).asDays();
+    const selected = selectedDate ? selectedDate : first;
+    const selectedDayIndex = selected.diff(first, 'days');
     this.setState({selectedDayIndex});
-
     setTimeout(() => {
       this.setScrollOffset(selectedDayIndex);
     }, 100);
   }
+
+  // TODO: If new selectedDayIndex from calendar is greater than the available days in the scroll, we need to regenerate dates up to the
+  // TODO: new date +10 or something?
+  static getDerivedStateFromProps(nextProps, prevState) {
+    const selectedDate = nextProps.selectedDate.startOf('day');
+    const first = nextProps.firstDate
+      ? moment(nextProps.firstDate).startOf('day')
+      : moment(new Date()).startOf('day');
+    const selectedDayIndex = Math.round(
+      moment.duration(selectedDate.diff(first)).asDays(),
+    );
+    if (prevState.selectedDayIndex !== selectedDayIndex) {
+      return {selectedDayIndex: selectedDayIndex};
+    } else {
+      return null;
+    }
+  }
+
+  componentDidUpdate = (prevProps, prevState) => {
+    this.setScrollOffset(this.state.selectedDayIndex);
+  };
 
   setScrollOffset = index => {
     if (this.scrollView) {
@@ -52,17 +72,18 @@ export default class DateCarousel extends React.Component {
           animated: true,
         };
         this.scrollView.scrollTo(scrollOffset);
+      } else {
+        const scrollOffset = {
+          x: 0,
+          animation: true,
+        };
+        this.scrollView.scrollTo(scrollOffset);
       }
     }
   };
 
   dateSelect = props => {
     const {onDateSelect} = this.props;
-    this.setState(
-      {selectedDayIndex: props.key},
-      this.setScrollOffset(props.key),
-    );
-
     if (typeof onDateSelect === 'function') {
       onDateSelect(props.date);
     }
@@ -202,7 +223,7 @@ export default class DateCarousel extends React.Component {
 DateCarousel.propTypes = {
   firstDate: PropTypes.string,
   lastDate: PropTypes.string,
-  selectedDate: PropTypes.string,
+  selectedDate: PropTypes.object,
   width: PropTypes.number,
   daysInView: PropTypes.number,
   onDateSelect: PropTypes.func,
@@ -277,7 +298,7 @@ const styles = StyleSheet.create({
   fadeLeft: {
     position: 'absolute',
     top: 0,
-    width: 50,
+    width: 100,
     height: 100,
     zIndex: 1,
   },
@@ -285,7 +306,7 @@ const styles = StyleSheet.create({
     position: 'absolute',
     top: 0,
     right: 0,
-    width: 50,
+    width: 100,
     height: 100,
     zIndex: 1,
   },
