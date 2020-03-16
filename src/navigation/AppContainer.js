@@ -65,48 +65,53 @@ const MainDrawer = createDrawerNavigator(
   DrawerConfig,
 );
 
-const RequestNavigator = createStackNavigator({
-  Title: {
-    screen: RequestTitle,
-    navigationOptions: {headerTransparent: true},
+const RequestNavigator = createStackNavigator(
+  {
+    Title: {
+      screen: RequestTitle,
+      navigationOptions: {headerTransparent: true},
+    },
+    Image: {
+      screen: RequestImage,
+      navigationOptions: {headerTransparent: true},
+    },
+    Carrier: {
+      screen: RequestCarrier,
+      navigationOptions: {headerTransparent: true},
+    },
+    Services: {
+      screen: RequestServices,
+      navigationOptions: {headerTransparent: true},
+    },
+    Package: {
+      screen: RequestPackage,
+      navigationOptions: {headerTransparent: true},
+    },
+    Address: {
+      screen: RequestAddress,
+      navigationOptions: {headerTransparent: true},
+    },
+    AddLabel: {
+      screen: RequestAddLabel,
+      navigationOptions: {headerTransparent: true},
+    },
+    Additional: {
+      screen: RequestAdditional,
+      navigationOptions: {headerTransparent: true},
+    },
+    Time: {
+      screen: RequestTime,
+      navigationOptions: {headerTransparent: true},
+    },
+    Review: {
+      screen: RequestReview,
+      navigationOptions: {headerTransparent: true},
+    },
   },
-  Image: {
-    screen: RequestImage,
-    navigationOptions: {headerTransparent: true},
-  },
-  Carrier: {
-    screen: RequestCarrier,
-    navigationOptions: {headerTransparent: true},
-  },
-  Services: {
-    screen: RequestServices,
-    navigationOptions: {headerTransparent: true},
-  },
-  Package: {
-    screen: RequestPackage,
-    navigationOptions: {headerTransparent: true},
-  },
-  Address: {
-    screen: RequestAddress,
-    navigationOptions: {headerTransparent: true},
-  },
-  AddLabel: {
-    screen: RequestAddLabel,
-    navigationOptions: {headerTransparent: true},
-  },
-  Additional: {
-    screen: RequestAdditional,
-    navigationOptions: {headerTransparent: true},
-  },
-  Time: {
-    screen: RequestTime,
-    navigationOptions: {headerTransparent: true},
-  },
-  Review: {
-    screen: RequestReview,
-    navigationOptions: {headerTransparent: true},
-  },
-});
+  // {
+  //   initialRouteName: 'Time',
+  // },
+);
 
 const AppNavigator = createStackNavigator(
   {
