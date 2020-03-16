@@ -14,23 +14,29 @@ import LinearGradient from 'react-native-linear-gradient';
 // TODO: Should i start with current date in the middle with whitespace to the left or just start with current date all the way to the left?
 // TODO: If i did the latter, I should probably get rid of the Left Blur on the first mount
 // TODO: Llysa likes the latter better but I kind of like the former.
+
+// TODO: Should i load more dates when the user reaches the end????
 const pageWidth = Dimensions.get('window').width;
 export default class DateCarousel extends React.Component {
   constructor(props) {
     super(props);
-    this.state = {selectedDayIndex: 0};
+    this.state = {
+      selectedDayIndex: 0,
+      dates: [],
+    };
   }
 
-  componentDidMount() {
+  componentDidMount = () => {
     const {firstDate, selectedDate} = this.props;
     const first = firstDate ? moment(firstDate) : moment(new Date());
     const selected = selectedDate ? selectedDate : first;
     const selectedDayIndex = selected.diff(first, 'days');
+    this.generateDates();
     this.setState({selectedDayIndex});
     setTimeout(() => {
       this.setScrollOffset(selectedDayIndex);
     }, 100);
-  }
+  };
 
   static getDerivedStateFromProps(nextProps, prevState) {
     const selectedDate = nextProps.selectedDate.startOf('day');
@@ -48,7 +54,12 @@ export default class DateCarousel extends React.Component {
   }
 
   componentDidUpdate = (prevProps, prevState) => {
-    this.setScrollOffset(this.state.selectedDayIndex);
+    if (this.state.selectedDayIndex >= this.state.dates.length) {
+      this.generateDates();
+    }
+    setTimeout(() => {
+      this.setScrollOffset(this.state.selectedDayIndex);
+    }, 100);
   };
 
   setScrollOffset = index => {
@@ -87,22 +98,30 @@ export default class DateCarousel extends React.Component {
     }
   };
 
-  // TODO: Need to snap when this happens and don't want the dates to regenerate when its less.
-  generateDates = props => {
-    const date = moment(props.firstDate);
-    const disabledDates = props.disabledDates ? props.disabledDates : [];
+  generateDates = () => {
+    const dayProps = {
+      firstDate: this.props.firstDate,
+      lastDate: this.props.lastDate,
+      selectedDate: this.props.selectedDate,
+      numberOfDays: this.props.numberOfDays || 30,
+      disabledText: this.props.disabledText || null,
+      disabledDates: this.props.disabledDates || null,
+    };
 
-    const first = props.firstDate
-      ? moment(props.firstDate)
+    const date = moment(dayProps.firstDate);
+    const disabledDates = dayProps.disabledDates ? dayProps.disabledDates : [];
+
+    const first = dayProps.firstDate
+      ? moment(dayProps.firstDate)
       : moment(new Date());
-    const last = props.lastDate ? moment(props.lastDate) : null;
+    const last = dayProps.lastDate ? moment(dayProps.lastDate) : null;
 
     let numberOfDays = last
       ? moment.duration(last.diff(first)).asDays() + 1
-      : props.numberOfDays;
+      : dayProps.numberOfDays;
 
     const diff = moment
-      .duration(props.selectedDate.startOf('day').diff(first.startOf('day')))
+      .duration(dayProps.selectedDate.startOf('day').diff(first.startOf('day')))
       .asDays();
     if (diff >= numberOfDays) {
       numberOfDays = diff + 10;
@@ -121,23 +140,13 @@ export default class DateCarousel extends React.Component {
       });
       date.add(1, 'days');
     }
-    return dates;
+    this.setState({dates: dates});
   };
 
   render() {
     let days;
     const {selectedDayIndex} = this.state;
-    const {
-      firstDate,
-      lastDate,
-      selectedDate,
-      numberOfDays,
-      disabledText,
-      daysInView,
-      disabledDates,
-      width,
-      paginate,
-    } = this.props;
+    const {disabledText, daysInView, width, paginate} = this.props;
 
     let scrollWidth = null;
     if (width) {
@@ -146,18 +155,8 @@ export default class DateCarousel extends React.Component {
       scrollWidth = daysInView * constants.DAY_WIDTH;
     }
 
-    const daysProps = {
-      firstDate,
-      lastDate,
-      selectedDate,
-      numberOfDays: numberOfDays || 30,
-      disabledText: disabledText || null,
-      disabledDates: disabledDates || null,
-    };
-    const availableDates = this.generateDates(daysProps);
-
-    if (availableDates) {
-      days = availableDates.map((val, key) => {
+    if (this.state.dates) {
+      days = this.state.dates.map((val, key) => {
         const isClosedStyle = val.open ? null : styles.closed;
         let selectedStyle;
         let selectedText;
@@ -170,7 +169,7 @@ export default class DateCarousel extends React.Component {
             key={key}
             disabled={val.disabled}
             onPress={() =>
-              this.dateSelect({key, date: availableDates[key].date})
+              this.dateSelect({key, date: this.state.dates[key].date})
             }>
             <View style={styles.singleContainer}>
               <View style={[styles.singleDateBox, selectedStyle]}>
