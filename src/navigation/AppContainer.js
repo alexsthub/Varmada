@@ -108,9 +108,9 @@ const RequestNavigator = createStackNavigator(
       navigationOptions: {headerTransparent: true},
     },
   },
-  {
-    initialRouteName: 'Time',
-  },
+  // {
+  //   initialRouteName: 'Time',
+  // },
 );
 
 const AppNavigator = createStackNavigator(
@@ -157,7 +157,7 @@ const AppNavigator = createStackNavigator(
     },
   },
   {
-    initialRouteName: 'Request',
+    initialRouteName: 'LoginScreen',
   },
 );
 export default createAppContainer(AppNavigator);
