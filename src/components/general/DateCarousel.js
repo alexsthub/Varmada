@@ -32,8 +32,6 @@ export default class DateCarousel extends React.Component {
     }, 100);
   }
 
-  // TODO: If new selectedDayIndex from calendar is greater than the available days in the scroll, we need to regenerate dates up to the
-  // TODO: new date +10 or something?
   static getDerivedStateFromProps(nextProps, prevState) {
     const selectedDate = nextProps.selectedDate.startOf('day');
     const first = nextProps.firstDate
@@ -89,6 +87,7 @@ export default class DateCarousel extends React.Component {
     }
   };
 
+  // TODO: Need to snap when this happens and don't want the dates to regenerate when its less.
   generateDates = props => {
     const date = moment(props.firstDate);
     const disabledDates = props.disabledDates ? props.disabledDates : [];
@@ -98,9 +97,16 @@ export default class DateCarousel extends React.Component {
       : moment(new Date());
     const last = props.lastDate ? moment(props.lastDate) : null;
 
-    const numberOfDays = last
+    let numberOfDays = last
       ? moment.duration(last.diff(first)).asDays() + 1
       : props.numberOfDays;
+
+    const diff = moment
+      .duration(props.selectedDate.startOf('day').diff(first.startOf('day')))
+      .asDays();
+    if (diff >= numberOfDays) {
+      numberOfDays = diff + 10;
+    }
 
     const dates = [];
     for (let i = 0; i < numberOfDays; i += 1) {
@@ -124,6 +130,7 @@ export default class DateCarousel extends React.Component {
     const {
       firstDate,
       lastDate,
+      selectedDate,
       numberOfDays,
       disabledText,
       daysInView,
@@ -142,11 +149,11 @@ export default class DateCarousel extends React.Component {
     const daysProps = {
       firstDate,
       lastDate,
+      selectedDate,
       numberOfDays: numberOfDays || 30,
       disabledText: disabledText || null,
       disabledDates: disabledDates || null,
     };
-
     const availableDates = this.generateDates(daysProps);
 
     if (availableDates) {
