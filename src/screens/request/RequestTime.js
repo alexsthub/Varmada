@@ -5,14 +5,16 @@ import {
   Text,
   TouchableNativeFeedback,
   TouchableOpacity,
+  KeyboardAvoidingView,
+  FlatList,
 } from 'react-native';
-import {RadioButton} from 'react-native-paper';
 import AntDesignIcon from 'react-native-vector-icons/AntDesign';
 import moment from 'moment';
 import DateTimePickerModal from 'react-native-modal-datetime-picker';
 
 import Header from '../../components/general/Header';
 import DateCarousel from '../../components/general/DateCarousel';
+import TimeRange from '../../components/general/TimeRange';
 
 export default class RequestTime extends React.Component {
   constructor(props) {
@@ -20,20 +22,27 @@ export default class RequestTime extends React.Component {
     this.state = {
       selectedDate: moment(),
       modalVisible: false,
-      checked: '',
+      times: [],
+      selectedTimeIndex: null,
     };
   }
 
+  // Get prices
+  componentDidMount = () => {
+    const shit = [
+      {startTime: 6, endTime: 8, price: 4.0},
+      {startTime: 8, endTime: 10, price: 4.0},
+      {startTime: 10, endTime: 12, price: 4.0},
+      {startTime: 12, endTime: 14, price: 4.0},
+      {startTime: 14, endTime: 16, price: 4.0},
+      {startTime: 16, endTime: 18, price: 4.0},
+      {startTime: 18, endTime: 20, price: 5.0},
+    ];
+    this.setState({times: shit});
+  };
+
   handleContinue = () => {
-    const {addressObj, carrier} = this.props.navigation.state.params;
-    const date = new Date();
-    this.props.navigation.navigate('Review', {
-      addressObj: this.props.navigation.getParam('addressObj'),
-      carrier: this.props.navigation.getParam('carrier'),
-      // filler for now
-      time: `${date.getHours()}:${date.getMinutes()}`,
-      date: `${date.getMonth()}/${date.getDate()}/${date.getFullYear()}`,
-    });
+    // TODO: Async storage.
   };
 
   datepickerSelect = date => {
@@ -46,8 +55,32 @@ export default class RequestTime extends React.Component {
     this.setState({selectedDate: d});
   };
 
+  getTime = () => {
+    if (this.state.selectedTimeIndex || this.state.selectedTimeIndex === 0) {
+      const timeRange = this.state.times[this.state.selectedTimeIndex];
+      let start = timeRange.startTime;
+      let end = timeRange.endTime;
+      let suffix;
+      if (start >= 12) {
+        suffix = 'PM';
+        start = start % 12;
+        end = end % 12;
+        if (start === 0) {
+          start = 12;
+        }
+        if (end === 0) {
+          end = 12;
+        }
+      } else {
+        suffix = 'AM';
+      }
+      return `${start}:00${suffix} - ${end}:00${suffix}`;
+    } else {
+      return 'No Time Currently Selected';
+    }
+  };
+
   render() {
-    const {checked} = this.state;
     return (
       <View style={{flex: 1}}>
         <View style={styles.headerContainer}>
@@ -73,13 +106,13 @@ export default class RequestTime extends React.Component {
           numberOfDays={30}
           paginate
           onDateSelect={this.carouselSelect}
+          fade={false}
         />
-        {/* // TODO: I can't set the value on this bitch */}
         <DateTimePickerModal
           isVisible={this.state.modalVisible}
           mode="date"
           minimumDate={new Date()}
-          // value={moment(this.state.selectedDate, 'dddd, MMMM Do YYYY').toDate}
+          date={this.state.selectedDate.toDate()}
           onConfirm={this.datepickerSelect}
           onCancel={() => this.setState({modalVisible: false})}
         />
@@ -87,140 +120,55 @@ export default class RequestTime extends React.Component {
         <View style={{marginTop: 20}} />
 
         <View style={styles.container}>
-          <View style={styles.carrier}>
-            <RadioButton
-              value="6:00AM - 8:00AM"
-              status={checked === '6:00AM - 8:00AM' ? 'checked' : 'unchecked'}
-              onPress={() => {
-                this.setState({checked: '6:00AM - 8:00AM'});
-              }}
-              color="black"
-              uncheckedColor="black"
-            />
-            <Text>6:00AM - 8:00AM</Text>
-            <Text style={styles.price}>$5.00</Text>
-          </View>
-
-          <View style={styles.carrier}>
-            <RadioButton
-              value="8:00AM - 10:00AM"
-              status={checked === '8:00AM - 10:00AM' ? 'checked' : 'unchecked'}
-              onPress={() => {
-                this.setState({checked: '8:00AM - 10:00AM'});
-              }}
-              color="black"
-              uncheckedColor="black"
-            />
-            <Text>8:00AM - 10:00AM</Text>
-            <Text style={styles.price}>$4.00</Text>
-          </View>
-
-          <View style={styles.carrier}>
-            <RadioButton
-              value="10:00AM - 12:00PM"
-              status={checked === '10:00AM - 12:00PM' ? 'checked' : 'unchecked'}
-              onPress={() => {
-                this.setState({checked: '10:00AM - 12:00PM'});
-              }}
-              color="black"
-              uncheckedColor="black"
-            />
-            <Text>10:00AM - 12:00PM</Text>
-            <Text style={styles.price}>$4.00</Text>
-          </View>
-
-          <View style={styles.carrier}>
-            <RadioButton
-              value="12:00PM - 2:00PM"
-              status={checked === '12:00PM - 2:00PM' ? 'checked' : 'unchecked'}
-              onPress={() => {
-                this.setState({checked: '12:00PM - 2:00PM'});
-              }}
-              color="black"
-              uncheckedColor="black"
-            />
-            <Text>12:00PM - 2:00PM</Text>
-            <Text style={styles.price}>$3.00</Text>
-          </View>
-
-          <View style={styles.carrier}>
-            <RadioButton
-              value="2:00PM - 4:00PM"
-              status={checked === '2:00PM - 4:00PM' ? 'checked' : 'unchecked'}
-              onPress={() => {
-                this.setState({checked: '2:00PM - 4:00PM'});
-              }}
-              color="black"
-              uncheckedColor="black"
-            />
-            <Text>2:00PM - 4:00PM</Text>
-            <Text style={styles.price}>$3.00</Text>
-          </View>
-
-          <View style={styles.carrier}>
-            <RadioButton
-              value="4:00PM - 6:00PM"
-              status={checked === '4:00PM - 6:00PM' ? 'checked' : 'unchecked'}
-              onPress={() => {
-                this.setState({checked: '4:00PM - 6:00PM'});
-              }}
-              color="black"
-              uncheckedColor="black"
-            />
-            <Text>4:00PM - 6:00PM</Text>
-            <Text style={styles.price}>$4.00</Text>
-          </View>
-
-          <View style={styles.carrier}>
-            <RadioButton
-              value="6:00PM - 8:00PM"
-              status={checked === '6:00PM - 8:00PM' ? 'checked' : 'unchecked'}
-              onPress={() => {
-                this.setState({checked: '6:00PM - 8:00PM'});
-              }}
-              color="black"
-              uncheckedColor="black"
-            />
-            <Text>6:00PM - 8:00PM</Text>
-            <Text style={styles.price}>$4.50</Text>
-          </View>
-
-          <View style={styles.carrier}>
-            <RadioButton
-              value="8:00PM - 10:00PM"
-              status={checked === '8:00PM - 10:00PM' ? 'checked' : 'unchecked'}
-              onPress={() => {
-                this.setState({checked: '8:00PM - 10:00PM'});
-              }}
-              color="black"
-              uncheckedColor="black"
-            />
-            <Text>8:00PM - 10:00PM</Text>
-            <Text style={styles.price}>$5.00</Text>
-          </View>
+          <FlatList
+            data={this.state.times}
+            renderItem={({item, index}) => (
+              <TimeRange
+                onPress={() => this.setState({selectedTimeIndex: index})}
+                startTime={item.startTime}
+                endTime={item.endTime}
+                price={item.price}
+                containerStyle={{paddingHorizontal: 40}}
+                index={index}
+                selected={index === this.state.selectedTimeIndex}
+              />
+            )}
+            keyExtractor={item => item.startTime.toString()}
+            showsVerticalScrollIndicator={false}
+          />
 
           <View style={styles.datetimeDisplay}>
-            <Text style={styles.text}>Pickup Date:</Text>
-            <Text style={styles.text}>
-              {this.state.selectedDate.format('dddd, MMMM Do YYYY')}
-            </Text>
-            <Text style={styles.text}>{checked}</Text>
+            <View style={styles.datetimeInnerContainer}>
+              <View style={styles.datetimeTextContainer}>
+                <Text style={styles.datetimeTitle}>Pickup Date</Text>
+                <Text style={styles.datetimeText}>
+                  {this.state.selectedDate.format('dddd, MMMM Do YYYY')}
+                </Text>
+                <Text style={styles.datetimeText}>{this.getTime()}</Text>
+              </View>
+            </View>
           </View>
+          {/*  */}
         </View>
-        <TouchableNativeFeedback
-          background={TouchableNativeFeedback.Ripple('lightgray')}
-          onPress={this.handleContinue}>
-          <View
-            style={{
-              backgroundColor: '#F8B500',
-              elevation: 10,
-              padding: 20,
-              justifyContent: 'center',
-              alignItems: 'center',
-            }}>
-            <Text style={{fontWeight: 'bold', fontSize: 16}}>Continue</Text>
-          </View>
-        </TouchableNativeFeedback>
+
+        <KeyboardAvoidingView
+          style={{marginBottom: 20, width: '60%', alignSelf: 'center'}}
+          behavior={'position'}>
+          <TouchableNativeFeedback
+            background={TouchableNativeFeedback.Ripple('lightgray')}
+            onPress={this.handleContinue}>
+            <View
+              style={{
+                backgroundColor: '#F8B500',
+                elevation: 10,
+                padding: 20,
+                justifyContent: 'center',
+                alignItems: 'center',
+              }}>
+              <Text style={{fontWeight: 'bold', fontSize: 16}}>Continue</Text>
+            </View>
+          </TouchableNativeFeedback>
+        </KeyboardAvoidingView>
       </View>
     );
   }
@@ -229,7 +177,6 @@ export default class RequestTime extends React.Component {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    marginHorizontal: 40,
   },
   headerContainer: {
     marginHorizontal: 40,
@@ -237,6 +184,7 @@ const styles = StyleSheet.create({
   calenderRowHelper: {
     flexDirection: 'row',
     justifyContent: 'flex-end',
+    marginBottom: 5,
   },
   calendarIconContainer: {
     marginRight: 15,
@@ -247,31 +195,21 @@ const styles = StyleSheet.create({
   },
   datetimeDisplay: {
     marginBottom: 10,
-    justifyContent: 'center',
-    alignItems: 'center',
+    backgroundColor: '#F7F7F7',
   },
-  text: {
+  datetimeInnerContainer: {
+    marginHorizontal: 20,
+    backgroundColor: 'white',
+    elevation: 5,
+  },
+  datetimeTextContainer: {
+    padding: 15,
+  },
+  datetimeTitle: {
+    fontSize: 20,
     fontWeight: 'bold',
+  },
+  datetimeText: {
     fontSize: 16,
-  },
-  price: {
-    marginLeft: 'auto',
-    marginRight: 10,
-  },
-  title: {
-    textAlign: 'center',
-    fontSize: 30,
-  },
-  carrier: {
-    flex: 1,
-    borderColor: 'black',
-    borderWidth: 0.5,
-    flexDirection: 'row',
-    height: 40,
-    // justifyContent: 'center',
-    alignItems: 'center',
-  },
-  checkbox: {
-    flex: 1,
   },
 });

@@ -207,20 +207,25 @@ export default class DateCarousel extends React.Component {
           {days || null}
         </ScrollView>
 
-        <LinearGradient
-          start={{x: 0, y: 0}}
-          end={{x: 1, y: 0}}
-          style={styles.fadeLeft}
-          colors={['rgba(255, 255, 255, 1.0)', 'rgba(255, 255, 255, 0.2)']}
-          pointerEvents={'none'}
-        />
-        <LinearGradient
-          start={{x: 0, y: 0}}
-          end={{x: 1, y: 0}}
-          style={styles.fadeRight}
-          colors={['rgba(255, 255, 255, 0.2)', 'rgba(255, 255, 255, 1.0)']}
-          pointerEvents={'none'}
-        />
+        {this.props.fade ? (
+          <LinearGradient
+            start={{x: 0, y: 0}}
+            end={{x: 1, y: 0}}
+            style={styles.fadeLeft}
+            colors={['rgba(255, 255, 255, 1.0)', 'rgba(255, 255, 255, 0.2)']}
+            pointerEvents={'none'}
+          />
+        ) : null}
+
+        {this.props.fade ? (
+          <LinearGradient
+            start={{x: 0, y: 0}}
+            end={{x: 1, y: 0}}
+            style={styles.fadeRight}
+            colors={['rgba(255, 255, 255, 0.2)', 'rgba(255, 255, 255, 1.0)']}
+            pointerEvents={'none'}
+          />
+        ) : null}
       </View>
     );
   }
@@ -237,6 +242,7 @@ DateCarousel.propTypes = {
   disabledText: PropTypes.string,
   disabledDates: PropTypes.array,
   paginate: PropTypes.bool,
+  fade: PropTypes.bool,
 };
 
 const constants = {
