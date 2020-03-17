@@ -157,7 +157,7 @@ const AppNavigator = createStackNavigator(
     },
   },
   {
-    initialRouteName: 'LoginScreen',
+    initialRouteName: 'MainDrawer',
   },
 );
 export default createAppContainer(AppNavigator);

@@ -6,18 +6,44 @@ import {
   TouchableNativeFeedback,
   Image,
   KeyboardAvoidingView,
+  AsyncStorage,
 } from 'react-native';
 
 import ImagePicker from 'react-native-image-picker';
 import FeatherIcon from 'react-native-vector-icons/Feather';
 
 import Header from '../../components/general/Header';
+// import {storeData, retrieveData} from '../../functions/store';
 
 export default class RequestImage extends React.Component {
   constructor(props) {
     super(props);
     this.state = {image: null};
   }
+
+  componentDidMount = async () => {
+    console.log('mounting');
+    // AsyncStorage.getAllKeys().then(res => {
+    //   for (let i = 0; i < res.length; i++) {
+    //     AsyncStorage.removeItem(res[i]);
+    //   }
+    // });
+
+    // AsyncStorage.getAllKeys().then(res => {
+    //   console.log(res);
+    // });
+
+    try {
+      const requestString = await AsyncStorage.getItem('request');
+      if (requestString !== null) {
+        this.requestObject = JSON.parse(requestString);
+      }
+    } catch (error) {
+      // TODO:
+      console.log('oh no...');
+    }
+    console.log(this.requestObject);
+  };
 
   takePicture = () => {
     const options = {
@@ -40,11 +66,16 @@ export default class RequestImage extends React.Component {
     });
   };
 
-  handleContinue = () => {
+  handleContinue = async () => {
     const {image} = this.state;
-    // TODO: Send to some database or some shit
-    // TODO: handle if it does not exist
-    this.props.navigation.navigate('Carrier');
+    this.requestObject.image = image;
+    const objString = JSON.stringify(this.requestObject);
+    try {
+      await AsyncStorage.setItem('request', objString);
+      this.props.navigation.navigate('Carrier');
+    } catch (error) {
+      console.log('oh fuck what do i do now.');
+    }
   };
 
   render() {

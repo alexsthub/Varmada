@@ -6,21 +6,22 @@ import Header from '../../components/general/Header';
 export default class RequestServices extends React.Component {
   constructor(props) {
     super(props);
-    console.log(this.props.navigation.getParam("carrier"))
     this.state = {packaging: null};
   }
 
-  componentDidMount() {
-    // console.log('MOUNTING');
-    // const packaging = this.props.navigation.getParam('stuff', null);
-    // if (packaging) {
-    //   this.setState({packaging: packaging});
-    //   console.log('PACKAGE?');
-    //   console.log(packaging);
-    // } else {
-    //   console.log('Problem');
-    // }
-  }
+  // TODO: Why doesn't it work here
+  componentDidMount = async () => {
+    try {
+      const requestString = AsyncStorage.getItem('request');
+      if (requestString !== null) {
+        this.requestObject = JSON.parse(requestString);
+      }
+    } catch (error) {
+      // TODO:
+      console.log('oh no...');
+    }
+    console.log(this.requestObject);
+  };
 
   handleLabels = () => {
     // Navigate to new page
@@ -33,7 +34,7 @@ export default class RequestServices extends React.Component {
 
   handleContinue = () => {
     this.props.navigation.navigate('Address', {
-      carrier: this.props.navigation.getParam("carrier")
+      carrier: this.props.navigation.getParam('carrier'),
     });
   };
 

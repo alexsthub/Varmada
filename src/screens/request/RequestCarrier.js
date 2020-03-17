@@ -6,6 +6,7 @@ import {
   StyleSheet,
   KeyboardAvoidingView,
   TouchableNativeFeedback,
+  AsyncStorage,
 } from 'react-native';
 import {RadioButton} from 'react-native-paper';
 
@@ -17,8 +18,28 @@ export default class RequestCarrier extends React.Component {
     this.state = {checked: ''};
   }
 
-  handleContinue = () => {
-    this.props.navigation.navigate('Services');
+  componentDidMount = async () => {
+    try {
+      const requestString = await AsyncStorage.getItem('request');
+      if (requestString !== null) {
+        this.requestObject = JSON.parse(requestString);
+      }
+    } catch (error) {
+      // TODO:
+      console.log('oh no...');
+    }
+    console.log(this.requestObject);
+  };
+
+  handleContinue = async () => {
+    this.requestObject.carrier = 'fedex';
+    const objString = JSON.stringify(this.requestObject);
+    try {
+      await AsyncStorage.setItem('request', objString);
+      this.props.navigation.navigate('Services');
+    } catch (error) {
+      console.log('oh fuck what do i do now.');
+    }
   };
 
   render() {

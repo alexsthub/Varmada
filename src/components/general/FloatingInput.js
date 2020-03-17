@@ -27,8 +27,16 @@ export default class FloatingInput extends React.Component {
   getInnerRef = () => this.ref;
 
   componentDidMount() {
-    if (this.props.value != '') {
+    if (this.props.value !== '') {
       this.setState({active: true});
+    }
+  }
+
+  static getDerivedStateFromProps(nextProps, prevState) {
+    if (nextProps.value !== '') {
+      return {active: true};
+    } else {
+      return null;
     }
   }
 

@@ -7,6 +7,7 @@ import {
   BackHandler,
   KeyboardAvoidingView,
   Animated,
+  AsyncStorage,
 } from 'react-native';
 
 import Header from '../../components/general/Header';
@@ -23,12 +24,26 @@ export default class RequestTitle extends React.Component {
     };
   }
 
-  componentDidMount() {
+  // TODO: Also check if a request already exists and if it does, put the value into title state and just change the title on continue
+  componentDidMount = async () => {
     BackHandler.addEventListener(
       'hardwareBackPress',
       this.handleBackButtonClick,
     );
-  }
+
+    try {
+      const requestString = await AsyncStorage.getItem('request');
+      if (requestString !== null) {
+        this.requestObject = JSON.parse(requestString);
+        if (this.requestObject.title) {
+          this.setState(
+            {title: this.requestObject.title},
+            this.renderAnimation(150),
+          );
+        }
+      }
+    } catch (error) {}
+  };
 
   componentWillUnmount() {
     BackHandler.removeEventListener(
@@ -43,27 +58,35 @@ export default class RequestTitle extends React.Component {
     // TODO: Need to do this if they hit the back button as well...
   };
 
-  handleContinue = () => {
+  handleContinue = async () => {
     const title = this.state.title;
     if (title === '') return;
-    // TODO: Send to some database or some shit
-    // TODO: handle if it does not exist
-    this.props.navigation.navigate('Image');
+    const requestObj = {
+      title: title,
+    };
+    const objString = JSON.stringify(requestObj);
+    try {
+      await AsyncStorage.setItem('request', objString);
+      this.props.navigation.navigate('Image');
+    } catch (error) {
+      console.log('oh fuck what do i do now.');
+    }
   };
 
   handleChangeText = text => {
     if (text === '' && this.state.fadeValue._value === 150) {
-      Animated.timing(this.state.fadeValue, {
-        toValue: 0,
-        duration: 300,
-      }).start();
+      this.renderAnimation(0);
     } else if (text !== '' && this.state.fadeValue._value < 150) {
-      Animated.timing(this.state.fadeValue, {
-        toValue: 150,
-        duration: 300,
-      }).start();
+      this.renderAnimation(150);
     }
     this.setState({title: text});
+  };
+
+  renderAnimation = toValue => {
+    Animated.timing(this.state.fadeValue, {
+      toValue: toValue,
+      duration: 300,
+    }).start();
   };
 
   render() {
