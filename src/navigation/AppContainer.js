@@ -107,10 +107,18 @@ const RequestNavigator = createStackNavigator(
       screen: RequestReview,
       navigationOptions: {headerTransparent: true},
     },
+    Payment: {
+      screen: PaymentMethodScreen,
+      navigationOptions: {headerTransparent: true},
+    },
+    AddPayment: {
+      screen: PaymentAddScreen,
+      navigationOptions: {headerTransparent: true},
+    },
   },
-  // {
-  //   initialRouteName: 'Time',
-  // },
+  {
+    initialRouteName: 'Review',
+  },
 );
 
 const AppNavigator = createStackNavigator(
@@ -157,7 +165,7 @@ const AppNavigator = createStackNavigator(
     },
   },
   {
-    initialRouteName: 'MainDrawer',
+    initialRouteName: 'Request',
   },
 );
 export default createAppContainer(AppNavigator);

@@ -4,11 +4,11 @@ import {
   View,
   Text,
   TouchableNativeFeedback,
-  Picker,
+  Image,
 } from 'react-native';
 
 import Header from '../../components/general/Header';
-import {TextInput} from 'react-native-gesture-handler';
+import ReviewHeader from '../../components/general/ReviewHeader';
 
 export default class RequestReview extends React.Component {
   constructor(props) {
@@ -17,41 +17,69 @@ export default class RequestReview extends React.Component {
       payment: 'Venmo',
     };
   }
+
+  choosePayment = () => {
+    this.props.navigation.navigate('Payment');
+  };
+
   render() {
-    const {
-      addressObj,
-      carrier,
-      time,
-      date,
-    } = this.props.navigation.state.params;
+    const addressObj = {
+      address: '4105 Brooklyn Ave NE',
+      city: 'Seattle',
+      countryCode: ' USA',
+      name: 'Levere Apartments',
+      placeID: 'ChIJyZCbd_MUkFQRXA53DSuvSns',
+      state: 'WA',
+      zip: '98105',
+    };
+    const carrier = 'FedEx';
+    const time = '8:00AM - 10:00AM';
+    const date = '3/22/2020';
+
+    const requestObject = {
+      address: addressObj,
+      carrier: carrier,
+      time: time,
+      date: date,
+    };
     return (
-      <View style={{marginHorizontal: 40}}>
+      <View style={{flex: 1, marginHorizontal: 40}}>
         <Header
           headerText={'Request a pickup'}
           subHeaderText={'Review and pay'}
         />
-        <Text style={{fontWeight: 'bold'}}>
-          Pickup: {date}, {time}
-        </Text>
-        <Text style={{fontWeight: 'bold'}}>From</Text>
-        <Text>{addressObj.address}</Text>
-        <Text>
-          {addressObj.city}, {addressObj.state}
-        </Text>
-        <Text>{addressObj.countryCode}</Text>
-        <Text style={{fontWeight: 'bold'}}>To</Text>
-        <Text>{carrier}</Text>
-        <TextInput
-          placeholder="Special Instructions (Optional)"
-          style={styles.instructions}
+        <ReviewHeader
+          request={requestObject}
+          containerStyle={{marginVertical: 15}}
+          touchDateTime={() => console.log('go to time picker')}
+          touchAddress={() => console.log('go to address picker')}
+          touchCarrier={() => console.log('go to carrier')}
         />
+
         <Text style={{fontWeight: 'bold'}}>Pay With:</Text>
-        <Picker
-          selectedValue={this.state.payment}
-          style={{height: 50, width: '100%'}}
-          onValueChange={itemValue => this.setState({payment: itemValue})}>
-          <Picker.Item label="Venmo" value="Venmo" />
-        </Picker>
+        <TouchableNativeFeedback
+          background={TouchableNativeFeedback.Ripple('lightgray')}
+          onPress={this.choosePayment}>
+          <View
+            style={{
+              flexDirection: 'row',
+              padding: 10,
+              borderWidth: 1,
+              justifyContent: 'space-between',
+              alignItems: 'center',
+            }}>
+            <View style={{flexDirection: 'row', alignItems: 'center'}}>
+              <Image
+                source={require('../../assets/venmo_icon.png')}
+                style={{width: 25, height: 25}}
+                resizeMode={'stretch'}
+              />
+              <Text style={{fontSize: 18, marginLeft: 15}}>Venmo</Text>
+            </View>
+            <Text>></Text>
+          </View>
+        </TouchableNativeFeedback>
+
         <View style={styles.container}>
           <Text>Items (1):</Text>
           <Text>$3.00</Text>
@@ -112,14 +140,10 @@ const styles = StyleSheet.create({
     marginVertical: 15,
   },
   price: {
-    color: '#f8b500'
+    color: '#f8b500',
   },
   warning: {
     textAlign: 'center',
     marginVertical: 10,
-  },
-  instructions: {
-    backgroundColor: 'grey',
-    paddingHorizontal: 10,
   },
 });

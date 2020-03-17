@@ -27,8 +27,20 @@ export default class RequestTime extends React.Component {
     };
   }
 
-  // Get prices
-  componentDidMount = () => {
+  // TODO: doesn't work here
+  componentDidMount = async () => {
+    try {
+      const requestString = await AsyncStorage.getItem('request');
+      if (requestString !== null) {
+        this.requestObject = JSON.parse(requestString);
+      }
+    } catch (error) {
+      // TODO:
+      console.log('cannot get item from time page');
+    }
+    console.log(this.requestObject);
+
+    // other
     const shit = [
       {startTime: 6, endTime: 8, price: 4.0},
       {startTime: 8, endTime: 10, price: 4.0},
@@ -43,6 +55,7 @@ export default class RequestTime extends React.Component {
 
   handleContinue = () => {
     // TODO: Async storage.
+    this.props.navigation.navigate('Additional');
   };
 
   datepickerSelect = date => {
