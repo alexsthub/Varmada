@@ -1,5 +1,11 @@
 import React from 'react';
-import {StyleSheet, View, Text, TouchableNativeFeedback} from 'react-native';
+import {
+  StyleSheet,
+  View,
+  Text,
+  TouchableNativeFeedback,
+  AsyncStorage,
+} from 'react-native';
 
 import Header from '../../components/general/Header';
 
@@ -9,22 +15,20 @@ export default class RequestServices extends React.Component {
     this.state = {packaging: null};
   }
 
-  // TODO: Why doesn't it work here
+  // TODO: If package is received, we need to check to see if async storage was updated and display the change
   componentDidMount = async () => {
     try {
-      const requestString = AsyncStorage.getItem('request');
+      const requestString = await AsyncStorage.getItem('request');
       if (requestString !== null) {
         this.requestObject = JSON.parse(requestString);
       }
     } catch (error) {
-      // TODO:
       console.log('oh no...');
     }
     console.log(this.requestObject);
   };
 
   handleLabels = () => {
-    // Navigate to new page
     this.props.navigation.navigate('AddLabel');
   };
 
@@ -33,9 +37,7 @@ export default class RequestServices extends React.Component {
   };
 
   handleContinue = () => {
-    this.props.navigation.navigate('Address', {
-      carrier: this.props.navigation.getParam('carrier'),
-    });
+    this.props.navigation.navigate('Address');
   };
 
   render() {

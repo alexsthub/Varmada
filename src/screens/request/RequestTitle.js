@@ -42,7 +42,9 @@ export default class RequestTitle extends React.Component {
           );
         }
       }
-    } catch (error) {}
+    } catch (error) {
+      console.log(error);
+    }
   };
 
   componentWillUnmount() {
@@ -59,12 +61,16 @@ export default class RequestTitle extends React.Component {
   };
 
   handleContinue = async () => {
-    const title = this.state.title;
+    const {title} = this.state;
     if (title === '') return;
-    const requestObj = {
-      title: title,
-    };
-    const objString = JSON.stringify(requestObj);
+
+    let objString;
+    if (this.requestObject) {
+      this.requestObject.title = title;
+      objString = JSON.stringify(this.requestObject);
+    } else {
+      objString = JSON.stringify({title: title});
+    }
     try {
       await AsyncStorage.setItem('request', objString);
       this.props.navigation.navigate('Image');

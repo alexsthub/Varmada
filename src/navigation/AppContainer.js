@@ -116,9 +116,9 @@ const RequestNavigator = createStackNavigator(
       navigationOptions: {headerTransparent: true},
     },
   },
-  {
-    initialRouteName: 'Review',
-  },
+  // {
+  //   initialRouteName: 'Review',
+  // },
 );
 
 const AppNavigator = createStackNavigator(

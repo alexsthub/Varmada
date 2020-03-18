@@ -7,6 +7,7 @@ import {
   TouchableOpacity,
   KeyboardAvoidingView,
   FlatList,
+  AsyncStorage,
 } from 'react-native';
 import AntDesignIcon from 'react-native-vector-icons/AntDesign';
 import moment from 'moment';
@@ -53,9 +54,18 @@ export default class RequestTime extends React.Component {
     this.setState({times: shit});
   };
 
-  handleContinue = () => {
-    // TODO: Async storage.
-    this.props.navigation.navigate('Additional');
+  handleContinue = async () => {
+    const date = this.state.selectedDate;
+    const time = this.state.times[this.state.selectedTimeIndex];
+    this.requestObject.date = date;
+    this.requestObject.time = time;
+    const objString = JSON.stringify(this.requestObject);
+    try {
+      await AsyncStorage.setItem('request', objString);
+      this.props.navigation.navigate('Additional');
+    } catch (error) {
+      console.log('oh fuck what do i do now.');
+    }
   };
 
   datepickerSelect = date => {

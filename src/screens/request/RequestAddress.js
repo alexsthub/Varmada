@@ -61,7 +61,6 @@ export default class RequestAddress extends React.Component {
         this.requestObject = JSON.parse(requestString);
       }
     } catch (error) {
-      // TODO:
       console.log('oh no...');
     }
     console.log(this.requestObject);
@@ -73,7 +72,6 @@ export default class RequestAddress extends React.Component {
   };
 
   handlePress = async (e, index) => {
-    // TODO: Add to db
     const selectedAddress = this.state.addresses[index];
     this.requestObject.address = selectedAddress;
     const objString = JSON.stringify(this.requestObject);
