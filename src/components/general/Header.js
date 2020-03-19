@@ -19,7 +19,7 @@ export default class Header extends React.Component {
 
 const styles = StyleSheet.create({
   headerContainer: {
-    marginTop: 60,
+    marginTop: 40,
   },
   header: {fontSize: 14, fontWeight: 'bold'},
   subHeader: {fontSize: 23, fontWeight: 'bold'},

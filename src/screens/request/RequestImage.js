@@ -13,16 +13,15 @@ import ImagePicker from 'react-native-image-picker';
 import FeatherIcon from 'react-native-vector-icons/Feather';
 
 import Header from '../../components/general/Header';
-// import {storeData, retrieveData} from '../../functions/store';
 
+// TODO: Set request to state
 export default class RequestImage extends React.Component {
   constructor(props) {
     super(props);
-    this.state = {image: null};
+    this.state = {request: null};
   }
 
   componentDidMount = async () => {
-    console.log('mounting');
     // AsyncStorage.getAllKeys().then(res => {
     //   for (let i = 0; i < res.length; i++) {
     //     AsyncStorage.removeItem(res[i]);
@@ -36,13 +35,12 @@ export default class RequestImage extends React.Component {
     try {
       const requestString = await AsyncStorage.getItem('request');
       if (requestString !== null) {
-        this.requestObject = JSON.parse(requestString);
+        const requestObject = JSON.parse(requestString);
+        this.setState({request: requestObject});
       }
     } catch (error) {
-      // TODO:
       console.log('oh no...');
     }
-    console.log(this.requestObject);
   };
 
   takePicture = () => {
@@ -56,20 +54,21 @@ export default class RequestImage extends React.Component {
 
     ImagePicker.showImagePicker(options, response => {
       if (!response.didCancel && !response.error) {
-        const profileImage = {
+        const packageImage = {
           uri: response.uri,
           type: response.type,
           name: 'package.jpg',
         };
-        this.setState({image: profileImage});
+        const request = this.state.request;
+        request.image = packageImage;
+        this.setState({request: request});
       }
     });
   };
 
   handleContinue = async () => {
-    const {image} = this.state;
-    this.requestObject.image = image;
-    const objString = JSON.stringify(this.requestObject);
+    const {request} = this.state;
+    const objString = JSON.stringify(request);
     try {
       await AsyncStorage.setItem('request', objString);
       this.props.navigation.navigate('Carrier');
@@ -79,14 +78,18 @@ export default class RequestImage extends React.Component {
   };
 
   render() {
-    const imageContent = !this.state.image ? (
-      <View style={styles.imageContainer}>
-        <FeatherIcon style={{color: '#000000'}} name={'camera'} size={40} />
-        <Text>Take a photo of your package</Text>
-      </View>
-    ) : (
-      <Image style={styles.imageStyle} source={{uri: this.state.image.uri}} />
-    );
+    const imageContent =
+      this.state.request && this.state.request.image ? (
+        <Image
+          style={styles.imageStyle}
+          source={{uri: this.state.request.image.uri}}
+        />
+      ) : (
+        <View style={styles.imageContainer}>
+          <FeatherIcon style={{color: '#000000'}} name={'camera'} size={40} />
+          <Text>Take a photo of your package</Text>
+        </View>
+      );
 
     return (
       <View style={{marginHorizontal: 40}}>

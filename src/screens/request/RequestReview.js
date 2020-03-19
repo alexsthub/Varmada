@@ -7,29 +7,37 @@ import {
   Image,
   AsyncStorage,
 } from 'react-native';
+import {NavigationEvents} from 'react-navigation';
 
 import Header from '../../components/general/Header';
 import ReviewHeader from '../../components/general/ReviewHeader';
 
+// TODO: Add image if exists and style title.
+// TODO: Use packaging price if exists
 export default class RequestReview extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
       payment: 'Venmo',
+      request: null,
     };
   }
 
+  // Keep this only for instant reloads
   componentDidMount = async () => {
+    await this.getRequestFromStorage();
+  };
+
+  getRequestFromStorage = async () => {
     try {
       const requestString = await AsyncStorage.getItem('request');
       if (requestString !== null) {
-        this.requestObject = JSON.parse(requestString);
+        const requestObject = JSON.parse(requestString);
+        this.setState({request: requestObject});
       }
     } catch (error) {
-      // TODO:
-      console.log('cannot get item from review page');
+      console.log('oh no...');
     }
-    console.log(this.requestObject);
   };
 
   choosePayment = () => {
@@ -41,33 +49,16 @@ export default class RequestReview extends React.Component {
   };
 
   render() {
-    const addressObj = {
-      address: '4105 Brooklyn Ave NE',
-      city: 'Seattle',
-      countryCode: ' USA',
-      name: 'Levere Apartments',
-      placeID: 'ChIJyZCbd_MUkFQRXA53DSuvSns',
-      state: 'WA',
-      zip: '98105',
-    };
-    const carrier = 'FedEx';
-    const time = '8:00AM - 10:00AM';
-    const date = '3/22/2020';
-
-    const requestObject = {
-      address: addressObj,
-      carrier: carrier,
-      time: time,
-      date: date,
-    };
     return (
       <View style={{flex: 1, marginHorizontal: 40}}>
+        <NavigationEvents onWillFocus={this.getRequestFromStorage} />
+
         <Header
           headerText={'Request a pickup'}
           subHeaderText={'Review and pay'}
         />
         <ReviewHeader
-          request={requestObject}
+          request={this.state.request}
           containerStyle={{marginVertical: 15}}
           touchDateTime={() => console.log('go to time picker')}
           touchAddress={() => console.log('go to address picker')}
@@ -125,9 +116,9 @@ export default class RequestReview extends React.Component {
             <Text style={styles.continueText}>Confirm Request</Text>
           </View>
         </TouchableNativeFeedback>
-        <Text style={styles.warning}>
+        {/* <Text style={styles.warning}>
           You won’t be charged until after the pickup has been dropped off.
-        </Text>
+        </Text> */}
       </View>
     );
   }

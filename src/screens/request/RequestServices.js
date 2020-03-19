@@ -6,26 +6,26 @@ import {
   TouchableNativeFeedback,
   AsyncStorage,
 } from 'react-native';
+import {NavigationEvents} from 'react-navigation';
 
 import Header from '../../components/general/Header';
 
 export default class RequestServices extends React.Component {
   constructor(props) {
     super(props);
-    this.state = {packaging: null};
+    this.state = {request: null};
   }
 
-  // TODO: If package is received, we need to check to see if async storage was updated and display the change
-  componentDidMount = async () => {
+  getRequestFromStorage = async () => {
     try {
       const requestString = await AsyncStorage.getItem('request');
       if (requestString !== null) {
-        this.requestObject = JSON.parse(requestString);
+        const requestObject = JSON.parse(requestString);
+        this.setState({request: requestObject});
       }
     } catch (error) {
       console.log('oh no...');
     }
-    console.log(this.requestObject);
   };
 
   handleLabels = () => {
@@ -43,6 +43,7 @@ export default class RequestServices extends React.Component {
   render() {
     return (
       <View style={{marginHorizontal: 40}}>
+        <NavigationEvents onWillFocus={this.getRequestFromStorage} />
         <Header
           headerText={'Request a pickup'}
           subHeaderText={'Need any extra services?'}

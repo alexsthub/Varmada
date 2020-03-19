@@ -9,7 +9,6 @@ export default class RequestAdditional extends React.Component {
   };
 
   handleContinue = () => {
-    console.log('good idea');
     this.props.navigation.navigate('Review');
   };
 

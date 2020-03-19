@@ -62,6 +62,11 @@ export default class RequestPackage extends React.Component {
     }
   };
 
+  static getDerivedStateFromProps(nextProps, prevState) {
+    console.log('yes');
+    return null;
+  }
+
   handlePress = async (e, index) => {
     const packaging = packageList[index];
     this.requestObject.packaging = packaging;
