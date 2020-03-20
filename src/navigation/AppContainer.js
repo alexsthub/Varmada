@@ -118,7 +118,7 @@ const RequestNavigator = createStackNavigator(
     },
   },
   {
-    initialRouteName: 'Services',
+    // initialRouteName: 'Services',
     transitionConfig: () => fromRight(500),
   },
 );
@@ -167,7 +167,7 @@ const AppNavigator = createStackNavigator(
     },
   },
   {
-    initialRouteName: 'Request',
+    initialRouteName: 'LoginScreen',
   },
 );
 export default createAppContainer(AppNavigator);
