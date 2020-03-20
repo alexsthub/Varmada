@@ -45,6 +45,7 @@ const packageList = [
   },
 ];
 
+// TODO: Make it a tab navigator to switch between Mailers and Boxes
 export default class RequestPackage extends React.Component {
   constructor(props) {
     super(props);

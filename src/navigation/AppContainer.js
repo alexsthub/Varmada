@@ -4,6 +4,7 @@ import {Dimensions} from 'react-native';
 import {createAppContainer} from 'react-navigation';
 import {createStackNavigator} from 'react-navigation-stack';
 import {createDrawerNavigator} from 'react-navigation-drawer';
+import {fromRight} from 'react-navigation-transitions';
 
 import LoginScreen from '../screens/LoginScreen';
 import SignupScreen from '../screens/SignupScreen';
@@ -117,7 +118,8 @@ const RequestNavigator = createStackNavigator(
     },
   },
   {
-    initialRouteName: 'Carrier',
+    initialRouteName: 'Services',
+    transitionConfig: () => fromRight(500),
   },
 );
 

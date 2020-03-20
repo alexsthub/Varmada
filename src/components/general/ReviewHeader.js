@@ -78,7 +78,7 @@ export default class ReviewHeader extends React.Component {
               onPress={this.props.touchCarrier}>
               <View style={{paddingVertical: 5, marginRight: 40}}>
                 <Text style={{fontWeight: 'bold'}}>To:</Text>
-                <Text>{carrier}</Text>
+                <Text>{carrier.name}</Text>
               </View>
             </TouchableNativeFeedback>
           </View>

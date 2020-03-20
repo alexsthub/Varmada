@@ -24,9 +24,9 @@ export default class RequestReview extends React.Component {
   }
 
   // Keep this only for instant reloads
-  componentDidMount = async () => {
-    await this.getRequestFromStorage();
-  };
+  // componentDidMount = async () => {
+  //   await this.getRequestFromStorage();
+  // };
 
   getRequestFromStorage = async () => {
     try {

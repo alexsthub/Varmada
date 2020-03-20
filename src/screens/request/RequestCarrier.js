@@ -39,19 +39,19 @@ export default class RequestCarrier extends React.Component {
     this.state = {selectedCarrierID: null, fadeValue: new Animated.Value(0)};
   }
 
-  // getRequestFromStorage = async () => {
-  //   try {
-  //     const requestString = await AsyncStorage.getItem('request');
-  //     if (requestString !== null) {
-  //       this.requestObject = JSON.parse(requestString);
-  //       if (this.requestObject.carrier) {
-  //         this.setState({selectedCarrierID: this.requestObject.carrier.id});
-  //       }
-  //     }
-  //   } catch (error) {
-  //     console.log('oh no...');
-  //   }
-  // };
+  getRequestFromStorage = async () => {
+    try {
+      const requestString = await AsyncStorage.getItem('request');
+      if (requestString !== null) {
+        this.requestObject = JSON.parse(requestString);
+        if (this.requestObject.carrier) {
+          this.setState({selectedCarrierID: this.requestObject.carrier.id});
+        }
+      }
+    } catch (error) {
+      console.log('oh no...');
+    }
+  };
 
   componentDidUpdate = (prevProps, prevState) => {
     if (!prevState.selectedCarrierID && this.state.selectedCarrierID) {
