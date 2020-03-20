@@ -117,7 +117,7 @@ const RequestNavigator = createStackNavigator(
     },
   },
   {
-    initialRouteName: 'Image',
+    initialRouteName: 'Carrier',
   },
 );
 
