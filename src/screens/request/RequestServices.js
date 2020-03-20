@@ -10,6 +10,8 @@ import {NavigationEvents} from 'react-navigation';
 
 import Header from '../../components/general/Header';
 
+// TODO: If packaging is in use, show it and add the option to remove it
+// TODO: Same goes for labels
 export default class RequestServices extends React.Component {
   constructor(props) {
     super(props);
@@ -21,6 +23,7 @@ export default class RequestServices extends React.Component {
       const requestString = await AsyncStorage.getItem('request');
       if (requestString !== null) {
         const requestObject = JSON.parse(requestString);
+        console.log(requestObject);
         this.setState({request: requestObject});
       }
     } catch (error) {

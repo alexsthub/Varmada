@@ -44,6 +44,10 @@ export default class RequestReview extends React.Component {
     this.props.navigation.navigate('Payment');
   };
 
+  editCarrier = () => {
+    this.props.navigation.navigate('Carrier');
+  };
+
   handleConfirm = () => {
     console.log('confirming...');
   };
@@ -62,7 +66,7 @@ export default class RequestReview extends React.Component {
           containerStyle={{marginVertical: 15}}
           touchDateTime={() => console.log('go to time picker')}
           touchAddress={() => console.log('go to address picker')}
-          touchCarrier={() => console.log('go to carrier')}
+          touchCarrier={this.editCarrier}
         />
 
         <Text style={{fontWeight: 'bold'}}>Pay With:</Text>

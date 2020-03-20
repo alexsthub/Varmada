@@ -62,11 +62,6 @@ export default class RequestPackage extends React.Component {
     }
   };
 
-  static getDerivedStateFromProps(nextProps, prevState) {
-    console.log('yes');
-    return null;
-  }
-
   handlePress = async (e, index) => {
     const packaging = packageList[index];
     this.requestObject.packaging = packaging;
@@ -148,7 +143,7 @@ class Packaging extends React.Component {
               {this.props.title}
             </Text>
             <Text>{this.props.dimensions}</Text>
-            <Text>{'$' + this.props.price.toString()}</Text>
+            <Text>{'$' + this.props.price.toFixed(2).toString()}</Text>
           </View>
         </View>
       </TouchableNativeFeedback>

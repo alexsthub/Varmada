@@ -27,15 +27,11 @@ export default class RequestImage extends React.Component {
     //     AsyncStorage.removeItem(res[i]);
     //   }
     // });
-
-    // AsyncStorage.getAllKeys().then(res => {
-    //   console.log(res);
-    // });
-
     try {
       const requestString = await AsyncStorage.getItem('request');
       if (requestString !== null) {
         const requestObject = JSON.parse(requestString);
+        console.log(requestObject);
         this.setState({request: requestObject});
       }
     } catch (error) {

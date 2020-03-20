@@ -12,11 +12,13 @@ import {
 import AntDesignIcon from 'react-native-vector-icons/AntDesign';
 import moment from 'moment';
 import DateTimePickerModal from 'react-native-modal-datetime-picker';
+import {NavigationEvents} from 'react-navigation';
 
 import Header from '../../components/general/Header';
 import DateCarousel from '../../components/general/DateCarousel';
 import TimeRange from '../../components/general/TimeRange';
 
+// TODO: When getRequestFromStorage is fired, the date carousel animation is shitty.
 export default class RequestTime extends React.Component {
   constructor(props) {
     super(props);
@@ -28,20 +30,7 @@ export default class RequestTime extends React.Component {
     };
   }
 
-  // TODO: doesn't work here
   componentDidMount = async () => {
-    try {
-      const requestString = await AsyncStorage.getItem('request');
-      if (requestString !== null) {
-        this.requestObject = JSON.parse(requestString);
-      }
-    } catch (error) {
-      // TODO:
-      console.log('cannot get item from time page');
-    }
-    console.log(this.requestObject);
-
-    // other
     const shit = [
       {startTime: 6, endTime: 8, price: 4.0},
       {startTime: 8, endTime: 10, price: 4.0},
@@ -52,6 +41,40 @@ export default class RequestTime extends React.Component {
       {startTime: 18, endTime: 20, price: 5.0},
     ];
     this.setState({times: shit});
+  };
+
+  getRequestFromStorage = async () => {
+    try {
+      const requestString = await AsyncStorage.getItem('request');
+      if (requestString !== null) {
+        this.requestObject = JSON.parse(requestString);
+        if (
+          this.requestObject.date &&
+          moment(this.requestObject.date).isSameOrAfter(moment(), 'day')
+        ) {
+          this.setState({selectedDate: moment(this.requestObject.date)});
+          if (this.requestObject.time) {
+            const time = this.requestObject.time;
+            let selectedIndex;
+            for (let i = 0; i < this.state.times.length; i++) {
+              if (this.state.times[i].startTime === time.startTime) {
+                selectedIndex = i;
+                break;
+              }
+            }
+            if (selectedIndex) {
+              this.setState({selectedTimeIndex: selectedIndex}, () => {
+                setTimeout(() => {
+                  this.handleTimeScroll(selectedIndex);
+                }, 50);
+              });
+            }
+          }
+        }
+      }
+    } catch (error) {
+      console.log(error);
+    }
   };
 
   handleContinue = async () => {
@@ -76,6 +99,21 @@ export default class RequestTime extends React.Component {
   carouselSelect = date => {
     const d = moment(date);
     this.setState({selectedDate: d});
+  };
+
+  handleChangeTime = index => {
+    this.setState({selectedTimeIndex: index}, () => {
+      this.handleTimeScroll(index);
+    });
+  };
+
+  handleTimeScroll = index => {
+    const options = {
+      animated: true,
+      index: index,
+      viewPosition: 0.5,
+    };
+    this.timeList.scrollToIndex(options);
   };
 
   getTime = () => {
@@ -106,6 +144,7 @@ export default class RequestTime extends React.Component {
   render() {
     return (
       <View style={{flex: 1}}>
+        <NavigationEvents onWillFocus={this.getRequestFromStorage} />
         <View style={styles.headerContainer}>
           <Header
             headerText={'Request a pickup'}
@@ -144,10 +183,11 @@ export default class RequestTime extends React.Component {
 
         <View style={styles.container}>
           <FlatList
+            ref={timeList => (this.timeList = timeList)}
             data={this.state.times}
             renderItem={({item, index}) => (
               <TimeRange
-                onPress={() => this.setState({selectedTimeIndex: index})}
+                onPress={index => this.handleChangeTime(index)}
                 startTime={item.startTime}
                 endTime={item.endTime}
                 price={item.price}
@@ -158,6 +198,7 @@ export default class RequestTime extends React.Component {
             )}
             keyExtractor={item => item.startTime.toString()}
             showsVerticalScrollIndicator={false}
+            // onScrollToIndexFailed={() => {}}
           />
 
           <View style={styles.datetimeDisplay}>

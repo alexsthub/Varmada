@@ -116,9 +116,9 @@ const RequestNavigator = createStackNavigator(
       navigationOptions: {headerTransparent: true},
     },
   },
-  // {
-  //   initialRouteName: 'Additional',
-  // },
+  {
+    initialRouteName: 'Address',
+  },
 );
 
 const AppNavigator = createStackNavigator(

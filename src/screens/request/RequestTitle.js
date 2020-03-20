@@ -10,6 +10,8 @@ import {
   AsyncStorage,
 } from 'react-native';
 
+import {NavigationEvents} from 'react-navigation';
+
 import Header from '../../components/general/Header';
 import FloatingInput from '../../components/general/FloatingInput';
 
@@ -24,13 +26,21 @@ export default class RequestTitle extends React.Component {
     };
   }
 
-  // TODO: Also check if a request already exists and if it does, put the value into title state and just change the title on continue
   componentDidMount = async () => {
     BackHandler.addEventListener(
       'hardwareBackPress',
       this.handleBackButtonClick,
     );
+  };
 
+  componentWillUnmount() {
+    BackHandler.removeEventListener(
+      'hardwareBackPress',
+      this.handleBackButtonClick,
+    );
+  }
+
+  getRequestFromStorage = async () => {
     try {
       const requestString = await AsyncStorage.getItem('request');
       if (requestString !== null) {
@@ -46,13 +56,6 @@ export default class RequestTitle extends React.Component {
       console.log(error);
     }
   };
-
-  componentWillUnmount() {
-    BackHandler.removeEventListener(
-      'hardwareBackPress',
-      this.handleBackButtonClick,
-    );
-  }
 
   handleBackButtonClick = () => {
     console.log('GOING BACK');
@@ -103,6 +106,7 @@ export default class RequestTitle extends React.Component {
 
     return (
       <View style={{marginHorizontal: 40}}>
+        <NavigationEvents onWillFocus={this.getRequestFromStorage} />
         <Header
           headerText={'Request a pickup'}
           subHeaderText={'Describe your package'}

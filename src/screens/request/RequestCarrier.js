@@ -12,6 +12,7 @@ import {RadioButton} from 'react-native-paper';
 
 import Header from '../../components/general/Header';
 
+// TODO: Fix this
 export default class RequestCarrier extends React.Component {
   constructor(props) {
     super(props);
@@ -25,7 +26,6 @@ export default class RequestCarrier extends React.Component {
         this.requestObject = JSON.parse(requestString);
       }
     } catch (error) {
-      // TODO:
       console.log('oh no...');
     }
     console.log(this.requestObject);
