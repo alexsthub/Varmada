@@ -7,7 +7,10 @@ import {
   BackHandler,
   KeyboardAvoidingView,
   Animated,
+  AsyncStorage,
 } from 'react-native';
+
+import {NavigationEvents} from 'react-navigation';
 
 import Header from '../../components/general/Header';
 import FloatingInput from '../../components/general/FloatingInput';
@@ -23,12 +26,12 @@ export default class RequestTitle extends React.Component {
     };
   }
 
-  componentDidMount() {
+  componentDidMount = async () => {
     BackHandler.addEventListener(
       'hardwareBackPress',
       this.handleBackButtonClick,
     );
-  }
+  };
 
   componentWillUnmount() {
     BackHandler.removeEventListener(
@@ -37,33 +40,62 @@ export default class RequestTitle extends React.Component {
     );
   }
 
+  getRequestFromStorage = async () => {
+    try {
+      const requestString = await AsyncStorage.getItem('request');
+      if (requestString !== null) {
+        this.requestObject = JSON.parse(requestString);
+        if (this.requestObject.title) {
+          this.setState(
+            {title: this.requestObject.title},
+            this.renderAnimation(150),
+          );
+        }
+      }
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
   handleBackButtonClick = () => {
     console.log('GOING BACK');
     // TODO: Ask the user if they are sure they want to close
     // TODO: Need to do this if they hit the back button as well...
   };
 
-  handleContinue = () => {
-    const title = this.state.title;
+  handleContinue = async () => {
+    const {title} = this.state;
     if (title === '') return;
-    // TODO: Send to some database or some shit
-    // TODO: handle if it does not exist
-    this.props.navigation.navigate('Image');
+
+    let objString;
+    if (this.requestObject) {
+      this.requestObject.title = title;
+      objString = JSON.stringify(this.requestObject);
+    } else {
+      objString = JSON.stringify({title: title});
+    }
+    try {
+      await AsyncStorage.setItem('request', objString);
+      this.props.navigation.navigate('Image');
+    } catch (error) {
+      console.log('oh fuck what do i do now.');
+    }
   };
 
   handleChangeText = text => {
     if (text === '' && this.state.fadeValue._value === 150) {
-      Animated.timing(this.state.fadeValue, {
-        toValue: 0,
-        duration: 300,
-      }).start();
+      this.renderAnimation(0);
     } else if (text !== '' && this.state.fadeValue._value < 150) {
-      Animated.timing(this.state.fadeValue, {
-        toValue: 150,
-        duration: 300,
-      }).start();
+      this.renderAnimation(150);
     }
     this.setState({title: text});
+  };
+
+  renderAnimation = toValue => {
+    Animated.timing(this.state.fadeValue, {
+      toValue: toValue,
+      duration: 300,
+    }).start();
   };
 
   render() {
@@ -74,6 +106,7 @@ export default class RequestTitle extends React.Component {
 
     return (
       <View style={{marginHorizontal: 40}}>
+        <NavigationEvents onWillFocus={this.getRequestFromStorage} />
         <Header
           headerText={'Request a pickup'}
           subHeaderText={'Describe your package'}

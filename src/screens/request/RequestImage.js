@@ -6,6 +6,7 @@ import {
   TouchableNativeFeedback,
   Image,
   KeyboardAvoidingView,
+  AsyncStorage,
 } from 'react-native';
 
 import ImagePicker from 'react-native-image-picker';
@@ -13,11 +14,30 @@ import FeatherIcon from 'react-native-vector-icons/Feather';
 
 import Header from '../../components/general/Header';
 
+// TODO: Set request to state
 export default class RequestImage extends React.Component {
   constructor(props) {
     super(props);
-    this.state = {image: null};
+    this.state = {request: null};
   }
+
+  componentDidMount = async () => {
+    // AsyncStorage.getAllKeys().then(res => {
+    //   for (let i = 0; i < res.length; i++) {
+    //     AsyncStorage.removeItem(res[i]);
+    //   }
+    // });
+    try {
+      const requestString = await AsyncStorage.getItem('request');
+      if (requestString !== null) {
+        const requestObject = JSON.parse(requestString);
+        console.log(requestObject);
+        this.setState({request: requestObject});
+      }
+    } catch (error) {
+      console.log('oh no...');
+    }
+  };
 
   takePicture = () => {
     const options = {
@@ -30,32 +50,42 @@ export default class RequestImage extends React.Component {
 
     ImagePicker.showImagePicker(options, response => {
       if (!response.didCancel && !response.error) {
-        const profileImage = {
+        const packageImage = {
           uri: response.uri,
           type: response.type,
           name: 'package.jpg',
         };
-        this.setState({image: profileImage});
+        const request = this.state.request;
+        request.image = packageImage;
+        this.setState({request: request});
       }
     });
   };
 
-  handleContinue = () => {
-    const {image} = this.state;
-    // TODO: Send to some database or some shit
-    // TODO: handle if it does not exist
-    this.props.navigation.navigate('Carrier');
+  handleContinue = async () => {
+    const {request} = this.state;
+    const objString = JSON.stringify(request);
+    try {
+      await AsyncStorage.setItem('request', objString);
+      this.props.navigation.navigate('Carrier');
+    } catch (error) {
+      console.log('oh fuck what do i do now.');
+    }
   };
 
   render() {
-    const imageContent = !this.state.image ? (
-      <View style={styles.imageContainer}>
-        <FeatherIcon style={{color: '#000000'}} name={'camera'} size={40} />
-        <Text>Take a photo of your package</Text>
-      </View>
-    ) : (
-      <Image style={styles.imageStyle} source={{uri: this.state.image.uri}} />
-    );
+    const imageContent =
+      this.state.request && this.state.request.image ? (
+        <Image
+          style={styles.imageStyle}
+          source={{uri: this.state.request.image.uri}}
+        />
+      ) : (
+        <View style={styles.imageContainer}>
+          <FeatherIcon style={{color: '#000000'}} name={'camera'} size={40} />
+          <Text>Take a photo of your package</Text>
+        </View>
+      );
 
     return (
       <View style={{marginHorizontal: 40}}>

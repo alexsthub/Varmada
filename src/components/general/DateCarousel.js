@@ -59,7 +59,7 @@ export default class DateCarousel extends React.Component {
     }
     setTimeout(() => {
       this.setScrollOffset(this.state.selectedDayIndex);
-    }, 100);
+    }, 50);
   };
 
   setScrollOffset = index => {

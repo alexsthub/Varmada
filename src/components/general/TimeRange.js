@@ -30,7 +30,7 @@ export default class TimeRange extends React.Component {
     return (
       <TouchableNativeFeedback
         background={TouchableNativeFeedback.Ripple('lightgray')}
-        onPress={this.props.onPress}>
+        onPress={() => this.props.onPress(this.props.index)}>
         <View
           style={[
             styles.container,

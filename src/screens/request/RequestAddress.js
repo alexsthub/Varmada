@@ -8,6 +8,7 @@ import {
   Animated,
   Dimensions,
   StatusBar,
+  AsyncStorage,
 } from 'react-native';
 
 import Header from '../../components/general/Header';
@@ -53,23 +54,46 @@ export default class RequestAddress extends React.Component {
     };
   }
 
-  componentDidMount() {
+  componentDidMount = async () => {
+    try {
+      const requestString = await AsyncStorage.getItem('request');
+      if (requestString !== null) {
+        this.requestObject = JSON.parse(requestString);
+      }
+    } catch (error) {
+      console.log('oh no...');
+    }
+    console.log(this.requestObject);
     this.setState({addresses: shit});
-  }
+  };
 
   addAddress = () => {
     this.props.navigation.navigate('AddAddress');
   };
 
-  handlePress = (e, index) => {
-    // TODO: Add to db
+  handlePress = async (e, index) => {
     const selectedAddress = this.state.addresses[index];
-    console.log(selectedAddress);
-    this.props.navigation.navigate('Time', {
-      addressObj: this.state.addresses[index],
-      carrier: this.props.navigation.getParam("carrier")
-    });
+    this.requestObject.address = selectedAddress;
+    const objString = JSON.stringify(this.requestObject);
+    try {
+      await AsyncStorage.setItem('request', objString);
+      this.props.navigation.navigate('Time');
+    } catch (error) {
+      console.log('ahhhhhh error with async storage');
+    }
   };
+
+  // handleContinue = async () => {
+  //   const {image} = this.state;
+  //   this.requestObject.image = image;
+  //   const objString = JSON.stringify(this.requestObject);
+  //   try {
+  //     await AsyncStorage.setItem('request', objString);
+  //     this.props.navigation.navigate('Carrier');
+  //   } catch (error) {
+  //     console.log('oh fuck what do i do now.');
+  //   }
+  // };
 
   // TODO: Parser doesn't work for all inputs.
   handleAutocompletePress = (data, details = null) => {

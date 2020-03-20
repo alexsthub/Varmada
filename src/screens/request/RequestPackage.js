@@ -6,6 +6,7 @@ import {
   TouchableNativeFeedback,
   Image,
   FlatList,
+  AsyncStorage,
 } from 'react-native';
 
 import Header from '../../components/general/Header';
@@ -44,17 +45,34 @@ const packageList = [
   },
 ];
 
+// TODO: Make it a tab navigator to switch between Mailers and Boxes
 export default class RequestPackage extends React.Component {
   constructor(props) {
     super(props);
     this.state = {};
   }
 
-  // TODO: Return this to the previous
-  handlePress = (e, index) => {
+  componentDidMount = async () => {
+    try {
+      const requestString = await AsyncStorage.getItem('request');
+      if (requestString !== null) {
+        this.requestObject = JSON.parse(requestString);
+      }
+    } catch (error) {
+      console.log('oh no...');
+    }
+  };
+
+  handlePress = async (e, index) => {
     const packaging = packageList[index];
-    console.log(packaging);
-    this.props.navigation.navigate('Services', {stuff: packaging});
+    this.requestObject.packaging = packaging;
+    const objString = JSON.stringify(this.requestObject);
+    try {
+      await AsyncStorage.setItem('request', objString);
+      this.props.navigation.navigate('Services');
+    } catch (error) {
+      console.log('oh fuck what do i do now.');
+    }
   };
 
   render() {
@@ -126,7 +144,7 @@ class Packaging extends React.Component {
               {this.props.title}
             </Text>
             <Text>{this.props.dimensions}</Text>
-            <Text>{'$' + this.props.price.toString()}</Text>
+            <Text>{'$' + this.props.price.toFixed(2).toString()}</Text>
           </View>
         </View>
       </TouchableNativeFeedback>

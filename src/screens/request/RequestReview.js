@@ -4,122 +4,167 @@ import {
   View,
   Text,
   TouchableNativeFeedback,
-  Picker,
+  Image,
+  AsyncStorage,
 } from 'react-native';
+import {NavigationEvents} from 'react-navigation';
 
 import Header from '../../components/general/Header';
-import {TextInput} from 'react-native-gesture-handler';
+import ReviewHeader from '../../components/general/ReviewHeader';
 
+// TODO: Add image if exists and style title.
+// TODO: Use packaging price if exists
 export default class RequestReview extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
       payment: 'Venmo',
+      request: null,
     };
   }
+
+  // Keep this only for instant reloads
+  // componentDidMount = async () => {
+  //   await this.getRequestFromStorage();
+  // };
+
+  getRequestFromStorage = async () => {
+    try {
+      const requestString = await AsyncStorage.getItem('request');
+      if (requestString !== null) {
+        const requestObject = JSON.parse(requestString);
+        this.setState({request: requestObject});
+      }
+    } catch (error) {
+      console.log('oh no...');
+    }
+  };
+
+  choosePayment = () => {
+    this.props.navigation.navigate('Payment');
+  };
+
+  editCarrier = () => {
+    this.props.navigation.navigate('Carrier');
+  };
+
+  handleConfirm = () => {
+    console.log('confirming...');
+  };
+
   render() {
-    const {
-      addressObj,
-      carrier,
-      time,
-      date,
-    } = this.props.navigation.state.params;
     return (
-      <View style={{marginHorizontal: 40}}>
+      <View style={{flex: 1, marginHorizontal: 40}}>
+        <NavigationEvents onWillFocus={this.getRequestFromStorage} />
+
         <Header
           headerText={'Request a pickup'}
           subHeaderText={'Review and pay'}
         />
-        <Text style={{fontWeight: 'bold'}}>
-          Pickup: {date}, {time}
-        </Text>
-        <Text style={{fontWeight: 'bold'}}>From</Text>
-        <Text>{addressObj.address}</Text>
-        <Text>
-          {addressObj.city}, {addressObj.state}
-        </Text>
-        <Text>{addressObj.countryCode}</Text>
-        <Text style={{fontWeight: 'bold'}}>To</Text>
-        <Text>{carrier}</Text>
-        <TextInput
-          placeholder="Special Instructions (Optional)"
-          style={styles.instructions}
+        <ReviewHeader
+          request={this.state.request}
+          containerStyle={{marginVertical: 15}}
+          touchDateTime={() => console.log('go to time picker')}
+          touchAddress={() => console.log('go to address picker')}
+          touchCarrier={this.editCarrier}
         />
+
         <Text style={{fontWeight: 'bold'}}>Pay With:</Text>
-        <Picker
-          selectedValue={this.state.payment}
-          style={{height: 50, width: '100%'}}
-          onValueChange={itemValue => this.setState({payment: itemValue})}>
-          <Picker.Item label="Venmo" value="Venmo" />
-        </Picker>
-        <View style={styles.container}>
-          <Text>Items (1):</Text>
-          <Text>$3.00</Text>
-        </View>
-        <View style={styles.container}>
-          <Text>Delivery Fee:</Text>
-          <Text>$1.00</Text>
-        </View>
-        <View style={styles.container}>
-          <Text>Printing:</Text>
-          <Text>$0.50</Text>
-        </View>
-        <View style={styles.container}>
-          <Text>Packaging:</Text>
-          <Text>$2.00</Text>
-        </View>
-        <View style={styles.container}>
-          <Text>Sales Tax:</Text>
-          <Text>$0.75</Text>
-        </View>
-        <View style={styles.container}>
-          <Text style={styles.orderTotal}>Order Total:</Text>
-          <Text style={[styles.orderTotal, styles.price]}>$7.25</Text>
-        </View>
         <TouchableNativeFeedback
           background={TouchableNativeFeedback.Ripple('lightgray')}
-          // onPress={this.handleContinue}
-        >
-          <View
-            style={{
-              backgroundColor: '#F8B500',
-              elevation: 10,
-              padding: 20,
-              justifyContent: 'center',
-              alignItems: 'center',
-            }}>
-            <Text style={{fontWeight: 'bold', fontSize: 16}}>
-              Confirm Request
-            </Text>
+          onPress={this.choosePayment}>
+          <View style={styles.payContainer}>
+            <View style={{flexDirection: 'row', alignItems: 'center'}}>
+              <Image
+                source={require('../../assets/venmo_icon.png')}
+                style={{width: 25, height: 25}}
+                resizeMode={'stretch'}
+              />
+              <Text style={{fontSize: 18, marginLeft: 15}}>Venmo</Text>
+            </View>
+            <Text>></Text>
           </View>
         </TouchableNativeFeedback>
-        <Text style={styles.warning}>
+
+        <View style={styles.orderDetails}>
+          <View style={styles.lineContainer}>
+            <Text>Items (1):</Text>
+            <Text>$3.00</Text>
+          </View>
+          <View style={styles.lineContainer}>
+            <Text>Delivery Fee:</Text>
+            <Text>$1.00</Text>
+          </View>
+          <View style={styles.lineContainer}>
+            <Text>Printing:</Text>
+            <Text>$0.50</Text>
+          </View>
+          <View style={styles.lineContainer}>
+            <Text>Packaging:</Text>
+            <Text>$2.00</Text>
+          </View>
+          <View style={styles.lineContainer}>
+            <Text>Sales Tax:</Text>
+            <Text>$0.75</Text>
+          </View>
+          <View style={styles.lineContainer}>
+            <Text style={styles.orderTotal}>Order Total:</Text>
+            <Text style={[styles.orderTotal, styles.price]}>$7.25</Text>
+          </View>
+        </View>
+
+        <TouchableNativeFeedback
+          background={TouchableNativeFeedback.Ripple('lightgray')}
+          onPress={this.handleConfirm}>
+          <View style={styles.continueButton}>
+            <Text style={styles.continueText}>Confirm Request</Text>
+          </View>
+        </TouchableNativeFeedback>
+        {/* <Text style={styles.warning}>
           You won’t be charged until after the pickup has been dropped off.
-        </Text>
+        </Text> */}
       </View>
     );
   }
 }
 
 const styles = StyleSheet.create({
-  container: {
+  lineContainer: {
     flexDirection: 'row',
     justifyContent: 'space-between',
+  },
+  orderDetails: {
+    marginVertical: 10,
   },
   orderTotal: {
     fontWeight: 'bold',
     fontSize: 20,
-    marginVertical: 15,
+    marginTop: 15,
   },
   price: {
-    color: '#f8b500'
+    color: '#f8b500',
   },
   warning: {
     textAlign: 'center',
     marginVertical: 10,
+    fontSize: 14,
   },
-  instructions: {
-    backgroundColor: 'grey',
-    paddingHorizontal: 10,
+  payContainer: {
+    flexDirection: 'row',
+    padding: 10,
+    borderWidth: 1,
+    justifyContent: 'space-between',
+    alignItems: 'center',
+  },
+  continueButton: {
+    backgroundColor: '#F8B500',
+    elevation: 10,
+    padding: 20,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  continueText: {
+    fontWeight: 'bold',
+    fontSize: 16,
   },
 });

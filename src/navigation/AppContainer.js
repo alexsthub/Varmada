@@ -4,6 +4,7 @@ import {Dimensions} from 'react-native';
 import {createAppContainer} from 'react-navigation';
 import {createStackNavigator} from 'react-navigation-stack';
 import {createDrawerNavigator} from 'react-navigation-drawer';
+import {fromRight} from 'react-navigation-transitions';
 
 import LoginScreen from '../screens/LoginScreen';
 import SignupScreen from '../screens/SignupScreen';
@@ -107,10 +108,19 @@ const RequestNavigator = createStackNavigator(
       screen: RequestReview,
       navigationOptions: {headerTransparent: true},
     },
+    Payment: {
+      screen: PaymentMethodScreen,
+      navigationOptions: {headerTransparent: true},
+    },
+    AddPayment: {
+      screen: PaymentAddScreen,
+      navigationOptions: {headerTransparent: true},
+    },
   },
-  // {
-  //   initialRouteName: 'Time',
-  // },
+  {
+    // initialRouteName: 'Services',
+    transitionConfig: () => fromRight(500),
+  },
 );
 
 const AppNavigator = createStackNavigator(
