@@ -92,9 +92,6 @@ const RequestNavigator = createStackNavigator(
     },
     Address: {
       screen: RequestAddress,
-      // navigationOptions: {
-      //   headerStyle: {position: 'absolute', left: 0, top: 0},
-      // },
       navigationOptions: {headerTransparent: true},
     },
     AddLabel: {
@@ -123,7 +120,7 @@ const RequestNavigator = createStackNavigator(
     },
   },
   {
-    // initialRouteName: 'Review',
+    initialRouteName: 'Package',
     transitionConfig: () => fromRight(500),
   },
 );

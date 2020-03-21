@@ -36,7 +36,6 @@ target 'Varmada' do
   pod 'BVLinearGradient', :path => '../node_modules/react-native-linear-gradient'
 
 
-  pod 'RNScreens', :path => '../node_modules/react-native-screens'
 
   target 'VarmadaTests' do
     inherit! :search_paths
