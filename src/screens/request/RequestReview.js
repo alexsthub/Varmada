@@ -13,6 +13,7 @@ import Header from '../../components/general/Header';
 import ReviewHeader from '../../components/general/ReviewHeader';
 
 // TODO: Use packaging price if exists
+// TODO: Be able to edit address from this screen
 export default class RequestReview extends React.Component {
   constructor(props) {
     super(props);

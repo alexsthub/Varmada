@@ -347,7 +347,7 @@ export default class RequestAddress extends React.Component {
                 onPress={this.handleAutocompletePress}
                 query={{
                   // TODO: Remove this key when you push. Probably use secrets manager later.
-                  key: 'AIzaSyB56fe3z7BP7gLLai0mObrGbTbgxDBqG8U',
+                  key: '',
                   language: 'en',
                 }}
                 styles={autocompleteStyle}
