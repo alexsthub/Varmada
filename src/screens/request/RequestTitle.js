@@ -40,11 +40,22 @@ export default class RequestTitle extends React.Component {
     );
   }
 
+  handleBackButtonClick = () => {
+    const navParams = this.props.navigation.state.params;
+    if (navParams && navParams.edit) {
+      this.props.navigation.navigate('Review');
+      return true;
+    }
+    // TODO: Ask the user if they are sure they want to close
+    // TODO: Need to do this if they hit the back button as well...
+  };
+
   getRequestFromStorage = async () => {
     try {
       const requestString = await AsyncStorage.getItem('request');
       if (requestString !== null) {
         this.requestObject = JSON.parse(requestString);
+        console.log(this.requestObject);
         if (this.requestObject.title) {
           this.setState(
             {title: this.requestObject.title},
@@ -55,12 +66,6 @@ export default class RequestTitle extends React.Component {
     } catch (error) {
       console.log(error);
     }
-  };
-
-  handleBackButtonClick = () => {
-    console.log('GOING BACK');
-    // TODO: Ask the user if they are sure they want to close
-    // TODO: Need to do this if they hit the back button as well...
   };
 
   handleContinue = async () => {

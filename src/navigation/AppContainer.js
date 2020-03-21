@@ -121,7 +121,7 @@ const RequestNavigator = createStackNavigator(
     },
   },
   {
-    initialRouteName: 'Address',
+    // initialRouteName: 'Review',
     transitionConfig: () => fromRight(500),
   },
 );

@@ -13,7 +13,9 @@ import Header from '../../components/general/Header';
 import ReviewHeader from '../../components/general/ReviewHeader';
 
 // TODO: Use packaging price if exists
-// TODO: Be able to edit address from this screen
+
+// TODO: When I use the back button to to go back to review, some pages are unmounted.
+// TODO: When I go back, it pops all of the intermediate screens
 export default class RequestReview extends React.Component {
   constructor(props) {
     super(props);
@@ -48,11 +50,12 @@ export default class RequestReview extends React.Component {
   };
 
   editTitle = () => {
+    console.log('reditting');
     this.props.navigation.navigate('Title', {edit: true});
   };
 
   editAddress = () => {
-    //
+    this.props.navigation.navigate('Address', {edit: true});
   };
 
   handleConfirm = () => {

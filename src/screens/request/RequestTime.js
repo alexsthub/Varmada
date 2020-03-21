@@ -8,6 +8,7 @@ import {
   KeyboardAvoidingView,
   FlatList,
   AsyncStorage,
+  BackHandler,
 } from 'react-native';
 import AntDesignIcon from 'react-native-vector-icons/AntDesign';
 import moment from 'moment';
@@ -31,6 +32,10 @@ export default class RequestTime extends React.Component {
   }
 
   componentDidMount = async () => {
+    BackHandler.addEventListener(
+      'hardwareBackPress',
+      this.handleBackButtonClick,
+    );
     const shit = [
       {startTime: 6, endTime: 8, price: 4.0},
       {startTime: 8, endTime: 10, price: 4.0},
@@ -41,6 +46,21 @@ export default class RequestTime extends React.Component {
       {startTime: 18, endTime: 20, price: 5.0},
     ];
     this.setState({times: shit});
+  };
+
+  componentWillUnmount() {
+    BackHandler.removeEventListener(
+      'hardwareBackPress',
+      this.handleBackButtonClick,
+    );
+  }
+
+  handleBackButtonClick = () => {
+    const navParams = this.props.navigation.state.params;
+    if (navParams && navParams.edit) {
+      this.props.navigation.navigate('Review');
+      return true;
+    }
   };
 
   getRequestFromStorage = async () => {

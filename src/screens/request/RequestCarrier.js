@@ -9,6 +9,7 @@ import {
   FlatList,
   AsyncStorage,
   Animated,
+  BackHandler,
 } from 'react-native';
 
 import {NavigationEvents} from 'react-navigation';
@@ -38,6 +39,28 @@ export default class RequestCarrier extends React.Component {
     super(props);
     this.state = {selectedCarrierID: null, fadeValue: new Animated.Value(0)};
   }
+
+  componentDidMount = () => {
+    BackHandler.addEventListener(
+      'hardwareBackPress',
+      this.handleBackButtonClick,
+    );
+  };
+
+  componentWillUnmount() {
+    BackHandler.removeEventListener(
+      'hardwareBackPress',
+      this.handleBackButtonClick,
+    );
+  }
+
+  handleBackButtonClick = () => {
+    const navParams = this.props.navigation.state.params;
+    if (navParams && navParams.edit) {
+      this.props.navigation.navigate('Review');
+      return true;
+    }
+  };
 
   getRequestFromStorage = async () => {
     try {

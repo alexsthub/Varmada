@@ -11,6 +11,7 @@ import {
   StatusBar,
   AsyncStorage,
   KeyboardAvoidingView,
+  BackHandler,
 } from 'react-native';
 
 import Header from '../../components/general/Header';
@@ -60,6 +61,10 @@ export default class RequestAddress extends React.Component {
   }
 
   componentDidMount = async () => {
+    BackHandler.addEventListener(
+      'hardwareBackPress',
+      this.handleBackButtonClick,
+    );
     try {
       const requestString = await AsyncStorage.getItem('request');
       if (requestString !== null) {
@@ -90,6 +95,21 @@ export default class RequestAddress extends React.Component {
       this.state.selectedAddressIndex === null
     ) {
       this.renderAnimation(0);
+    }
+  };
+
+  componentWillUnmount() {
+    BackHandler.removeEventListener(
+      'hardwareBackPress',
+      this.handleBackButtonClick,
+    );
+  }
+
+  handleBackButtonClick = () => {
+    const navParams = this.props.navigation.state.params;
+    if (navParams && navParams.edit) {
+      this.props.navigation.navigate('Review');
+      return true;
     }
   };
 
@@ -127,7 +147,12 @@ export default class RequestAddress extends React.Component {
     const objString = JSON.stringify(this.requestObject);
     try {
       await AsyncStorage.setItem('request', objString);
-      this.props.navigation.navigate('Time');
+      const navParams = this.props.navigation.state.params;
+      if (navParams && navParams.edit) {
+        this.props.navigation.navigate('Review');
+      } else {
+        this.props.navigation.navigate('Time');
+      }
     } catch (error) {
       console.log('ahhhhhh error with async storage');
     }
