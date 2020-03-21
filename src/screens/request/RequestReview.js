@@ -12,7 +12,6 @@ import {NavigationEvents} from 'react-navigation';
 import Header from '../../components/general/Header';
 import ReviewHeader from '../../components/general/ReviewHeader';
 
-// TODO: Add image if exists and style title.
 // TODO: Use packaging price if exists
 export default class RequestReview extends React.Component {
   constructor(props) {
@@ -22,11 +21,6 @@ export default class RequestReview extends React.Component {
       request: null,
     };
   }
-
-  // Keep this only for instant reloads
-  // componentDidMount = async () => {
-  //   await this.getRequestFromStorage();
-  // };
 
   getRequestFromStorage = async () => {
     try {
@@ -45,7 +39,19 @@ export default class RequestReview extends React.Component {
   };
 
   editCarrier = () => {
-    this.props.navigation.navigate('Carrier');
+    this.props.navigation.navigate('Carrier', {edit: true});
+  };
+
+  editDateTime = () => {
+    this.props.navigation.navigate('Time', {edit: true});
+  };
+
+  editTitle = () => {
+    this.props.navigation.navigate('Title', {edit: true});
+  };
+
+  editAddress = () => {
+    //
   };
 
   handleConfirm = () => {
@@ -64,8 +70,9 @@ export default class RequestReview extends React.Component {
         <ReviewHeader
           request={this.state.request}
           containerStyle={{marginVertical: 15}}
-          touchDateTime={() => console.log('go to time picker')}
-          touchAddress={() => console.log('go to address picker')}
+          touchTitle={this.editTitle}
+          touchDateTime={this.editDateTime}
+          touchAddress={this.editAddress}
           touchCarrier={this.editCarrier}
         />
 

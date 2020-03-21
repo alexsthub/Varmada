@@ -79,7 +79,12 @@ export default class RequestCarrier extends React.Component {
     const objString = JSON.stringify(this.requestObject);
     try {
       await AsyncStorage.setItem('request', objString);
-      this.props.navigation.navigate('Services');
+      const navParams = this.props.navigation.state.params;
+      if (navParams && navParams.edit) {
+        this.props.navigation.navigate('Review');
+      } else {
+        this.props.navigation.navigate('Services');
+      }
     } catch (error) {
       console.log('oh fuck what do i do now.');
     }
@@ -125,7 +130,7 @@ export default class RequestCarrier extends React.Component {
               style={{
                 backgroundColor: animatedBackground,
                 borderWidth: !this.state.selectedCarrierID ? 1 : null,
-                borderColor: !this.state.title ? '#F8B500' : null,
+                borderColor: !this.state.selectedCarrierID ? '#F8B500' : null,
                 elevation: 10,
                 padding: 20,
                 justifyContent: 'center',

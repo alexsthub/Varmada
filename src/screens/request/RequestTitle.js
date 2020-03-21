@@ -76,7 +76,12 @@ export default class RequestTitle extends React.Component {
     }
     try {
       await AsyncStorage.setItem('request', objString);
-      this.props.navigation.navigate('Image');
+      const navParams = this.props.navigation.state.params;
+      if (navParams && navParams.edit) {
+        this.props.navigation.navigate('Review');
+      } else {
+        this.props.navigation.navigate('Image');
+      }
     } catch (error) {
       console.log('oh fuck what do i do now.');
     }

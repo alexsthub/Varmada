@@ -90,6 +90,9 @@ const RequestNavigator = createStackNavigator(
     },
     Address: {
       screen: RequestAddress,
+      // navigationOptions: {
+      //   headerStyle: {position: 'absolute', left: 0, top: 0},
+      // },
       navigationOptions: {headerTransparent: true},
     },
     AddLabel: {
@@ -118,7 +121,7 @@ const RequestNavigator = createStackNavigator(
     },
   },
   {
-    // initialRouteName: 'Services',
+    initialRouteName: 'Address',
     transitionConfig: () => fromRight(500),
   },
 );
@@ -167,7 +170,7 @@ const AppNavigator = createStackNavigator(
     },
   },
   {
-    initialRouteName: 'LoginScreen',
+    initialRouteName: 'Request',
   },
 );
 export default createAppContainer(AppNavigator);

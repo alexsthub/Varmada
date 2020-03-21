@@ -26,9 +26,9 @@ export default class ReviewHeader extends React.Component {
     if (!this.props.request) {
       return null;
     }
-    const {address, carrier, time, date, title, image} = this.props.request;
+    const {address, carrier, time, date, title} = this.props.request;
     let subtitle;
-    if (address.name !== address.address) {
+    if (address.name.split(' ')[0] !== address.address.split(' ')[0]) {
       subtitle = `${address.address} ${address.city}, ${address.state} `;
     } else {
       subtitle = `${address.city}, ${address.state}`;
@@ -38,7 +38,13 @@ export default class ReviewHeader extends React.Component {
     const timeString = this.timesToRange(time.startTime, time.endTime);
     return (
       <View style={this.props.containerStyle}>
-        <Text>{title}</Text>
+        <TouchableNativeFeedback
+          background={TouchableNativeFeedback.Ripple('lightgray')}
+          onPress={this.props.touchTitle}>
+          <View style={{flexDirection: 'row', alignItems: 'center'}}>
+            <Text style={{fontWeight: 'bold', fontSize: 20}}>{title}</Text>
+          </View>
+        </TouchableNativeFeedback>
         <TouchableNativeFeedback
           background={TouchableNativeFeedback.Ripple('lightgray')}
           onPress={this.props.touchDateTime}>

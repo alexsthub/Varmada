@@ -85,7 +85,12 @@ export default class RequestTime extends React.Component {
     const objString = JSON.stringify(this.requestObject);
     try {
       await AsyncStorage.setItem('request', objString);
-      this.props.navigation.navigate('Additional');
+      const navParams = this.props.navigation.state.params;
+      if (navParams && navParams.edit) {
+        this.props.navigation.navigate('Review');
+      } else {
+        this.props.navigation.navigate('Additional');
+      }
     } catch (error) {
       console.log('oh fuck what do i do now.');
     }
