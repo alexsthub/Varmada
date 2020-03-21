@@ -5,6 +5,7 @@ import {createAppContainer} from 'react-navigation';
 import {createStackNavigator} from 'react-navigation-stack';
 import {createDrawerNavigator} from 'react-navigation-drawer';
 import {fromRight} from 'react-navigation-transitions';
+import {enableScreens} from 'react-native-screens';
 
 import LoginScreen from '../screens/LoginScreen';
 import SignupScreen from '../screens/SignupScreen';
@@ -35,6 +36,7 @@ import RequestTime from '../screens/request/RequestTime';
 import RequestReview from '../screens/request/RequestReview';
 import RequestAddLabel from '../screens/request/RequestAddLabel';
 
+enableScreens();
 const WIDTH = Dimensions.get('window').width;
 
 const DrawerConfig = {
