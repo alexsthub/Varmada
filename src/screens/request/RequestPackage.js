@@ -11,12 +11,11 @@ import {
   Animated,
 } from 'react-native';
 
-import {TabView, SceneMap} from 'react-native-tab-view';
+import {TabView} from 'react-native-tab-view';
 
 import Header from '../../components/general/Header';
 
-// TODO: Pull from a DB
-const packageList = [
+const mailerList = [
   {
     name: 'Bubble Mailer - Size 0',
     dimensions: '6" x 9"',
@@ -92,10 +91,8 @@ const boxList = [
   },
 ];
 
-// TODO: Optimize by making flatlists own components and should use shouldComponentUpdate
-// TODO: Clicking on the same one will actually unselect the thing
-
-// TODO: If you set the state, it will re-render literally everything, even the components in the flatlist
+// TODO: Style the tabs
+// TODO: Need this to scroll to the click.
 export default class RequestPackage extends React.Component {
   constructor(props) {
     super(props);
@@ -129,67 +126,23 @@ export default class RequestPackage extends React.Component {
   };
 
   handleContinue = async () => {
-    // const packaging = packageList[index];
-    // this.requestObject.packaging = packaging;
-    // const objString = JSON.stringify(this.requestObject);
-    // try {
-    //   await AsyncStorage.setItem('request', objString);
-    //   this.props.navigation.navigate('Services');
-    // } catch (error) {
-    //   console.log('oh fuck what do i do now.');
-    // }
+    const all = mailerList.concat(boxList);
+    const packaging = all.find(p => p.id === this.state.selectedPackageID);
+    if (packaging) {
+      this.requestObject.packaging = packaging;
+    } else {
+      delete this.requestObject.packaging;
+    }
+    const objString = JSON.stringify(this.requestObject);
+    try {
+      await AsyncStorage.setItem('request', objString);
+      this.props.navigation.navigate('Services');
+    } catch (error) {
+      console.log('oh fuck what do i do now.');
+    }
   };
 
-  render() {
-    const mailers = () => (
-      <View style={styles.listContainer}>
-        <FlatList
-          data={packageList}
-          renderItem={({item}) => (
-            <Packaging
-              title={item.name}
-              dimensions={item.dimensions}
-              price={item.price}
-              type={item.type}
-              selected={this.state.selectedPackageID === item.id}
-              onPress={() => this.handlePress(item.id)}
-            />
-          )}
-          ItemSeparatorComponent={() => <View style={{marginVertical: 8}} />}
-          keyExtractor={item => String(item.id)}
-          showsVerticalScrollIndicator={false}
-          contentContainerStyle={{paddingBottom: 10}}
-        />
-      </View>
-    );
-
-    const boxes = () => (
-      <View style={styles.listContainer}>
-        <FlatList
-          data={boxList}
-          renderItem={({item}) => (
-            <Packaging
-              title={item.name}
-              dimensions={item.dimensions}
-              price={item.price}
-              type={item.type}
-              selected={this.state.selectedPackageID === item.id}
-              onPress={() => this.handlePress(item.id)}
-            />
-          )}
-          ItemSeparatorComponent={() => <View style={{marginVertical: 8}} />}
-          keyExtractor={item => String(item.id)}
-          showsVerticalScrollIndicator={false}
-          contentContainerStyle={{paddingBottom: 10}}
-        />
-      </View>
-    );
-
-    const renderScene = SceneMap({
-      Mailer: mailers,
-      Box: boxes,
-    });
-
+  render = () => {
     return (
       <View style={{marginHorizontal: 40, flex: 1}}>
         <Header
@@ -200,7 +153,32 @@ export default class RequestPackage extends React.Component {
         <TabView
           initialLayout={{width: Dimensions.get('window').width - 80}}
           navigationState={{index: this.state.index, routes: this.state.routes}}
-          renderScene={renderScene}
+          renderScene={({route}) => {
+            switch (route.key) {
+              case 'Mailer':
+                return (
+                  <PackageOptionsView
+                    type={route.key}
+                    data={mailerList}
+                    selectedPackageID={this.state.selectedPackageID}
+                    onPress={itemID => this.handlePress(itemID)}
+                    index={this.state.index}
+                  />
+                );
+              case 'Box':
+                return (
+                  <PackageOptionsView
+                    type={route.key}
+                    data={boxList}
+                    selectedPackageID={this.state.selectedPackageID}
+                    onPress={itemID => this.handlePress(itemID)}
+                    index={this.state.index}
+                  />
+                );
+              default:
+                return null;
+            }
+          }}
           onIndexChange={index => this.setState({index: index})}
           style={{marginTop: 20}}
         />
@@ -214,7 +192,7 @@ export default class RequestPackage extends React.Component {
         </TouchableNativeFeedback>
       </View>
     );
-  }
+  };
 }
 
 const styles = StyleSheet.create({
@@ -233,6 +211,46 @@ const styles = StyleSheet.create({
   },
 });
 
+class PackageOptionsView extends React.Component {
+  componentDidMount = () => {
+    console.log('mounting mailerview');
+  };
+
+  shouldComponentUpdate = nextProps => {
+    if (
+      (this.props.type === 'Mailer' && nextProps.index === 1) ||
+      (this.props.type === 'Box' && nextProps.index === 0)
+    ) {
+      return false;
+    }
+    return true;
+  };
+
+  render() {
+    return (
+      <View style={styles.listContainer}>
+        <FlatList
+          data={this.props.data}
+          renderItem={({item}) => (
+            <Packaging
+              title={item.name}
+              dimensions={item.dimensions}
+              price={item.price}
+              type={item.type}
+              selected={this.props.selectedPackageID === item.id}
+              onPress={() => this.props.onPress(item.id)}
+            />
+          )}
+          ItemSeparatorComponent={() => <View style={{marginVertical: 8}} />}
+          keyExtractor={item => String(item.id)}
+          showsVerticalScrollIndicator={false}
+          contentContainerStyle={{paddingBottom: 10}}
+        />
+      </View>
+    );
+  }
+}
+
 class Packaging extends React.Component {
   constructor(props) {
     super(props);
@@ -245,7 +263,7 @@ class Packaging extends React.Component {
     }
   }
 
-  componentDidUpdate = (prevProps, prevState) => {
+  componentDidUpdate = prevProps => {
     if (this.props.selected && !prevProps.selected) {
       this.renderAnimation(150);
     } else if (prevProps.selected && !this.props.selected) {

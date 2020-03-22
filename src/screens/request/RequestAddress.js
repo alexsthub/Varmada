@@ -271,6 +271,7 @@ export default class RequestAddress extends React.Component {
       inputRange: [0, 150],
       outputRange: ['#FFFFFF', '#F8B500'],
     });
+
     return (
       <View style={styles.container}>
         <View
