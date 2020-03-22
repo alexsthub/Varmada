@@ -11,7 +11,6 @@ import {NavigationEvents} from 'react-navigation';
 
 import Header from '../../components/general/Header';
 
-// TODO: If packaging is in use, show it and add the option to remove it
 // TODO: Same goes for labels
 export default class RequestServices extends React.Component {
   constructor(props) {
@@ -32,12 +31,19 @@ export default class RequestServices extends React.Component {
     }
   };
 
-  removePackaging = () => {
+  removePackaging = async () => {
     const request = this.state.request;
     if (request.packaging) {
       delete request.packaging;
     }
-    this.setState({request: request});
+    this.setState({request: request}, async () => {
+      const objString = JSON.stringify(request);
+      try {
+        await AsyncStorage.setItem('request', objString);
+      } catch (error) {
+        console.log('oh fuck what do i do now.');
+      }
+    });
   };
 
   handleLabels = () => {
@@ -48,14 +54,8 @@ export default class RequestServices extends React.Component {
     this.props.navigation.navigate('Package');
   };
 
-  handleContinue = async () => {
-    const objString = JSON.stringify(this.state.request);
-    try {
-      await AsyncStorage.setItem('request', objString);
-      this.props.navigation.navigate('Address');
-    } catch (error) {
-      console.log('oh fuck what do i do now.');
-    }
+  handleContinue = () => {
+    this.props.navigation.navigate('Address');
   };
 
   render() {
@@ -71,7 +71,11 @@ export default class RequestServices extends React.Component {
             }}>
             <Image
               style={{height: 50, width: 50}}
-              source={require('../../assets/packaging/mailer.png')}
+              source={
+                request.packaging.type === 'mailer'
+                  ? require('../../assets/packaging/mailer.png')
+                  : require('../../assets/packaging/box.png')
+              }
             />
             <View style={{paddingLeft: 20, flex: 1}}>
               <Text>{request.packaging.name}</Text>

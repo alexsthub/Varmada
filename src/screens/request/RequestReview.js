@@ -13,9 +13,7 @@ import Header from '../../components/general/Header';
 import ReviewHeader from '../../components/general/ReviewHeader';
 
 // TODO: Use packaging price if exists
-
-// TODO: When I use the back button to to go back to review, some pages are unmounted.
-// TODO: When I go back, it pops all of the intermediate screens
+// TODO: Show packaging if it exists and make it editable.
 export default class RequestReview extends React.Component {
   constructor(props) {
     super(props);

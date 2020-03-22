@@ -139,6 +139,7 @@ export default class RequestCarrier extends React.Component {
             keyExtractor={item => item.name}
             showsVerticalScrollIndicator={false}
             ItemSeparatorComponent={() => <View style={{marginVertical: 8}} />}
+            contentContainerStyle={{paddingBottom: 10}}
           />
         </View>
 

@@ -120,7 +120,7 @@ const RequestNavigator = createStackNavigator(
     },
   },
   {
-    initialRouteName: 'Package',
+    // initialRouteName: 'Package',
     transitionConfig: () => fromRight(500),
   },
 );

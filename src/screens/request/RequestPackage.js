@@ -11,7 +11,8 @@ import {
   Animated,
 } from 'react-native';
 
-import {TabView} from 'react-native-tab-view';
+import {NavigationEvents} from 'react-navigation';
+import {TabView, TabBar} from 'react-native-tab-view';
 
 import Header from '../../components/general/Header';
 
@@ -91,8 +92,6 @@ const boxList = [
   },
 ];
 
-// TODO: Style the tabs
-// TODO: Need this to scroll to the click.
 export default class RequestPackage extends React.Component {
   constructor(props) {
     super(props);
@@ -106,22 +105,43 @@ export default class RequestPackage extends React.Component {
     };
   }
 
-  componentDidMount = async () => {
+  getRequestFromStorage = async () => {
     try {
       const requestString = await AsyncStorage.getItem('request');
       if (requestString !== null) {
         this.requestObject = JSON.parse(requestString);
+        if (this.requestObject.packaging) {
+          this.setState({selectedPackageID: this.requestObject.packaging.id});
+          if (this.requestObject.packaging.type === 'box') {
+            this.setState({index: 1});
+          }
+        }
       }
     } catch (error) {
       console.log('oh no...');
     }
   };
 
-  handlePress = itemID => {
+  handlePress = (itemID, index, key) => {
     if (this.state.selectedPackageID === itemID) {
       this.setState({selectedPackageID: null});
     } else {
-      this.setState({selectedPackageID: itemID});
+      this.setState({selectedPackageID: itemID}, () => {
+        this.handleScroll(index, key);
+      });
+    }
+  };
+
+  handleScroll = (index, key) => {
+    const options = {
+      animated: true,
+      index: index,
+      viewPosition: 0.5,
+    };
+    if (key === 'Mailer') {
+      this.mailerFlatlist.getInnerRef().scrollToIndex(options);
+    } else {
+      this.boxFlatlist.getInnerRef().scrollToIndex(options);
     }
   };
 
@@ -142,9 +162,19 @@ export default class RequestPackage extends React.Component {
     }
   };
 
+  renderTabBar = props => (
+    <TabBar
+      {...props}
+      indicatorStyle={{backgroundColor: '#f8b500'}}
+      style={{backgroundColor: '#393e46'}}
+    />
+  );
+
   render = () => {
     return (
       <View style={{marginHorizontal: 40, flex: 1}}>
+        <NavigationEvents onWillFocus={this.getRequestFromStorage} />
+
         <Header
           headerText={'Request a pickup'}
           subHeaderText={'Select a container'}
@@ -153,25 +183,32 @@ export default class RequestPackage extends React.Component {
         <TabView
           initialLayout={{width: Dimensions.get('window').width - 80}}
           navigationState={{index: this.state.index, routes: this.state.routes}}
+          renderTabBar={this.renderTabBar}
           renderScene={({route}) => {
             switch (route.key) {
               case 'Mailer':
                 return (
                   <PackageOptionsView
+                    ref={r => (this.mailerFlatlist = r)}
                     type={route.key}
                     data={mailerList}
                     selectedPackageID={this.state.selectedPackageID}
-                    onPress={itemID => this.handlePress(itemID)}
+                    onPress={(itemID, index) =>
+                      this.handlePress(itemID, index, route.key)
+                    }
                     index={this.state.index}
                   />
                 );
               case 'Box':
                 return (
                   <PackageOptionsView
+                    ref={r => (this.boxFlatlist = r)}
                     type={route.key}
                     data={boxList}
                     selectedPackageID={this.state.selectedPackageID}
-                    onPress={itemID => this.handlePress(itemID)}
+                    onPress={(itemID, index) =>
+                      this.handlePress(itemID, index, route.key)
+                    }
                     index={this.state.index}
                   />
                 );
@@ -212,10 +249,6 @@ const styles = StyleSheet.create({
 });
 
 class PackageOptionsView extends React.Component {
-  componentDidMount = () => {
-    console.log('mounting mailerview');
-  };
-
   shouldComponentUpdate = nextProps => {
     if (
       (this.props.type === 'Mailer' && nextProps.index === 1) ||
@@ -226,19 +259,22 @@ class PackageOptionsView extends React.Component {
     return true;
   };
 
+  getInnerRef = () => this.ref;
+
   render() {
     return (
       <View style={styles.listContainer}>
         <FlatList
+          ref={r => (this.ref = r)}
           data={this.props.data}
-          renderItem={({item}) => (
+          renderItem={({item, index}) => (
             <Packaging
               title={item.name}
               dimensions={item.dimensions}
               price={item.price}
               type={item.type}
               selected={this.props.selectedPackageID === item.id}
-              onPress={() => this.props.onPress(item.id)}
+              onPress={() => this.props.onPress(item.id, index)}
             />
           )}
           ItemSeparatorComponent={() => <View style={{marginVertical: 8}} />}
