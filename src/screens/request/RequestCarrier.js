@@ -40,6 +40,7 @@ export default class RequestCarrier extends React.Component {
     this.state = {selectedCarrierID: null, fadeValue: new Animated.Value(0)};
   }
 
+  // Creates an event listener for the android back button
   componentDidMount = () => {
     BackHandler.addEventListener(
       'hardwareBackPress',
@@ -47,6 +48,7 @@ export default class RequestCarrier extends React.Component {
     );
   };
 
+  // Removes back button listener when component is unmounted
   componentWillUnmount() {
     BackHandler.removeEventListener(
       'hardwareBackPress',
@@ -54,6 +56,7 @@ export default class RequestCarrier extends React.Component {
     );
   }
 
+  // If screen was navigated in order to edit, return to review. Else, default behavior
   handleBackButtonClick = () => {
     const navParams = this.props.navigation.state.params;
     if (navParams && navParams.edit) {
@@ -62,6 +65,7 @@ export default class RequestCarrier extends React.Component {
     }
   };
 
+  // Get request from async storage and set carrier value if exists
   getRequestFromStorage = async () => {
     try {
       const requestString = await AsyncStorage.getItem('request');
@@ -76,6 +80,7 @@ export default class RequestCarrier extends React.Component {
     }
   };
 
+  // If carrier is selected, render button animation
   componentDidUpdate = (prevProps, prevState) => {
     if (!prevState.selectedCarrierID && this.state.selectedCarrierID) {
       this.renderAnimation(150);
@@ -84,6 +89,7 @@ export default class RequestCarrier extends React.Component {
     }
   };
 
+  // Button animation helper
   renderAnimation = toValue => {
     Animated.timing(this.state.fadeValue, {
       toValue: toValue,
@@ -91,6 +97,7 @@ export default class RequestCarrier extends React.Component {
     }).start();
   };
 
+  // Get carrier object and save to async storage. Navigate to next screen
   handleContinue = async () => {
     const carrierName = carriers.find(
       c => c.id === this.state.selectedCarrierID,

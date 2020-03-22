@@ -31,6 +31,7 @@ export default class RequestTime extends React.Component {
     };
   }
 
+  // Android back button listener
   componentDidMount = async () => {
     BackHandler.addEventListener(
       'hardwareBackPress',
@@ -48,6 +49,7 @@ export default class RequestTime extends React.Component {
     this.setState({times: shit});
   };
 
+  // Remove back button listener
   componentWillUnmount() {
     BackHandler.removeEventListener(
       'hardwareBackPress',
@@ -55,6 +57,7 @@ export default class RequestTime extends React.Component {
     );
   }
 
+  // Return to review if editting
   handleBackButtonClick = () => {
     const navParams = this.props.navigation.state.params;
     if (navParams && navParams.edit) {
@@ -63,6 +66,7 @@ export default class RequestTime extends React.Component {
     }
   };
 
+  // read request from async storage
   getRequestFromStorage = async () => {
     try {
       const requestString = await AsyncStorage.getItem('request');
@@ -97,6 +101,7 @@ export default class RequestTime extends React.Component {
     }
   };
 
+  // Get selected date and time and save to async storage. Go to next screen
   handleContinue = async () => {
     const date = this.state.selectedDate;
     const time = this.state.times[this.state.selectedTimeIndex];

@@ -18,6 +18,7 @@ export default class RequestServices extends React.Component {
     this.state = {request: null};
   }
 
+  // Get request object from async storage and save to state
   getRequestFromStorage = async () => {
     try {
       const requestString = await AsyncStorage.getItem('request');
@@ -31,6 +32,7 @@ export default class RequestServices extends React.Component {
     }
   };
 
+  // Remove packaging attribute from request object and save to async storage
   removePackaging = async () => {
     const request = this.state.request;
     if (request.packaging) {
@@ -46,14 +48,17 @@ export default class RequestServices extends React.Component {
     });
   };
 
+  // Navigate to label screen
   handleLabels = () => {
     this.props.navigation.navigate('AddLabel');
   };
 
+  // Navigate to package screen
   handlePackaging = () => {
     this.props.navigation.navigate('Package');
   };
 
+  // Navigate to address screen
   handleContinue = () => {
     this.props.navigation.navigate('Address');
   };

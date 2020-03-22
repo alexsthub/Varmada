@@ -21,12 +21,8 @@ export default class RequestImage extends React.Component {
     this.state = {request: null};
   }
 
+  // Read request from async storage.
   componentDidMount = async () => {
-    // AsyncStorage.getAllKeys().then(res => {
-    //   for (let i = 0; i < res.length; i++) {
-    //     AsyncStorage.removeItem(res[i]);
-    //   }
-    // });
     try {
       const requestString = await AsyncStorage.getItem('request');
       if (requestString !== null) {
@@ -39,6 +35,7 @@ export default class RequestImage extends React.Component {
     }
   };
 
+  // Open camera roll or take a picture and set the value to state
   takePicture = () => {
     const options = {
       title: 'Select a profile picture',
@@ -62,6 +59,7 @@ export default class RequestImage extends React.Component {
     });
   };
 
+  // Save entire request to async storage and navigate to next screen
   handleContinue = async () => {
     const {request} = this.state;
     const objString = JSON.stringify(request);

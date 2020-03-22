@@ -105,6 +105,7 @@ export default class RequestPackage extends React.Component {
     };
   }
 
+  // Get request object from async storage and save selected package if exists
   getRequestFromStorage = async () => {
     try {
       const requestString = await AsyncStorage.getItem('request');
@@ -122,6 +123,7 @@ export default class RequestPackage extends React.Component {
     }
   };
 
+  // Set new selected packageID to state and handle flatlist scrolling
   handlePress = (itemID, index, key) => {
     if (this.state.selectedPackageID === itemID) {
       this.setState({selectedPackageID: null});
@@ -132,6 +134,7 @@ export default class RequestPackage extends React.Component {
     }
   };
 
+  // Helper function to handle flatlist scrolling
   handleScroll = (index, key) => {
     const options = {
       animated: true,
@@ -145,6 +148,7 @@ export default class RequestPackage extends React.Component {
     }
   };
 
+  // Get package object and save to async storage
   handleContinue = async () => {
     const all = mailerList.concat(boxList);
     const packaging = all.find(p => p.id === this.state.selectedPackageID);
@@ -162,6 +166,7 @@ export default class RequestPackage extends React.Component {
     }
   };
 
+  // Returns tab bar element for the tabview
   renderTabBar = props => (
     <TabBar
       {...props}
@@ -248,7 +253,10 @@ const styles = StyleSheet.create({
   },
 });
 
+// Class to render the flatlist for mailers and boxes
 class PackageOptionsView extends React.Component {
+  // By default re-renders when tabview is moved so this prevents pages from re-rendering if they are not
+  // currently in view
   shouldComponentUpdate = nextProps => {
     if (
       (this.props.type === 'Mailer' && nextProps.index === 1) ||
@@ -259,6 +267,7 @@ class PackageOptionsView extends React.Component {
     return true;
   };
 
+  // Return the ref of the flatlist
   getInnerRef = () => this.ref;
 
   render() {
@@ -287,18 +296,21 @@ class PackageOptionsView extends React.Component {
   }
 }
 
+// Class to render the view of a package option
 class Packaging extends React.Component {
   constructor(props) {
     super(props);
     this.state = {fadeValue: new Animated.Value(0)};
   }
 
+  // If selected, object should be highlighted
   componentDidMount() {
     if (this.props.selected) {
       this.renderAnimation(150);
     }
   }
 
+  // If selected, render animation
   componentDidUpdate = prevProps => {
     if (this.props.selected && !prevProps.selected) {
       this.renderAnimation(150);
@@ -307,6 +319,7 @@ class Packaging extends React.Component {
     }
   };
 
+  // Helper function to render animation
   renderAnimation = toValue => {
     Animated.timing(this.state.fadeValue, {
       toValue: toValue,

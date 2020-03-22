@@ -60,6 +60,7 @@ export default class RequestAddress extends React.Component {
     };
   }
 
+  // Android back button listener and read request from async storage
   componentDidMount = async () => {
     BackHandler.addEventListener(
       'hardwareBackPress',
@@ -84,6 +85,7 @@ export default class RequestAddress extends React.Component {
     this.setState({addresses: shit});
   };
 
+  // Handles when button animation should happen
   componentDidUpdate = (prevProps, prevState) => {
     if (
       prevState.selectedAddressIndex === null &&
@@ -98,6 +100,7 @@ export default class RequestAddress extends React.Component {
     }
   };
 
+  // Remove back button listener on unmount
   componentWillUnmount() {
     BackHandler.removeEventListener(
       'hardwareBackPress',
@@ -105,6 +108,7 @@ export default class RequestAddress extends React.Component {
     );
   }
 
+  // Return to review if editting
   handleBackButtonClick = () => {
     const navParams = this.props.navigation.state.params;
     if (navParams && navParams.edit) {
@@ -113,6 +117,7 @@ export default class RequestAddress extends React.Component {
     }
   };
 
+  // Helper to render button animation
   renderAnimation = toValue => {
     Animated.timing(this.state.fadeValue, {
       toValue: toValue,
@@ -120,16 +125,14 @@ export default class RequestAddress extends React.Component {
     }).start();
   };
 
-  addAddress = () => {
-    this.props.navigation.navigate('AddAddress');
-  };
-
+  // On address press, set selected address index and scroll flatlist
   handlePress = (e, index) => {
     this.setState({selectedAddressIndex: index}, () => {
       this.handleScroll(index);
     });
   };
 
+  // Helper function to scroll flatlist to selected index
   handleScroll = index => {
     const options = {
       animated: true,
@@ -139,6 +142,7 @@ export default class RequestAddress extends React.Component {
     this.addressList.scrollToIndex(options);
   };
 
+  // Get address object and save to async storage. Continue to next screen.
   handleContinue = async () => {
     const selectedAddress = this.state.addresses[
       this.state.selectedAddressIndex
@@ -212,12 +216,14 @@ export default class RequestAddress extends React.Component {
     }
   };
 
+  // Blur the autocomplete when closing the sliding window by drag
   handleDragStart = () => {
     if (this.state.sliderOpen) {
       this.autocomplete.triggerBlur();
     }
   };
 
+  // Keep track if sliding view is open or not.
   handleDragEnd = position => {
     if (position === this.top) {
       this.setState({sliderOpen: true});
@@ -227,6 +233,7 @@ export default class RequestAddress extends React.Component {
     }
   };
 
+  // Handle back button press when sliding view is open
   handleBackButton = () => {
     if (this.state.sliderOpen) {
       this._panel.hide();
@@ -237,6 +244,7 @@ export default class RequestAddress extends React.Component {
     }
   };
 
+  // Clicking the sliding view should slide it open
   handleTouchSlidingWindow = () => {
     this._panel.show(this.top);
     this.setState({sliderOpen: true}, () => {
@@ -244,11 +252,13 @@ export default class RequestAddress extends React.Component {
     });
   };
 
+  // When autocomplete is focused, slide up view
   handleFocus = () => {
     this._panel.show(this.top);
     this.setState({sliderOpen: true});
   };
 
+  // Set value to autocomplete text state
   handleTextChange = text => {
     this.setState({autocompleteText: text});
   };

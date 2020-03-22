@@ -26,6 +26,7 @@ export default class RequestTitle extends React.Component {
     };
   }
 
+  // Creates an event listener for the android back button
   componentDidMount = async () => {
     BackHandler.addEventListener(
       'hardwareBackPress',
@@ -33,6 +34,7 @@ export default class RequestTitle extends React.Component {
     );
   };
 
+  // Removes back button listener when component is unmounted
   componentWillUnmount() {
     BackHandler.removeEventListener(
       'hardwareBackPress',
@@ -40,6 +42,7 @@ export default class RequestTitle extends React.Component {
     );
   }
 
+  // If screen was navigated in order to edit, return to review. Else, default behavior
   handleBackButtonClick = () => {
     const navParams = this.props.navigation.state.params;
     if (navParams && navParams.edit) {
@@ -50,6 +53,7 @@ export default class RequestTitle extends React.Component {
     // TODO: Need to do this if they hit the back button as well...
   };
 
+  // Get request from async storage and set title value to state if exists
   getRequestFromStorage = async () => {
     try {
       const requestString = await AsyncStorage.getItem('request');
@@ -68,6 +72,7 @@ export default class RequestTitle extends React.Component {
     }
   };
 
+  // Save data to async storage and navigate to next screen
   handleContinue = async () => {
     const {title} = this.state;
     if (title === '') return;
@@ -92,6 +97,7 @@ export default class RequestTitle extends React.Component {
     }
   };
 
+  // Set new value to title state and render button animation
   handleChangeText = text => {
     if (text === '' && this.state.fadeValue._value === 150) {
       this.renderAnimation(0);
@@ -101,6 +107,7 @@ export default class RequestTitle extends React.Component {
     this.setState({title: text});
   };
 
+  // Helper function to render button animation
   renderAnimation = toValue => {
     Animated.timing(this.state.fadeValue, {
       toValue: toValue,
