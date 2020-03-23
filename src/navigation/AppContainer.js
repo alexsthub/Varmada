@@ -1,19 +1,25 @@
 import React from 'react';
 import {Dimensions} from 'react-native';
 
-import {createAppContainer} from 'react-navigation';
+import {createAppContainer, createSwitchNavigator} from 'react-navigation';
 import {createStackNavigator} from 'react-navigation-stack';
 import {createDrawerNavigator} from 'react-navigation-drawer';
 import {fromRight} from 'react-navigation-transitions';
 import {enableScreens} from 'react-native-screens';
 
+// Loading Screen
+import LoadingScreen from '../screens/LoadingScreen';
+
+// Auth Screens
 import LoginScreen from '../screens/LoginScreen';
 import SignupScreen from '../screens/SignupScreen';
 import ValidateScreen from '../screens/ValidateScreen';
 
+// Main Screens
 import MainScreen from '../screens/MainScreen';
 import LeftNav from '../components/leftNav/leftNav';
 
+// Nav Screens
 import MyPickupScreen from '../screens/navscreens/MyPickupScreen';
 import MyAddressScreen from '../screens/navscreens/MyAddressScreen';
 import PaymentMethodScreen from '../screens/navscreens/PaymentMethodScreen';
@@ -125,7 +131,7 @@ const RequestNavigator = createStackNavigator(
   },
 );
 
-const AppNavigator = createStackNavigator(
+const AuthStack = createStackNavigator(
   {
     LoginScreen: {
       screen: LoginScreen,
@@ -139,6 +145,14 @@ const AppNavigator = createStackNavigator(
       screen: ValidateScreen,
       navigationOptions: {headerTransparent: true},
     },
+  },
+  {
+    initialRouteName: 'LoginScreen',
+  },
+);
+
+const MainStack = createStackNavigator(
+  {
     MainDrawer: {
       screen: MainDrawer,
       navigationOptions: {header: null},
@@ -169,7 +183,28 @@ const AppNavigator = createStackNavigator(
     },
   },
   {
-    initialRouteName: 'LoginScreen',
+    initialRouteName: 'MainDrawer',
   },
 );
+
+const AppNavigator = createSwitchNavigator(
+  {
+    Loading: {
+      screen: LoadingScreen,
+      navigationOptions: {header: null},
+    },
+    Auth: {
+      screen: AuthStack,
+      navigationOptions: {header: null},
+    },
+    Main: {
+      screen: MainStack,
+      navigationOptions: {header: null},
+    },
+  },
+  {
+    initialRouteName: 'Loading',
+  },
+);
+
 export default createAppContainer(AppNavigator);
