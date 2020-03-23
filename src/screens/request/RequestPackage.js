@@ -9,6 +9,7 @@ import {
   AsyncStorage,
   Dimensions,
   Animated,
+  BackHandler,
 } from 'react-native';
 
 import {NavigationEvents} from 'react-navigation';
@@ -105,6 +106,31 @@ export default class RequestPackage extends React.Component {
     };
   }
 
+  // Creates an event listener for the android back button
+  componentDidMount = async () => {
+    BackHandler.addEventListener(
+      'hardwareBackPress',
+      this.handleBackButtonClick,
+    );
+  };
+
+  // Removes back button listener when component is unmounted
+  componentWillUnmount() {
+    BackHandler.removeEventListener(
+      'hardwareBackPress',
+      this.handleBackButtonClick,
+    );
+  }
+
+  // If screen was navigated in order to edit, return to review. Else, default behavior
+  handleBackButtonClick = () => {
+    const navParams = this.props.navigation.state.params;
+    if (navParams && navParams.edit) {
+      this.props.navigation.navigate('Review');
+      return true;
+    }
+  };
+
   // Get request object from async storage and save selected package if exists
   getRequestFromStorage = async () => {
     try {
@@ -112,7 +138,17 @@ export default class RequestPackage extends React.Component {
       if (requestString !== null) {
         this.requestObject = JSON.parse(requestString);
         if (this.requestObject.packaging) {
-          this.setState({selectedPackageID: this.requestObject.packaging.id});
+          this.setState(
+            {selectedPackageID: this.requestObject.packaging.id},
+            () => {
+              const itemObj = this.findIndexAndKeyByID(
+                this.requestObject.packaging.id,
+              );
+              setTimeout(() => {
+                this.handleScroll(itemObj.index, itemObj.key);
+              }, 50);
+            },
+          );
           if (this.requestObject.packaging.type === 'box') {
             this.setState({index: 1});
           }
@@ -121,6 +157,19 @@ export default class RequestPackage extends React.Component {
     } catch (error) {
       console.log('oh no...');
     }
+  };
+
+  findIndexAndKeyByID = id => {
+    let index;
+    index = mailerList.findIndex(o => o.id === id);
+    if (index !== -1) {
+      return {index: index, key: 'Mailer'};
+    }
+    index = mailerList.findIndex(o => o.id === id);
+    if (index !== -1) {
+      return {index: index, key: 'Box'};
+    }
+    return null;
   };
 
   // Set new selected packageID to state and handle flatlist scrolling
@@ -160,7 +209,12 @@ export default class RequestPackage extends React.Component {
     const objString = JSON.stringify(this.requestObject);
     try {
       await AsyncStorage.setItem('request', objString);
-      this.props.navigation.navigate('Services');
+      const navParams = this.props.navigation.state.params;
+      if (navParams && navParams.edit) {
+        this.props.navigation.navigate('Review');
+      } else {
+        this.props.navigation.navigate('Services');
+      }
     } catch (error) {
       console.log('oh fuck what do i do now.');
     }

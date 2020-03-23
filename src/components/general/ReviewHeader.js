@@ -1,7 +1,15 @@
 import React from 'react';
-import {StyleSheet, View, Text, TouchableNativeFeedback} from 'react-native';
+import {
+  StyleSheet,
+  View,
+  Text,
+  TouchableNativeFeedback,
+  Image,
+} from 'react-native';
 import LinearGradient from 'react-native-linear-gradient';
 import moment from 'moment';
+import FeatherIcon from 'react-native-vector-icons/Feather';
+import MaterialIcon from 'react-native-vector-icons/MaterialIcons';
 
 export default class ReviewHeader extends React.Component {
   timesToRange = (start, end) => {
@@ -26,7 +34,7 @@ export default class ReviewHeader extends React.Component {
     if (!this.props.request) {
       return null;
     }
-    const {address, carrier, time, date, title} = this.props.request;
+    const {address, carrier, time, date, title, packaging} = this.props.request;
     let subtitle;
     if (address.name.split(' ')[0] !== address.address.split(' ')[0]) {
       subtitle = `${address.address} ${address.city}, ${address.state} `;
@@ -36,6 +44,39 @@ export default class ReviewHeader extends React.Component {
 
     const dateString = moment(date).format('dddd, MMMM Do');
     const timeString = this.timesToRange(time.startTime, time.endTime);
+
+    let packageElementContent;
+    if (packaging) {
+      packageElementContent = (
+        <View style={styles.packageView}>
+          <View style={{flexDirection: 'row', alignItems: 'center'}}>
+            <Image
+              style={{height: 30, width: 30, marginRight: 10}}
+              source={
+                packaging.type === 'mailer'
+                  ? require('../../assets/packaging/mailer.png')
+                  : require('../../assets/packaging/box.png')
+              }
+            />
+            <Text>
+              {packaging.name} ({packaging.dimensions})
+            </Text>
+          </View>
+          <FeatherIcon name={'edit'} size={20} />
+        </View>
+      );
+    } else {
+      packageElementContent = (
+        <View style={styles.packageView}>
+          <View>
+            <Text>No extra packaging selected.</Text>
+            <Text style={{color: 'gray'}}>Press to add a container</Text>
+          </View>
+          <MaterialIcon name={'add'} size={20} />
+        </View>
+      );
+    }
+
     return (
       <View style={this.props.containerStyle}>
         <TouchableNativeFeedback
@@ -89,6 +130,15 @@ export default class ReviewHeader extends React.Component {
             </TouchableNativeFeedback>
           </View>
         </View>
+
+        <View style={{marginTop: 10}}>
+          <Text style={{fontWeight: 'bold'}}>Extra Packaging:</Text>
+          <TouchableNativeFeedback
+            background={TouchableNativeFeedback.Ripple('lightgray')}
+            onPress={this.props.touchPackage}>
+            {packageElementContent}
+          </TouchableNativeFeedback>
+        </View>
       </View>
     );
   }
@@ -109,5 +159,14 @@ const styles = StyleSheet.create({
   gradient: {
     flex: 1,
     width: 1,
+  },
+  packageView: {
+    // height: 50,
+    padding: 10,
+    flexDirection: 'row',
+    alignItems: 'center',
+    elevation: 5,
+    backgroundColor: '#F7F7F7',
+    justifyContent: 'space-between',
   },
 });
