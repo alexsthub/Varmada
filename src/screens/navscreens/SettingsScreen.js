@@ -8,6 +8,7 @@ import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome';
 import {faUserEdit} from '@fortawesome/free-solid-svg-icons';
 
 import ModalPicker from '../../components/general/ModalPicker';
+import {Auth} from 'aws-amplify';
 
 // TODO: Modal picker code is actually disgusting
 export default class SettingsScreen extends React.Component {
@@ -21,7 +22,7 @@ export default class SettingsScreen extends React.Component {
     };
   }
 
-  handleModalSettingsPress = (title) => {
+  handleModalSettingsPress = title => {
     if (this.state.type === 'darkMode') {
       if (title === 'On' && !this.state.darkMode) {
         this.setState({darkMode: true, showModal: false});
@@ -31,14 +32,30 @@ export default class SettingsScreen extends React.Component {
         this.setState({showModal: false});
       }
     } else {
-      if (title === 'English (US)' && this.state.language.name != 'English (US)') {
-        this.setState({language: {name: 'English (US)', code: 'en'}, showModal: false});
+      if (
+        title === 'English (US)' &&
+        this.state.language.name != 'English (US)'
+      ) {
+        this.setState({
+          language: {name: 'English (US)', code: 'en'},
+          showModal: false,
+        });
       } else if (title === 'Spanish' && this.state.language.name != 'Spanish') {
-        this.setState({language: {name: 'Spanish', code: 'es'}, showModal: false});
+        this.setState({
+          language: {name: 'Spanish', code: 'es'},
+          showModal: false,
+        });
       } else {
         this.setState({showModal: false});
       }
     }
+  };
+
+  handleSignOut = async () => {
+    try {
+      await Auth.signOut();
+      this.props.navigation.navigate('Auth');
+    } catch (e) {}
   };
 
   render() {
@@ -143,7 +160,7 @@ export default class SettingsScreen extends React.Component {
         <TouchableHighlight
           underlayColor={'lightgray'}
           activeOpacity={0.95}
-          onPress={() => {}}>
+          onPress={this.handleSignOut}>
           <View style={styles.settingOption}>
             <Text style={{fontSize: 24, color: '#B52323'}}>Sign Out</Text>
           </View>
