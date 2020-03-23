@@ -120,7 +120,7 @@ const RequestNavigator = createStackNavigator(
     },
   },
   {
-    initialRouteName: 'Review',
+    // initialRouteName: 'Review',
     transitionConfig: () => fromRight(500),
   },
 );
@@ -169,7 +169,7 @@ const AppNavigator = createStackNavigator(
     },
   },
   {
-    initialRouteName: 'Request',
+    initialRouteName: 'LoginScreen',
   },
 );
 export default createAppContainer(AppNavigator);
