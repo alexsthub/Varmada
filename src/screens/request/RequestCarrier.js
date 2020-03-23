@@ -9,6 +9,7 @@ import {
   FlatList,
   AsyncStorage,
   Animated,
+  BackHandler,
 } from 'react-native';
 
 import {NavigationEvents} from 'react-navigation';
@@ -39,6 +40,32 @@ export default class RequestCarrier extends React.Component {
     this.state = {selectedCarrierID: null, fadeValue: new Animated.Value(0)};
   }
 
+  // Creates an event listener for the android back button
+  componentDidMount = () => {
+    BackHandler.addEventListener(
+      'hardwareBackPress',
+      this.handleBackButtonClick,
+    );
+  };
+
+  // Removes back button listener when component is unmounted
+  componentWillUnmount() {
+    BackHandler.removeEventListener(
+      'hardwareBackPress',
+      this.handleBackButtonClick,
+    );
+  }
+
+  // If screen was navigated in order to edit, return to review. Else, default behavior
+  handleBackButtonClick = () => {
+    const navParams = this.props.navigation.state.params;
+    if (navParams && navParams.edit) {
+      this.props.navigation.navigate('Review');
+      return true;
+    }
+  };
+
+  // Get request from async storage and set carrier value if exists
   getRequestFromStorage = async () => {
     try {
       const requestString = await AsyncStorage.getItem('request');
@@ -53,6 +80,7 @@ export default class RequestCarrier extends React.Component {
     }
   };
 
+  // If carrier is selected, render button animation
   componentDidUpdate = (prevProps, prevState) => {
     if (!prevState.selectedCarrierID && this.state.selectedCarrierID) {
       this.renderAnimation(150);
@@ -61,6 +89,7 @@ export default class RequestCarrier extends React.Component {
     }
   };
 
+  // Button animation helper
   renderAnimation = toValue => {
     Animated.timing(this.state.fadeValue, {
       toValue: toValue,
@@ -68,6 +97,7 @@ export default class RequestCarrier extends React.Component {
     }).start();
   };
 
+  // Get carrier object and save to async storage. Navigate to next screen
   handleContinue = async () => {
     const carrierName = carriers.find(
       c => c.id === this.state.selectedCarrierID,
@@ -79,7 +109,12 @@ export default class RequestCarrier extends React.Component {
     const objString = JSON.stringify(this.requestObject);
     try {
       await AsyncStorage.setItem('request', objString);
-      this.props.navigation.navigate('Services');
+      const navParams = this.props.navigation.state.params;
+      if (navParams && navParams.edit) {
+        this.props.navigation.navigate('Review');
+      } else {
+        this.props.navigation.navigate('Services');
+      }
     } catch (error) {
       console.log('oh fuck what do i do now.');
     }
@@ -111,6 +146,7 @@ export default class RequestCarrier extends React.Component {
             keyExtractor={item => item.name}
             showsVerticalScrollIndicator={false}
             ItemSeparatorComponent={() => <View style={{marginVertical: 8}} />}
+            contentContainerStyle={{paddingBottom: 10}}
           />
         </View>
 
@@ -125,7 +161,7 @@ export default class RequestCarrier extends React.Component {
               style={{
                 backgroundColor: animatedBackground,
                 borderWidth: !this.state.selectedCarrierID ? 1 : null,
-                borderColor: !this.state.title ? '#F8B500' : null,
+                borderColor: !this.state.selectedCarrierID ? '#F8B500' : null,
                 elevation: 10,
                 padding: 20,
                 justifyContent: 'center',

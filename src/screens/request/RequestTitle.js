@@ -26,6 +26,7 @@ export default class RequestTitle extends React.Component {
     };
   }
 
+  // Creates an event listener for the android back button
   componentDidMount = async () => {
     BackHandler.addEventListener(
       'hardwareBackPress',
@@ -33,6 +34,7 @@ export default class RequestTitle extends React.Component {
     );
   };
 
+  // Removes back button listener when component is unmounted
   componentWillUnmount() {
     BackHandler.removeEventListener(
       'hardwareBackPress',
@@ -40,11 +42,24 @@ export default class RequestTitle extends React.Component {
     );
   }
 
+  // If screen was navigated in order to edit, return to review. Else, default behavior
+  handleBackButtonClick = () => {
+    const navParams = this.props.navigation.state.params;
+    if (navParams && navParams.edit) {
+      this.props.navigation.navigate('Review');
+      return true;
+    }
+    // TODO: Ask the user if they are sure they want to close
+    // TODO: Need to do this if they hit the back button as well...
+  };
+
+  // Get request from async storage and set title value to state if exists
   getRequestFromStorage = async () => {
     try {
       const requestString = await AsyncStorage.getItem('request');
       if (requestString !== null) {
         this.requestObject = JSON.parse(requestString);
+        console.log(this.requestObject);
         if (this.requestObject.title) {
           this.setState(
             {title: this.requestObject.title},
@@ -57,12 +72,7 @@ export default class RequestTitle extends React.Component {
     }
   };
 
-  handleBackButtonClick = () => {
-    console.log('GOING BACK');
-    // TODO: Ask the user if they are sure they want to close
-    // TODO: Need to do this if they hit the back button as well...
-  };
-
+  // Save data to async storage and navigate to next screen
   handleContinue = async () => {
     const {title} = this.state;
     if (title === '') return;
@@ -76,12 +86,18 @@ export default class RequestTitle extends React.Component {
     }
     try {
       await AsyncStorage.setItem('request', objString);
-      this.props.navigation.navigate('Image');
+      const navParams = this.props.navigation.state.params;
+      if (navParams && navParams.edit) {
+        this.props.navigation.navigate('Review');
+      } else {
+        this.props.navigation.navigate('Image');
+      }
     } catch (error) {
       console.log('oh fuck what do i do now.');
     }
   };
 
+  // Set new value to title state and render button animation
   handleChangeText = text => {
     if (text === '' && this.state.fadeValue._value === 150) {
       this.renderAnimation(0);
@@ -91,6 +107,7 @@ export default class RequestTitle extends React.Component {
     this.setState({title: text});
   };
 
+  // Helper function to render button animation
   renderAnimation = toValue => {
     Animated.timing(this.state.fadeValue, {
       toValue: toValue,

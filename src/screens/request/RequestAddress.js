@@ -4,11 +4,14 @@ import {
   View,
   Text,
   TouchableWithoutFeedback,
+  TouchableNativeFeedback,
   FlatList,
   Animated,
   Dimensions,
   StatusBar,
   AsyncStorage,
+  KeyboardAvoidingView,
+  BackHandler,
 } from 'react-native';
 
 import Header from '../../components/general/Header';
@@ -43,22 +46,37 @@ const shit = [
 
 const {height} = Dimensions.get('window');
 // TODO: Doesn't go over the back arrow :/ when the view is up
+// TODO: Can I only return addresses in the autocomplete? Only show those that start with numbers?
 export default class RequestAddress extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
+      selectedAddressIndex: null,
       addresses: [],
       draggedValue: new Animated.Value(120),
+      fadeValue: new Animated.Value(0),
       sliderOpen: false,
       autocompleteText: '',
     };
   }
 
+  // Android back button listener and read request from async storage
   componentDidMount = async () => {
+    BackHandler.addEventListener(
+      'hardwareBackPress',
+      this.handleBackButtonClick,
+    );
     try {
       const requestString = await AsyncStorage.getItem('request');
       if (requestString !== null) {
         this.requestObject = JSON.parse(requestString);
+        if (this.requestObject.address) {
+          const id = this.requestObject.address.placeID;
+          const index = shit.findIndex(ele => ele.placeID === id);
+          if (index !== -1) {
+            this.setState({selectedAddressIndex: index});
+          }
+        }
       }
     } catch (error) {
       console.log('oh no...');
@@ -67,38 +85,87 @@ export default class RequestAddress extends React.Component {
     this.setState({addresses: shit});
   };
 
-  addAddress = () => {
-    this.props.navigation.navigate('AddAddress');
+  // Handles when button animation should happen
+  componentDidUpdate = (prevProps, prevState) => {
+    if (
+      prevState.selectedAddressIndex === null &&
+      this.state.selectedAddressIndex !== null
+    ) {
+      this.renderAnimation(150);
+    } else if (
+      prevState.selectedAddressIndex !== null &&
+      this.state.selectedAddressIndex === null
+    ) {
+      this.renderAnimation(0);
+    }
   };
 
-  handlePress = async (e, index) => {
-    const selectedAddress = this.state.addresses[index];
+  // Remove back button listener on unmount
+  componentWillUnmount() {
+    BackHandler.removeEventListener(
+      'hardwareBackPress',
+      this.handleBackButtonClick,
+    );
+  }
+
+  // Return to review if editting
+  handleBackButtonClick = () => {
+    const navParams = this.props.navigation.state.params;
+    if (navParams && navParams.edit) {
+      this.props.navigation.navigate('Review');
+      return true;
+    }
+  };
+
+  // Helper to render button animation
+  renderAnimation = toValue => {
+    Animated.timing(this.state.fadeValue, {
+      toValue: toValue,
+      duration: 300,
+    }).start();
+  };
+
+  // On address press, set selected address index and scroll flatlist
+  handlePress = (e, index) => {
+    this.setState({selectedAddressIndex: index}, () => {
+      this.handleScroll(index);
+    });
+  };
+
+  // Helper function to scroll flatlist to selected index
+  handleScroll = index => {
+    const options = {
+      animated: true,
+      index: index,
+      viewPosition: 0.5,
+    };
+    this.addressList.scrollToIndex(options);
+  };
+
+  // Get address object and save to async storage. Continue to next screen.
+  handleContinue = async () => {
+    const selectedAddress = this.state.addresses[
+      this.state.selectedAddressIndex
+    ];
     this.requestObject.address = selectedAddress;
     const objString = JSON.stringify(this.requestObject);
     try {
       await AsyncStorage.setItem('request', objString);
-      this.props.navigation.navigate('Time');
+      const navParams = this.props.navigation.state.params;
+      if (navParams && navParams.edit) {
+        this.props.navigation.navigate('Review');
+      } else {
+        this.props.navigation.navigate('Time');
+      }
     } catch (error) {
       console.log('ahhhhhh error with async storage');
     }
   };
 
-  // handleContinue = async () => {
-  //   const {image} = this.state;
-  //   this.requestObject.image = image;
-  //   const objString = JSON.stringify(this.requestObject);
-  //   try {
-  //     await AsyncStorage.setItem('request', objString);
-  //     this.props.navigation.navigate('Carrier');
-  //   } catch (error) {
-  //     console.log('oh fuck what do i do now.');
-  //   }
-  // };
-
   // TODO: Parser doesn't work for all inputs.
   handleAutocompletePress = (data, details = null) => {
-    console.log(data);
-    console.log(details);
+    // console.log(data);
+    // console.log(details);
     const formattedAddress = details.formatted_address.split(',');
     const address = {
       name: data.structured_formatting.main_text
@@ -117,19 +184,46 @@ export default class RequestAddress extends React.Component {
         .trim(),
       countryCode: formattedAddress[3],
     };
-    console.log(address);
-    const newAddresses = this.state.addresses.concat(address);
-    this.setState({addresses: newAddresses, autocompleteText: ''}, () => {
-      this._panel.hide();
-    });
+    // console.log(address);
+    const savedAddresses = this.state.addresses;
+    const existingAddressIndex = savedAddresses.findIndex(
+      ele => ele.placeID === address.placeID,
+    );
+    if (existingAddressIndex !== -1) {
+      this.setState(
+        {
+          autocompleteText: '',
+          selectedAddressIndex: existingAddressIndex,
+        },
+        () => {
+          this._panel.hide();
+          this.handleScroll(existingAddressIndex);
+        },
+      );
+    } else {
+      savedAddresses.unshift(address);
+      this.setState(
+        {
+          addresses: savedAddresses,
+          autocompleteText: '',
+          selectedAddressIndex: 0,
+        },
+        () => {
+          this._panel.hide();
+          this.handleScroll(0);
+        },
+      );
+    }
   };
 
+  // Blur the autocomplete when closing the sliding window by drag
   handleDragStart = () => {
     if (this.state.sliderOpen) {
       this.autocomplete.triggerBlur();
     }
   };
 
+  // Keep track if sliding view is open or not.
   handleDragEnd = position => {
     if (position === this.top) {
       this.setState({sliderOpen: true});
@@ -139,6 +233,7 @@ export default class RequestAddress extends React.Component {
     }
   };
 
+  // Handle back button press when sliding view is open
   handleBackButton = () => {
     if (this.state.sliderOpen) {
       this._panel.hide();
@@ -149,6 +244,7 @@ export default class RequestAddress extends React.Component {
     }
   };
 
+  // Clicking the sliding view should slide it open
   handleTouchSlidingWindow = () => {
     this._panel.show(this.top);
     this.setState({sliderOpen: true}, () => {
@@ -156,11 +252,13 @@ export default class RequestAddress extends React.Component {
     });
   };
 
+  // When autocomplete is focused, slide up view
   handleFocus = () => {
     this._panel.show(this.top);
     this.setState({sliderOpen: true});
   };
 
+  // Set value to autocomplete text state
   handleTextChange = text => {
     this.setState({autocompleteText: text});
   };
@@ -179,21 +277,33 @@ export default class RequestAddress extends React.Component {
       borderTopRightRadius: borderRadiusAnim,
     };
 
+    const animatedBackground = this.state.fadeValue.interpolate({
+      inputRange: [0, 150],
+      outputRange: ['#FFFFFF', '#F8B500'],
+    });
+
     return (
       <View style={styles.container}>
-        <View style={{marginHorizontal: 40}}>
+        <View
+          style={{
+            marginHorizontal: 40,
+            height:
+              height - styles.panelHeader.height - StatusBar.currentHeight,
+          }}>
           <Header
             headerText={'Request a pickup'}
             subHeaderText={'Select a pickup address'}
           />
 
           <FlatList
+            ref={addressList => (this.addressList = addressList)}
             data={this.state.addresses}
             renderItem={({item, index}) => (
               <AddressBox
                 address={item}
                 index={index}
                 onPress={(e, index) => this.handlePress(e, index)}
+                selected={this.state.selectedAddressIndex === index}
               />
             )}
             ItemSeparatorComponent={() => <View style={{marginVertical: 8}} />}
@@ -201,6 +311,30 @@ export default class RequestAddress extends React.Component {
             showsVerticalScrollIndicator={false}
             contentContainerStyle={{marginTop: 20}}
           />
+
+          <KeyboardAvoidingView
+            style={{marginBottom: 20, width: '60%', alignSelf: 'center'}}
+            behavior={'position'}>
+            <TouchableNativeFeedback
+              background={TouchableNativeFeedback.Ripple('lightgray')}
+              onPress={this.handleContinue}
+              disabled={this.state.selectedAddressIndex === null}>
+              <Animated.View
+                style={{
+                  backgroundColor: animatedBackground,
+                  borderWidth:
+                    this.state.selectedAddressIndex === null ? 1 : null,
+                  borderColor:
+                    this.state.selectedAddressIndex === null ? '#F8B500' : null,
+                  elevation: 10,
+                  padding: 20,
+                  justifyContent: 'center',
+                  alignItems: 'center',
+                }}>
+                <Text style={{fontWeight: 'bold', fontSize: 16}}>Continue</Text>
+              </Animated.View>
+            </TouchableNativeFeedback>
+          </KeyboardAvoidingView>
         </View>
 
         <SlidingUpPanel

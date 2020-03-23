@@ -8,6 +8,7 @@ import {
   KeyboardAvoidingView,
   FlatList,
   AsyncStorage,
+  BackHandler,
 } from 'react-native';
 import AntDesignIcon from 'react-native-vector-icons/AntDesign';
 import moment from 'moment';
@@ -30,7 +31,12 @@ export default class RequestTime extends React.Component {
     };
   }
 
+  // Android back button listener
   componentDidMount = async () => {
+    BackHandler.addEventListener(
+      'hardwareBackPress',
+      this.handleBackButtonClick,
+    );
     const shit = [
       {startTime: 6, endTime: 8, price: 4.0},
       {startTime: 8, endTime: 10, price: 4.0},
@@ -43,6 +49,24 @@ export default class RequestTime extends React.Component {
     this.setState({times: shit});
   };
 
+  // Remove back button listener
+  componentWillUnmount() {
+    BackHandler.removeEventListener(
+      'hardwareBackPress',
+      this.handleBackButtonClick,
+    );
+  }
+
+  // Return to review if editting
+  handleBackButtonClick = () => {
+    const navParams = this.props.navigation.state.params;
+    if (navParams && navParams.edit) {
+      this.props.navigation.navigate('Review');
+      return true;
+    }
+  };
+
+  // read request from async storage
   getRequestFromStorage = async () => {
     try {
       const requestString = await AsyncStorage.getItem('request');
@@ -77,6 +101,7 @@ export default class RequestTime extends React.Component {
     }
   };
 
+  // Get selected date and time and save to async storage. Go to next screen
   handleContinue = async () => {
     const date = this.state.selectedDate;
     const time = this.state.times[this.state.selectedTimeIndex];
@@ -85,7 +110,12 @@ export default class RequestTime extends React.Component {
     const objString = JSON.stringify(this.requestObject);
     try {
       await AsyncStorage.setItem('request', objString);
-      this.props.navigation.navigate('Additional');
+      const navParams = this.props.navigation.state.params;
+      if (navParams && navParams.edit) {
+        this.props.navigation.navigate('Review');
+      } else {
+        this.props.navigation.navigate('Additional');
+      }
     } catch (error) {
       console.log('oh fuck what do i do now.');
     }
