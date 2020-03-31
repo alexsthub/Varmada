@@ -14,6 +14,8 @@ import PropTypes from 'prop-types';
 // TODO: Box shadows
 // TODO: Add X button to clear text
 // TODO: What happens if I want to make this a little bigger?
+
+// TODO: If value exists on mount, don't run the animation, just make it go up
 export default class FloatingInput extends React.Component {
   constructor(props) {
     super(props);
@@ -28,7 +30,9 @@ export default class FloatingInput extends React.Component {
 
   componentDidMount() {
     if (this.props.value !== '') {
-      this.setState({active: true});
+      this.setState({active: true}, () => {
+        this.state.labelSlideValue.setValue(0);
+      });
     }
   }
 
@@ -179,7 +183,7 @@ const styles = StyleSheet.create({
     paddingBottom: 8,
   },
   iconInput: {
-    paddingLeft: 5,
+    paddingLeft: 10,
   },
   label: {
     position: 'absolute',

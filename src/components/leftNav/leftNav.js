@@ -22,6 +22,10 @@ class LeftNav extends React.Component {
     this.state = {profileImage: {}};
   }
 
+  componentDidMount() {
+    console.log('mounting');
+  }
+
   changeImage = () => {
     const options = {
       title: 'Select a profile picture',
@@ -48,7 +52,7 @@ class LeftNav extends React.Component {
       }
     });
   };
-  
+
   navigateToScreen = route => () => {
     const navigateAction = NavigationActions.navigate({
       routeName: route,
@@ -61,8 +65,6 @@ class LeftNav extends React.Component {
     return (
       <View style={styles.container}>
         <ScrollView>
-
-
           <View style={styles.navHeader}>
             <Text style={{textAlign: 'center', fontSize: 24}}>Alex Tan</Text>
             <View style={{marginTop: 20}}>

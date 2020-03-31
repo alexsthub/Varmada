@@ -1,6 +1,5 @@
 import React from 'react';
 import {
-  ImageBackground,
   Image,
   View,
   Text,
@@ -15,6 +14,8 @@ import FloatingInput from '../components/general/FloatingInput';
 import CustomButton from '../components/general/CustomButton';
 import {faPhone, faLock} from '@fortawesome/free-solid-svg-icons';
 
+// TODO: Probably handle the keyboard is showing a little better. I want it centered in the screen
+// TODO: Textinput is a little low in comparison to ICON + LABEL
 export default class LoginScreen extends React.Component {
   constructor(props) {
     super(props);
@@ -79,7 +80,7 @@ export default class LoginScreen extends React.Component {
       password: this.state.password,
     })
       .then(user => {
-        console.log(user);
+        console.log(user.attributes);
         this.props.navigation.navigate('MainDrawer');
       })
       .catch(err => {
@@ -97,12 +98,6 @@ export default class LoginScreen extends React.Component {
         <Text style={{fontSize: 60, fontWeight: 'bold', fontStyle: 'italic'}}>
           Varmada
         </Text>
-      </View>
-    ) : null;
-
-    const orText = !this.state.keyboardOpen ? (
-      <View style={{alignItems: 'center', marginVertical: 10}}>
-        <Text style={{fontSize: 24, color: '#FFFFFF'}}>--OR--</Text>
       </View>
     ) : null;
 
@@ -158,6 +153,7 @@ export default class LoginScreen extends React.Component {
               blurOnSubmit={false}
               icon={faLock}
               showPasswordIcon={true}
+              autoCapitalize={'none'}
               secureText={true}
               onSubmitEditing={this.handleLogin}
             />
