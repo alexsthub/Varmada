@@ -22,8 +22,8 @@ export default class MainScreen extends React.Component {
     return (
       <View style={{flex: 1}}>
         <View style={{flex: 6, backgroundColor: 'lightgray'}}>
-          <LeftNavButton navigation={this.props.navigation} />
-          <Text style={{alignSelf: 'center'}}>STUFF GOES HERE</Text>
+          <LeftNavButton navigation={this.props.navigation} />  
+          <Image source={{uri: 'https://cdn4.iconfinder.com/data/icons/logistics-55/50/1-512.png'}} style={{width: 400, height: 400, alignSelf: 'center'}} />
         </View>
         <View style={{flex: 5, elevation: 10}}>
           <Header
