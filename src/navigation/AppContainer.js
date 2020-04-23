@@ -21,6 +21,7 @@ import LeftNav from '../components/leftNav/leftNav';
 
 // Nav Screens
 import MyPickupScreen from '../screens/navscreens/MyPickupScreen';
+import PickupScreen from '../screens/navscreens/PickupScreen';
 import MyAddressScreen from '../screens/navscreens/MyAddressScreen';
 import PaymentMethodScreen from '../screens/navscreens/PaymentMethodScreen';
 import PaymentAddScreen from '../screens/PaymentAddScreen';
@@ -59,6 +60,9 @@ const MainDrawer = createDrawerNavigator(
     },
     Pickups: {
       screen: MyPickupScreen,
+    },
+    Pickup: {
+      screen: PickupScreen
     },
     MyAddresses: {
       screen: MyAddressScreen,
