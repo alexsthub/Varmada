@@ -27,6 +27,13 @@ export default class MainScreen extends React.Component {
     return (
       <View style={{flex: 1}}>
         <View style={{flex: 6, backgroundColor: 'lightgray'}}>
+          <Image
+            source={{
+              uri:
+                'https://cdn4.iconfinder.com/data/icons/logistics-55/50/1-512.png',
+            }}
+            style={{flex: 1, width: null, height: null}}
+          />
           {/* Left Nav Button */}
           <View style={styles.leftNavButtonContainer}>
             <TouchableNativeFeedback
@@ -40,8 +47,6 @@ export default class MainScreen extends React.Component {
               </View>
             </TouchableNativeFeedback>
           </View>
-
-          <Text style={{alignSelf: 'center'}}>STUFF GOES HERE</Text>
         </View>
         <View style={{flex: 5, elevation: 10}}>
           <Header
