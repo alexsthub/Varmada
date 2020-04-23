@@ -26,7 +26,6 @@ import PaymentMethodScreen from '../screens/navscreens/PaymentMethodScreen';
 import PaymentAddScreen from '../screens/PaymentAddScreen';
 import SettingsScreen from '../screens/navscreens/SettingsScreen';
 import EditAccountScreen from '../screens/navscreens/EditAccountScreen';
-import EditFieldScreen from '../screens/navscreens/EditFieldScreen';
 import NotificationSettingsScreen from '../screens/NotificationSettingsScreen';
 import SecuritySettingsScreen from '../screens/SecuritySettingsScreen';
 
@@ -41,6 +40,11 @@ import RequestAdditional from '../screens/request/RequestAdditional';
 import RequestTime from '../screens/request/RequestTime';
 import RequestReview from '../screens/request/RequestReview';
 import RequestAddLabel from '../screens/request/RequestAddLabel';
+
+import EditNameScreen from '../screens/editfieldscreens/EditNameScreen';
+import EditPhoneScreen from '../screens/editfieldscreens/EditPhoneScreen';
+import EditEmailScreen from '../screens/editfieldscreens/EditEmailScreen';
+import EditPasswordScreen from '../screens/editfieldscreens/EditPasswordScreen';
 
 enableScreens();
 const WIDTH = Dimensions.get('window').width;
@@ -161,8 +165,20 @@ const MainStack = createStackNavigator(
       screen: EditAccountScreen,
       navigationOptions: {title: 'Edit Profile'},
     },
-    EditFieldScreen: {
-      screen: EditFieldScreen,
+    EditNameScreen: {
+      screen: EditNameScreen,
+      navigationOptions: {headerTransparent: true},
+    },
+    EditPhoneScreen: {
+      screen: EditPhoneScreen,
+      navigationOptions: {headerTransparent: true},
+    },
+    EditEmailScreen: {
+      screen: EditEmailScreen,
+      navigationOptions: {headerTransparent: true},
+    },
+    EditPasswordScreen: {
+      screen: EditPasswordScreen,
       navigationOptions: {headerTransparent: true},
     },
     NotificationSettingsScreen: {

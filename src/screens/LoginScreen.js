@@ -13,6 +13,7 @@ import {Auth} from 'aws-amplify';
 import FloatingInput from '../components/general/FloatingInput';
 import CustomButton from '../components/general/CustomButton';
 import {faPhone, faLock} from '@fortawesome/free-solid-svg-icons';
+import {formatPhoneNumber} from '../helpers/InputHelpers';
 
 // TODO: Probably handle the keyboard is showing a little better. I want it centered in the screen
 // TODO: Textinput is a little low in comparison to ICON + LABEL
@@ -51,25 +52,7 @@ export default class LoginScreen extends React.Component {
   };
 
   onChangePhone = text => {
-    let input = text.replace(/[(\-) ]/g, '');
-    const size = input.length;
-    if (input === '(') {
-      input = '';
-    } else if (size == 0) {
-      input = input;
-    } else if (size < 4) {
-      input = '(' + input;
-    } else if (size < 7) {
-      input = '(' + input.substring(0, 3) + ') ' + input.substring(3, 6);
-    } else {
-      input =
-        '(' +
-        input.substring(0, 3) +
-        ') ' +
-        input.substring(3, 6) +
-        '-' +
-        input.substring(6, 10);
-    }
+    const input = formatPhoneNumber(text);
     this.setState({phone: input});
   };
 
@@ -120,7 +103,7 @@ export default class LoginScreen extends React.Component {
           <View style={styles.container}>
             {logoContainer}
 
-            <View style={{marginTop: 40}}></View>
+            <View style={{marginTop: 40}} />
 
             <FloatingInput
               ref={r => (this.phone = r)}
@@ -139,7 +122,7 @@ export default class LoginScreen extends React.Component {
               onSubmitEditing={() => this.password.getInnerRef().focus()}
             />
 
-            <View style={styles.inputDivider}></View>
+            <View style={styles.inputDivider} />
 
             <FloatingInput
               ref={r => (this.password = r)}
@@ -161,7 +144,7 @@ export default class LoginScreen extends React.Component {
               <Text style={styles.clickableText}>Forgot Password?</Text>
             </TouchableOpacity>
 
-            <View style={styles.inputDivider}></View>
+            <View style={styles.inputDivider} />
 
             <CustomButton
               text={'Login'}

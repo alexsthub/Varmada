@@ -14,6 +14,9 @@ import ImagePicker from 'react-native-image-picker';
 
 // TODO: Upload file to s3
 // TODO: Show activity indicator over until the screen is finished with ComponentDidMount
+
+// TODO: After I update, this data needs to refresh. Maybe just use didFocus
+
 export default class EditAccountScreen extends React.Component {
   constructor(props) {
     super(props);
@@ -22,7 +25,7 @@ export default class EditAccountScreen extends React.Component {
 
   componentDidMount = async () => {
     try {
-      const user = await Auth.currentUserInfo();
+      const user = await Auth.currentAuthenticatedUser({bypassCache: true});
       this.setState({user: user.attributes});
     } catch (err) {
       console.log(err);
@@ -76,7 +79,7 @@ export default class EditAccountScreen extends React.Component {
             value={name}
             label={'Name'}
             onPress={() =>
-              this.props.navigation.navigate('EditFieldScreen', {
+              this.props.navigation.navigate('EditNameScreen', {
                 firstName: user.name,
                 lastName: user.family_name,
               })
@@ -89,8 +92,8 @@ export default class EditAccountScreen extends React.Component {
             value={phone}
             label={'Phone Number'}
             onPress={() =>
-              this.props.navigation.navigate('EditFieldScreen', {
-                phone: '(360) 515-1765',
+              this.props.navigation.navigate('EditPhoneScreen', {
+                phone: user.phone_number,
               })
             }
           />
@@ -102,6 +105,7 @@ export default class EditAccountScreen extends React.Component {
             label={'Email'}
             onPress={() =>
               this.props.navigation.navigate('EditFieldScreen', {
+                key: 'email',
                 email: '',
               })
             }
@@ -112,11 +116,7 @@ export default class EditAccountScreen extends React.Component {
           <AccountField
             value={'********'}
             label={'Password'}
-            onPress={() =>
-              this.props.navigation.navigate('EditFieldScreen', {
-                password: '',
-              })
-            }
+            onPress={() => this.props.navigation.navigate('EditPasswordScreen')}
           />
         </View>
       </View>
