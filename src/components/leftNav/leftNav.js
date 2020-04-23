@@ -22,10 +22,6 @@ class LeftNav extends React.Component {
     this.state = {profileImage: {}};
   }
 
-  componentDidMount() {
-    console.log('mounting');
-  }
-
   changeImage = () => {
     const options = {
       title: 'Select a profile picture',

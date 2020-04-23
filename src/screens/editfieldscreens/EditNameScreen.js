@@ -20,11 +20,10 @@ export default class EditNameScreen extends React.Component {
   handleSave = async () => {
     if (this.isValid()) {
       let user = await Auth.currentAuthenticatedUser();
-      let result = await Auth.updateUserAttributes(user, {
+      await Auth.updateUserAttributes(user, {
         name: this.state.firstName,
         family_name: this.state.lastName,
       });
-      console.log(result);
       this.props.navigation.goBack(null);
     }
   };

@@ -1,35 +1,41 @@
 import React from 'react';
 import {
+  ActivityIndicator,
   StyleSheet,
   View,
-  TouchableOpacity,
   TouchableNativeFeedback,
 } from 'react-native';
 
 import {Auth} from 'aws-amplify';
+import {NavigationEvents} from 'react-navigation';
 
 import ProfieImage from '../../components/general/ProfileImage';
 import FloatingInput from '../../components/general/FloatingInput';
 import ImagePicker from 'react-native-image-picker';
+import {formatPhoneNumber} from '../../helpers/InputHelpers';
 
 // TODO: Upload file to s3
-// TODO: Show activity indicator over until the screen is finished with ComponentDidMount
-
-// TODO: After I update, this data needs to refresh. Maybe just use didFocus
+// TODO: Little popup message at the bottom, when something gets changed?
 
 export default class EditAccountScreen extends React.Component {
   constructor(props) {
     super(props);
-    this.state = {profileImage: {}, user: {}};
+    this.state = {profileImage: {}, user: {}, loading: true};
   }
 
   componentDidMount = async () => {
-    try {
-      const user = await Auth.currentAuthenticatedUser({bypassCache: true});
-      this.setState({user: user.attributes});
-    } catch (err) {
-      console.log(err);
-    }
+    await this.getUser();
+  };
+
+  getUser = async () => {
+    this.setState({loading: true}, async () => {
+      try {
+        const user = await Auth.currentAuthenticatedUser({bypassCache: true});
+        this.setState({user: user.attributes, loading: false});
+      } catch (err) {
+        console.log(err);
+      }
+    });
   };
 
   changeImage = () => {
@@ -60,11 +66,25 @@ export default class EditAccountScreen extends React.Component {
   };
 
   render() {
+    if (this.state.loading) {
+      return (
+        <View style={{justifyContent: 'center', alignItems: 'center', flex: 1}}>
+          <ActivityIndicator
+            animating={true}
+            size={'large'}
+            color={'#000000'}
+          />
+        </View>
+      );
+    }
+
     const {user} = this.state;
     const name = user ? `${user.name} ${user.family_name}` : null;
     const phone = user ? user.phone_number : null;
+    const formattedPhone = formatPhoneNumber(phone.substring(2));
     return (
       <View style={{flex: 1}}>
+        <NavigationEvents onWillFocus={this.getUser} />
         <View style={{alignItems: 'center', marginTop: 40}}>
           <ProfieImage
             borderWidth={1}
@@ -89,7 +109,7 @@ export default class EditAccountScreen extends React.Component {
           <View style={{marginVertical: 10}} />
 
           <AccountField
-            value={phone}
+            value={formattedPhone}
             label={'Phone Number'}
             onPress={() =>
               this.props.navigation.navigate('EditPhoneScreen', {

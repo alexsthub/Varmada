@@ -27,25 +27,20 @@ export default class EditPhoneScreen extends React.Component {
   // TODO: This does not check if it is a valid number... need error handling
   // TODO: I think this takes me to verification....
   handleSave = async () => {
-    const number = this.unformatNumber(this.state.number);
-    console.log(number);
-    let result = await Auth.updateUserAttributes(this.state.user, {
-      phone_number: number,
-    });
-    console.log(result);
-
-    // if (this.isValid()) {
-    //   const requiredFormat = this.unformatNumber();
-    //   let user = await Auth.currentAuthenticatedUser();
-    //   let result = await Auth.updateUserAttributes(user, {
-    //     phone_number: requiredFormat,
-    //   });
-    //   console.log(result);
-    //   this.props.navigation.goBack(null);
-    // }
+    if (this.isValid()) {
+      const number = this.unformatNumber(this.state.number);
+      await Auth.updateUserAttributes(this.state.user, {
+        phone_number: number,
+      });
+      this.props.navigation.goBack(null);
+    }
   };
 
-  isValid = number => {};
+  // TODO: Better error handling
+  isValid = () => {
+    const number = this.state.number;
+    return number.length === 14;
+  };
 
   unformatNumber = number => {
     const removals = ['(', ')', '-', ' '];
