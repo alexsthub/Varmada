@@ -10,16 +10,16 @@ import {
 
 import ImagePicker from 'react-native-image-picker';
 import FeatherIcon from 'react-native-vector-icons/Feather';
-
+import DocumentPicker from 'react-native-document-picker';
 import Header from '../../components/general/Header';
 
 export default class RequestAddLabel extends React.Component {
   constructor(props) {
     super(props);
-    this.state = {image: null};
+    this.state = {file: null};
   }
 
-  takePicture = () => {
+  takePicture = async () => {
     const options = {
       title: 'Upload a file',
       storageOptions: {
@@ -28,17 +28,58 @@ export default class RequestAddLabel extends React.Component {
       },
     };
 
-    ImagePicker.showImagePicker(options, response => {
-      if (!response.didCancel && !response.error) {
-        const profileImage = {
-          uri: response.uri,
-          type: response.type,
-          name: 'shippinglabel.pdf',
-        };
-        this.setState({image: profileImage});
+    // ImagePicker.showImagePicker(options, response => {
+    //   if (!response.didCancel && !response.error) {
+    //     const profileImage = {
+    //       uri: response.uri,
+    //       type: response.type,
+    //       name: 'shippinglabel.pdf',
+    //     };
+    //     this.setState({image: profileImage});
+    //   }
+    // });
+    try {
+      const res = await DocumentPicker.pick({
+        type: [DocumentPicker.types.pdf, DocumentPicker.types.images],
+      });
+      console.log(
+        res.uri,
+        res.type, // mime type
+        res.name,
+        res.size
+      );
+      this.setState({file: res})
+    } catch (err) {
+      if (DocumentPicker.isCancel(err)) {
+        // User cancelled the picker, exit any dialogs or menus and move on
+      } else {
+        throw err;
       }
-    });
+    }
+
+    
+    
+    // try {
+    //   const res = await DocumentPicker.pick({
+    //     type: [DocumentPicker.types.images],
+    //   });
+    //   console.log(
+    //     res.uri,
+    //     res.type, // mime type
+    //     res.name,
+    //     res.size
+    //   );
+    // } catch (err) {
+    //   if (DocumentPicker.isCancel(err)) {
+    //     // User cancelled the picker, exit any dialogs or menus and move on
+    //   } else {
+    //     throw err;
+    //   }
+    // }
   };
+
+
+
 
   handleContinue = () => {
     const {image} = this.state;
