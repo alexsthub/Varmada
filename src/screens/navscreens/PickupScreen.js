@@ -1,5 +1,5 @@
 import React from 'react';
-import { StyleSheet, View, Text } from 'react-native';
+import { StyleSheet, View, Text, TouchableOpacity, Button } from 'react-native';
 import NavScreenHeader from '../../components/general/NavScreenHeader';
 
 const styles = StyleSheet.create({
@@ -20,7 +20,7 @@ const styles = StyleSheet.create({
   },
   lineContainer: {
     flexDirection: 'row',
-    justifyContent: 'space-between',
+    justifyContent: 'space-between'
   },
   price: {
     color: '#f8b500',
@@ -29,8 +29,21 @@ const styles = StyleSheet.create({
     padding: 20
   },
   warning: {
+    paddingTop: 100,
     textAlign: 'center',
-    fontSize: 14,
+    fontSize: 14
+  },
+  button: {
+    width: 120,
+    padding: 10,
+    backgroundColor: '#DDDDDD',
+    justifyContent: 'center',
+    alignItems: 'center'
+  },
+  buttonText: {
+    fontSize: 12,
+    alignContent: 'center',
+    textAlign: 'center'
   }
 })
 
@@ -38,10 +51,10 @@ export default class PickupScreen extends React.Component {
   constructor(props) {
     super(props);
   }
+
   render() {
     const { params } = this.props.navigation.state;
     const pickup = params ? params.pickup : null;
-    console.log(pickup);
     return (
       <View>
         <NavScreenHeader navigation={this.props.navigation} title={'Pickup Details'} />
@@ -69,6 +82,14 @@ export default class PickupScreen extends React.Component {
               <Text style={styles.orderTotal}>Order Total:</Text>
               <Text style={[styles.orderTotal, styles.price]}>${pickup.price + pickup.delivery + pickup.printing + pickup.tax}</Text>
             </View>
+          </View>
+          <View style={styles.lineContainer}>
+            <TouchableOpacity style={styles.button}>
+              <Text style={styles.buttonText}>Need to change the pickup time?</Text>
+            </TouchableOpacity>
+            <TouchableOpacity style={styles.button}>
+              <Text style={styles.buttonText}>Need to cancel?</Text>
+            </TouchableOpacity>
           </View>
           <Text style={styles.warning}>You won't be charged until after the pickup is dropped off.</Text>
         </View>
