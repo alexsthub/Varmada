@@ -60,24 +60,6 @@ export default class RequestAddLabel extends React.Component {
     }
 
     
-    
-    // try {
-    //   const res = await DocumentPicker.pick({
-    //     type: [DocumentPicker.types.images],
-    //   });
-    //   console.log(
-    //     res.uri,
-    //     res.type, // mime type
-    //     res.name,
-    //     res.size
-    //   );
-    // } catch (err) {
-    //   if (DocumentPicker.isCancel(err)) {
-    //     // User cancelled the picker, exit any dialogs or menus and move on
-    //   } else {
-    //     throw err;
-    //   }
-    // }
   };
 
   viewFile = () => {
@@ -102,30 +84,19 @@ export default class RequestAddLabel extends React.Component {
     const imageContent = !this.state.file ? (
     <View>
       <View style={styles.imageContainer}>
-        {/* <FeatherIcon style={{color: '#000000'}} name={'camera'} size={40} /> */}
-        <Text>Click here to upload a file</Text>
+        <Text style={{fontWeight: 'bold', fontSize: 16}}>UPLAOD FILE</Text>
       </View>
       <Text style={{marginTop:10}}>No File Chosen</Text>
       </View>
     ) : (
         <View>
         <View style={styles.imageContainer}>
-        {/* <FeatherIcon style={{color: '#000000'}} name={'camera'} size={40} /> */}
-        <Text>Click here to upload a different file</Text>
+        <Text style={{fontWeight: 'bold', fontSize: 16}}>UPLOAD DIFFERENT FILE</Text>
       </View>
       <Text style={{marginTop:10}}>File name: {this.state.file.name}</Text>
-      {/* <Image style={styles.fileStyle} source={{uri: this.state.image.uri}} /> */}
-      {/* <View style={{marginTop: 10,
-                    backgroundColor: '#f8b500',
-                    elevation: 10,
-                    alignItems: 'center',
-                    justifyContent: 'center',
-                    height: 30,
-        }} onPress={this.changePage}><Text>Change page setting</Text></View> */}
       </View>
     );
 
-    // const previewFile = !this.state
 
     return (
       <View style={{marginHorizontal: 40}}>
@@ -145,7 +116,7 @@ export default class RequestAddLabel extends React.Component {
               background={TouchableNativeFeedback.Ripple('lightgray')}
               onPress={this.viewFile}>
               <View style={styles.imageContainer}>
-                <Text>Click here to view the file</Text>
+                <Text style={{fontWeight: 'bold', fontSize: 16}}>OPEN FILE</Text>
               </View>
 
             </TouchableNativeFeedback>
