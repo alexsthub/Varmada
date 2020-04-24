@@ -63,7 +63,7 @@ export default class MyPickupScreen extends React.Component {
             data={pickups}
             renderItem={({ item }) =>
               <View>
-                <TouchableNativeFeedback key={item.key} onPress={this.props.navigation.navigate('PickupDetails', { pickup: item })}>
+                <TouchableNativeFeedback key={item.key} onPress={() => { this.props.navigation.navigate('PickupDetails', { pickup: item }) }}>
                   <View style={styles.row}>
                     <Image style={styles.icon} source={{ uri: courierImgs[item.courier] }} />
                     <Text style={styles.pickupItem}>

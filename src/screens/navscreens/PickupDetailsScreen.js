@@ -12,30 +12,29 @@ export default class PickupDetailsScreen extends React.Component {
     const pickup = params ? params.pickup : null;
     return (
       <View>
-        <NavScreenHeader navigation={this.props.navigation} title={'Pickup Details'} />
         <View style={styles.container}>
           <Text style={styles.title}>{pickup.key}</Text>
           <Text style={styles.summary}>Your pickup is scheduled for {pickup.date}. We'll let you know when the driver is within a 30 minute proximity.</Text>
           <View style={styles.orderDetails}>
             <View style={styles.lineContainer}>
               <Text>Items (1):</Text>
-              <Text>${pickup.price}</Text>
+              <Text>${pickup.price.toFixed(2).toString()}</Text>
             </View>
             <View style={styles.lineContainer}>
               <Text>Delivery Fee:</Text>
-              <Text>${pickup.delivery}</Text>
+              <Text>${pickup.delivery.toFixed(2).toString()}</Text>
             </View>
             <View style={styles.lineContainer}>
               <Text>Printing:</Text>
-              <Text>${pickup.printing}</Text>
+              <Text>${pickup.printing.toFixed(2).toString()}</Text>
             </View>
             <View style={styles.lineContainer}>
               <Text>Sales Tax:</Text>
-              <Text>${pickup.tax}</Text>
+              <Text>${pickup.tax.toFixed(2).toString()}</Text>
             </View>
             <View style={styles.lineContainer}>
               <Text style={styles.orderTotal}>Order Total:</Text>
-              <Text style={[styles.orderTotal, styles.price]}>${pickup.price + pickup.delivery + pickup.printing + pickup.tax}</Text>
+              <Text style={[styles.orderTotal, styles.price]}>${(pickup.price + pickup.delivery + pickup.printing + pickup.tax).toFixed(2).toString()}</Text>
             </View>
           </View>
           <View style={styles.lineContainer}>

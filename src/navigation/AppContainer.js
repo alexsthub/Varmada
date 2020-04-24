@@ -200,7 +200,7 @@ const MainStack = createStackNavigator(
     },
     PickupDetails: {
       screen: PickupDetailsScreen,
-      navigationOptions: {headerTransparent: true},
+      navigationOptions: {title: 'Pickup Details'},
     }
   },
   {
