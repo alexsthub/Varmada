@@ -1,16 +1,42 @@
 import React from 'react';
-import {StyleSheet, View, TouchableOpacity} from 'react-native';
+import {
+  ActivityIndicator,
+  StyleSheet,
+  View,
+  TouchableNativeFeedback,
+} from 'react-native';
+
+import {Auth} from 'aws-amplify';
+import {NavigationEvents} from 'react-navigation';
 
 import ProfieImage from '../../components/general/ProfileImage';
 import FloatingInput from '../../components/general/FloatingInput';
 import ImagePicker from 'react-native-image-picker';
+import {formatPhoneNumber} from '../../helpers/InputHelpers';
 
 // TODO: Upload file to s3
+// TODO: Little popup message at the bottom, when something gets changed?
+
 export default class EditAccountScreen extends React.Component {
   constructor(props) {
     super(props);
-    this.state = {profileImage: {}};
+    this.state = {profileImage: {}, user: {}, loading: true};
   }
+
+  componentDidMount = async () => {
+    await this.getUser();
+  };
+
+  getUser = async () => {
+    this.setState({loading: true}, async () => {
+      try {
+        const user = await Auth.currentAuthenticatedUser({bypassCache: true});
+        this.setState({user: user.attributes, loading: false});
+      } catch (err) {
+        console.log(err);
+      }
+    });
+  };
 
   changeImage = () => {
     const options = {
@@ -40,8 +66,25 @@ export default class EditAccountScreen extends React.Component {
   };
 
   render() {
+    if (this.state.loading) {
+      return (
+        <View style={{justifyContent: 'center', alignItems: 'center', flex: 1}}>
+          <ActivityIndicator
+            animating={true}
+            size={'large'}
+            color={'#000000'}
+          />
+        </View>
+      );
+    }
+
+    const {user} = this.state;
+    const name = user ? `${user.name} ${user.family_name}` : null;
+    const phone = user ? user.phone_number : null;
+    const formattedPhone = formatPhoneNumber(phone.substring(2));
     return (
       <View style={{flex: 1}}>
+        <NavigationEvents onWillFocus={this.getUser} />
         <View style={{alignItems: 'center', marginTop: 40}}>
           <ProfieImage
             borderWidth={1}
@@ -52,78 +95,80 @@ export default class EditAccountScreen extends React.Component {
         </View>
 
         <View style={{marginHorizontal: 40, marginTop: 30}}>
-          <TouchableOpacity
+          <AccountField
+            value={name}
+            label={'Name'}
             onPress={() =>
-              this.props.navigation.navigate('EditFieldScreen', {
-                firstName: 'Alex',
-                lastName: 'Tan',
+              this.props.navigation.navigate('EditNameScreen', {
+                firstName: user.name,
+                lastName: user.family_name,
               })
-            }>
-            <FloatingInput
-              value={'Alex Tan'}
-              label={'Name'}
-              labelColorBlur={'#000000'}
-              rgbaBackgroundColorBlur={'rgba(247,247,247,0.6)'}
-              rgbaBackgroundColorFocus={'rgba(230,230,230,1)'}
-              editable={false}
-            />
-          </TouchableOpacity>
+            }
+          />
 
           <View style={{marginVertical: 10}} />
 
-          <TouchableOpacity
+          <AccountField
+            value={formattedPhone}
+            label={'Phone Number'}
             onPress={() =>
-              this.props.navigation.navigate('EditFieldScreen', {
-                phone: '(360) 515-1765',
+              this.props.navigation.navigate('EditPhoneScreen', {
+                phone: user.phone_number,
               })
-            }>
-            <FloatingInput
-              value={'(360) 515-1765'}
-              label={'Phone Number'}
-              labelColorBlur={'#000000'}
-              rgbaBackgroundColorBlur={'rgba(247,247,247,0.6)'}
-              rgbaBackgroundColorFocus={'rgba(230,230,230,1)'}
-              editable={false}
-            />
-          </TouchableOpacity>
+            }
+          />
 
           <View style={{marginVertical: 10}} />
 
-          <TouchableOpacity
+          <AccountField
+            value={'*Link an email address for extra security'}
+            label={'Email'}
             onPress={() =>
               this.props.navigation.navigate('EditFieldScreen', {
+                key: 'email',
                 email: '',
               })
-            }>
-            <FloatingInput
-              value={'*Link an email address for extra security'}
-              label={'Email Addresses'}
-              labelColorBlur={'#000000'}
-              rgbaBackgroundColorBlur={'rgba(247,247,247,0.6)'}
-              rgbaBackgroundColorFocus={'rgba(230,230,230,1)'}
-              editable={false}
-            />
-          </TouchableOpacity>
+            }
+          />
 
           <View style={{marginVertical: 10}} />
 
-          <TouchableOpacity
-            onPress={() =>
-              this.props.navigation.navigate('EditFieldScreen', {
-                password: '',
-              })
-            }>
-            <FloatingInput
-              value={'************'}
-              label={'Password'}
-              labelColorBlur={'#000000'}
-              rgbaBackgroundColorBlur={'rgba(247,247,247,0.6)'}
-              rgbaBackgroundColorFocus={'rgba(230,230,230,1)'}
-              editable={false}
-            />
-          </TouchableOpacity>
+          <AccountField
+            value={'********'}
+            label={'Password'}
+            onPress={() => this.props.navigation.navigate('EditPasswordScreen')}
+          />
         </View>
       </View>
     );
   }
 }
+
+class AccountField extends React.Component {
+  render() {
+    return (
+      <TouchableNativeFeedback
+        background={TouchableNativeFeedback.Ripple('lightgray')}
+        useForeground={true}
+        onPress={this.props.onPress}>
+        <View>
+          <FloatingInput
+            value={this.props.value ? this.props.value : null}
+            label={this.props.label}
+            editable={false}
+            fieldStyle={styles.editField}
+          />
+        </View>
+      </TouchableNativeFeedback>
+    );
+  }
+}
+
+const styles = StyleSheet.create({
+  editField: {
+    backgroundColor: '#F7F7F7',
+    elevation: 5,
+    borderRadius: 5,
+    paddingLeft: 15,
+  },
+});
