@@ -21,7 +21,7 @@ import LeftNav from '../components/leftNav/leftNav';
 
 // Nav Screens
 import MyPickupScreen from '../screens/navscreens/MyPickupScreen';
-import PickupScreen from '../screens/navscreens/PickupScreen';
+import PickupDetailsScreen from '../screens/navscreens/PickupDetailsScreen';
 import MyAddressScreen from '../screens/navscreens/MyAddressScreen';
 import PaymentMethodScreen from '../screens/navscreens/PaymentMethodScreen';
 import PaymentAddScreen from '../screens/PaymentAddScreen';
@@ -64,9 +64,6 @@ const MainDrawer = createDrawerNavigator(
     },
     Pickups: {
       screen: MyPickupScreen,
-    },
-    Pickup: {
-      screen: PickupScreen
     },
     MyAddresses: {
       screen: MyAddressScreen,
@@ -131,7 +128,7 @@ const RequestNavigator = createStackNavigator(
     AddPayment: {
       screen: PaymentAddScreen,
       navigationOptions: {headerTransparent: true},
-    },
+    }
   },
   {
     // initialRouteName: 'Review',
@@ -201,6 +198,10 @@ const MainStack = createStackNavigator(
       screen: RequestNavigator,
       navigationOptions: {header: null},
     },
+    PickupDetails: {
+      screen: PickupDetailsScreen,
+      navigationOptions: {headerTransparent: true},
+    }
   },
   {
     initialRouteName: 'MainDrawer',

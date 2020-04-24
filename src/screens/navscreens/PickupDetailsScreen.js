@@ -1,53 +1,8 @@
 import React from 'react';
-import { StyleSheet, View, Text, TouchableOpacity, Button } from 'react-native';
+import { StyleSheet, View, Text, TouchableOpacity } from 'react-native';
 import NavScreenHeader from '../../components/general/NavScreenHeader';
 
-const styles = StyleSheet.create({
-  container: {
-    padding: 50
-  },
-  title: {
-    fontWeight: 'bold',
-    fontSize: 24
-  },
-  orderDetails: {
-    marginVertical: 10,
-  },
-  orderTotal: {
-    fontWeight: 'bold',
-    fontSize: 20,
-    marginTop: 15,
-  },
-  lineContainer: {
-    flexDirection: 'row',
-    justifyContent: 'space-between'
-  },
-  price: {
-    color: '#f8b500',
-  },
-  summary: {
-    padding: 20
-  },
-  warning: {
-    paddingTop: 100,
-    textAlign: 'center',
-    fontSize: 14
-  },
-  button: {
-    width: 120,
-    padding: 10,
-    backgroundColor: '#DDDDDD',
-    justifyContent: 'center',
-    alignItems: 'center'
-  },
-  buttonText: {
-    fontSize: 12,
-    alignContent: 'center',
-    textAlign: 'center'
-  }
-})
-
-export default class PickupScreen extends React.Component {
+export default class PickupDetailsScreen extends React.Component {
   constructor(props) {
     super(props);
   }
@@ -97,3 +52,48 @@ export default class PickupScreen extends React.Component {
     )
   }
 }
+
+const styles = StyleSheet.create({
+  container: {
+    padding: 50
+  },
+  title: {
+    fontWeight: 'bold',
+    fontSize: 24
+  },
+  orderDetails: {
+    marginVertical: 10,
+  },
+  orderTotal: {
+    fontWeight: 'bold',
+    fontSize: 20,
+    marginTop: 15,
+  },
+  lineContainer: {
+    flexDirection: 'row',
+    justifyContent: 'space-between'
+  },
+  price: {
+    color: '#f8b500',
+  },
+  summary: {
+    padding: 20
+  },
+  warning: {
+    paddingTop: 100,
+    textAlign: 'center',
+    fontSize: 14
+  },
+  button: {
+    width: 120,
+    padding: 10,
+    backgroundColor: '#DDDDDD',
+    justifyContent: 'center',
+    alignItems: 'center'
+  },
+  buttonText: {
+    fontSize: 12,
+    alignContent: 'center',
+    textAlign: 'center'
+  }
+});
