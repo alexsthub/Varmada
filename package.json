@@ -10,6 +10,8 @@
     "lint": "eslint ."
   },
   "dependencies": {
+    "@aws-amplify/core": "^3.2.5",
+    "@aws-amplify/datastore": "^2.0.9",
     "@dooboo-ui/native-switch-toggle": "^0.4.0",
     "@fortawesome/fontawesome-common-types": "^0.2.26",
     "@fortawesome/fontawesome-svg-core": "^1.2.26",
