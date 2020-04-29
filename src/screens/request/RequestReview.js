@@ -103,7 +103,6 @@ export default class RequestReview extends React.Component {
                 />
                 <Text style={{fontSize: 18, marginLeft: 15}}>Venmo</Text>
               </View>
-              <Text>></Text>
             </View>
           </TouchableNativeFeedback>
 
