@@ -1,7 +1,7 @@
 import React from 'react';
-import { StyleSheet, ScrollView, Text, View } from 'react-native';
+import {StyleSheet, ScrollView, Text, View} from 'react-native';
 import PropTypes from 'prop-types';
-import { NavigationActions } from 'react-navigation';
+import {NavigationActions} from 'react-navigation';
 import ImagePicker from 'react-native-image-picker';
 
 import {
@@ -12,8 +12,6 @@ import {
   faUserCog,
 } from '@fortawesome/free-solid-svg-icons';
 
-import { Storage } from 'aws-amplify';
-
 import NavOption from './navOption';
 import ProfileImage from '../general/ProfileImage';
 
@@ -21,10 +19,10 @@ import ProfileImage from '../general/ProfileImage';
 class LeftNav extends React.Component {
   constructor(props) {
     super(props);
-    this.state = { profileImage: {} };
+    this.state = {profileImage: {}};
   }
 
-  changeImage = async () => {
+  changeImage = () => {
     const options = {
       title: 'Select a profile picture',
       storageOptions: {
@@ -33,7 +31,7 @@ class LeftNav extends React.Component {
       },
     };
 
-    ImagePicker.showImagePicker(options, async (response) => {
+    ImagePicker.showImagePicker(options, response => {
       if (response.didCancel) {
         console.log('User cancelled image picker');
       } else if (response.error) {
@@ -46,14 +44,7 @@ class LeftNav extends React.Component {
           type: response.type,
           name: 'profileImage.jpg',
         };
-        const f = await fetch(response.uri);
-        const blob = await f.blob();
-        console.log(blob)
-        await Storage.put('profileImage.jpeg', blob, {
-          contentType: 'image/jpeg'
-        }).then(data => console.log(data))
-          .catch(err => console.log(err));
-        this.setState({ profileImage: profileImage });
+        this.setState({profileImage: profileImage});
       }
     });
   };
@@ -71,8 +62,8 @@ class LeftNav extends React.Component {
       <View style={styles.container}>
         <ScrollView>
           <View style={styles.navHeader}>
-            <Text style={{ textAlign: 'center', fontSize: 24 }}>Alex Tan</Text>
-            <View style={{ marginTop: 20 }}>
+            <Text style={{textAlign: 'center', fontSize: 24}}>Alex Tan</Text>
+            <View style={{marginTop: 20}}>
               <ProfileImage
                 borderWidth={1}
                 size={100}
@@ -82,7 +73,7 @@ class LeftNav extends React.Component {
             </View>
           </View>
 
-          <View style={{ marginTop: 10 }}>
+          <View style={{marginTop: 10}}>
             <NavOption
               containerStyle={styles.sectionHeadingStyle}
               onPress={this.navigateToScreen('Home')}
@@ -123,13 +114,13 @@ class LeftNav extends React.Component {
         <View style={styles.footerContainer}>
           <NavOption
             containerStyle={styles.footerOptions}
-            onPress={() => { }}
+            onPress={() => {}}
             text={'Legal'}
             isFooter={true}
           />
           <NavOption
             containerStyle={styles.footerOptions}
-            onPress={() => { }}
+            onPress={() => {}}
             text={'Support'}
             isFooter={true}
           />
