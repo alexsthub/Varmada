@@ -1,9 +1,16 @@
 import React from 'react';
-import {StyleSheet, View, Text, TouchableHighlight} from 'react-native';
+import {
+  ActivityIndicator,
+  StyleSheet,
+  View,
+  Text,
+  TouchableHighlight,
+} from 'react-native';
 
 import NavScreenHeader from '../../components/general/NavScreenHeader';
 import ProfieImage from '../../components/general/ProfileImage';
 
+import {formatPhoneNumber} from '../../helpers/InputHelpers';
 import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome';
 import {faUserEdit} from '@fortawesome/free-solid-svg-icons';
 
@@ -19,8 +26,18 @@ export default class SettingsScreen extends React.Component {
       darkMode: false,
       type: 'darkMode',
       showModal: false,
+      loading: true,
     };
   }
+
+  componentDidMount = async () => {
+    try {
+      const user = await Auth.currentAuthenticatedUser({bypassCache: true});
+      this.setState({user: user.attributes, loading: false});
+    } catch (err) {
+      console.log(err);
+    }
+  };
 
   handleModalSettingsPress = title => {
     if (this.state.type === 'darkMode') {
@@ -59,6 +76,23 @@ export default class SettingsScreen extends React.Component {
   };
 
   render() {
+    if (this.state.loading) {
+      return (
+        <View style={{justifyContent: 'center', alignItems: 'center', flex: 1}}>
+          <ActivityIndicator
+            animating={true}
+            size={'large'}
+            color={'#000000'}
+          />
+        </View>
+      );
+    }
+
+    const {user} = this.state;
+    const name = user ? `${user.name} ${user.family_name}` : null;
+    const phone = user ? user.phone_number : null;
+    const formattedPhone = formatPhoneNumber(phone.substring(2));
+
     return (
       <View style={styles.container}>
         <NavScreenHeader
@@ -92,8 +126,8 @@ export default class SettingsScreen extends React.Component {
             </View>
 
             <View style={styles.accountDetailsContainer}>
-              <Text>Alex Tan</Text>
-              <Text>+1 (360) 515-1765</Text>
+              <Text>{name}</Text>
+              <Text>{formattedPhone}</Text>
             </View>
 
             <View style={{marginRight: 20}}>

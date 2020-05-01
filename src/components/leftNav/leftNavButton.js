@@ -1,5 +1,4 @@
 import React from 'react';
-import {StyleSheet} from 'react-native';
 import IOSIcon from 'react-native-vector-icons/Ionicons';
 
 export default class LeftNavButton extends React.Component {
@@ -7,8 +6,12 @@ export default class LeftNavButton extends React.Component {
     return (
       <IOSIcon
         name="ios-menu"
-        size={40}
-        onPress={() => this.props.navigation.toggleDrawer()}
+        style={{fontSize: 25}}
+        onPress={
+          this.props.disableIconPress
+            ? null
+            : () => this.props.navigation.openDrawer()
+        }
       />
     );
   }

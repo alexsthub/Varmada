@@ -30,6 +30,16 @@ export default class PaymentAddScreen extends React.Component {
 
   addPayment = () => {
     console.log('Save damnit!');
+    console.log(this.state.cardNumber, this.state.expDate, this.state.cvv, this.state.zipCode)
+    console.log(this.state.cardNumber == null)
+    if (this.state.cardNumber != '' && 
+        this.state.expDate != '' &&
+        this.state.cvv != '' &&
+        this.state.zipCode != '') {
+          console.log("pass")
+          this.props.navigation.navigate("PaymentMethodScreen")
+        }
+
   };
 
   scanCard = () => {

@@ -1,11 +1,16 @@
 import React from 'react';
-import {StyleSheet, View, Text, Image} from 'react-native';
+import {
+  StyleSheet,
+  View,
+  Text,
+  Image,
+  TouchableNativeFeedback,
+} from 'react-native';
 import CustomButton from '../components/general/CustomButton';
 import LeftNavButton from '../components/leftNav/leftNavButton';
 
 import Header from '../components/general/Header';
 
-// TODO: Make the button bigger. CustomButton needs to be more flexible.
 export default class MainScreen extends React.Component {
   constructor(props) {
     super(props);
@@ -22,8 +27,26 @@ export default class MainScreen extends React.Component {
     return (
       <View style={{flex: 1}}>
         <View style={{flex: 6, backgroundColor: 'lightgray'}}>
-          <LeftNavButton navigation={this.props.navigation} />
-          <Text style={{alignSelf: 'center'}}>STUFF GOES HERE</Text>
+          <Image
+            source={{
+              uri:
+                'https://cdn4.iconfinder.com/data/icons/logistics-55/50/1-512.png',
+            }}
+            style={{flex: 1, width: null, height: null}}
+          />
+          {/* Left Nav Button */}
+          <View style={styles.leftNavButtonContainer}>
+            <TouchableNativeFeedback
+              background={TouchableNativeFeedback.Ripple('lightgray')}
+              onPress={() => this.props.navigation.toggleDrawer()}>
+              <View style={styles.LeftNavButton}>
+                <LeftNavButton
+                  navigation={this.props.navigation}
+                  disableIconPress={true}
+                />
+              </View>
+            </TouchableNativeFeedback>
+          </View>
         </View>
         <View style={{flex: 5, elevation: 10}}>
           <Header
@@ -73,3 +96,18 @@ export default class MainScreen extends React.Component {
     );
   }
 }
+
+const styles = StyleSheet.create({
+  leftNavButtonContainer: {
+    position: 'absolute',
+    top: 20,
+    left: 20,
+  },
+  LeftNavButton: {
+    backgroundColor: '#F7F7F7',
+    paddingHorizontal: 10,
+    paddingVertical: 5,
+    borderRadius: 5,
+    elevation: 5,
+  },
+});

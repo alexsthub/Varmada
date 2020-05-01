@@ -13,6 +13,7 @@ import styles from '../constants/styles/loginStyles';
 import FloatingInput from '../components/general/FloatingInput';
 import CustomButton from '../components/general/CustomButton';
 import Header from '../components/general/Header';
+import {formatPhoneNumber} from '../helpers/InputHelpers';
 
 // TODO: Handle errors
 // TODO: Implement my own error handling. (Start with first name and last name)
@@ -34,25 +35,7 @@ export default class SignupScreen extends React.Component {
   }
 
   onChangePhone = text => {
-    let input = text.replace(/[(\-) ]/g, '');
-    const size = input.length;
-    if (input === '(') {
-      input = '';
-    } else if (size == 0) {
-      input = input;
-    } else if (size < 4) {
-      input = '(' + input;
-    } else if (size < 7) {
-      input = '(' + input.substring(0, 3) + ') ' + input.substring(3, 6);
-    } else {
-      input =
-        '(' +
-        input.substring(0, 3) +
-        ') ' +
-        input.substring(3, 6) +
-        '-' +
-        input.substring(6, 10);
-    }
+    const input = formatPhoneNumber(text);
     this.setState({phone: input});
   };
 
@@ -104,7 +87,7 @@ export default class SignupScreen extends React.Component {
               subHeaderText={'Join the community'}
             />
 
-            <View style={styles.inputDivider}></View>
+            <View style={styles.inputDivider} />
 
             <FloatingInput
               ref={r => (this.firstName = r)}
@@ -121,7 +104,7 @@ export default class SignupScreen extends React.Component {
               error={this.state.errors[0] !== '' ? this.state.errors[0] : null}
             />
 
-            <View style={styles.inputDivider}></View>
+            <View style={styles.inputDivider} />
 
             <FloatingInput
               ref={r => (this.lastName = r)}
@@ -138,7 +121,7 @@ export default class SignupScreen extends React.Component {
               error={this.state.errors[1] !== '' ? this.state.errors[1] : null}
             />
 
-            <View style={styles.inputDivider}></View>
+            <View style={styles.inputDivider} />
 
             <FloatingInput
               ref={r => (this.phone = r)}
@@ -156,7 +139,7 @@ export default class SignupScreen extends React.Component {
               returnKeyType={'next'}
             />
 
-            <View style={styles.inputDivider}></View>
+            <View style={styles.inputDivider} />
 
             <FloatingInput
               ref={r => (this.password = r)}
@@ -173,7 +156,7 @@ export default class SignupScreen extends React.Component {
               onSubmitEditing={this.handleSignup}
             />
 
-            <View style={styles.inputDivider}></View>
+            <View style={styles.inputDivider} />
 
             <View style={styles.noticeContainer}>
               <Text>By clicking Sign Up, you agree to Varmada's </Text>
@@ -186,7 +169,7 @@ export default class SignupScreen extends React.Component {
               </TouchableOpacity>
             </View>
 
-            <View style={styles.inputDivider}></View>
+            <View style={styles.inputDivider} />
 
             <CustomButton
               text={'Sign Up'}
@@ -194,7 +177,7 @@ export default class SignupScreen extends React.Component {
               buttonStyle={{elevation: 10}}
             />
 
-            <View style={styles.inputDivider}></View>
+            <View style={styles.inputDivider} />
 
             <View
               style={{
