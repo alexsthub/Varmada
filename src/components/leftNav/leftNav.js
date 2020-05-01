@@ -12,6 +12,8 @@ import {
   faUserCog,
 } from '@fortawesome/free-solid-svg-icons';
 
+import {Storage} from 'aws-amplify';
+
 import NavOption from './navOption';
 import ProfileImage from '../general/ProfileImage';
 
@@ -22,7 +24,18 @@ class LeftNav extends React.Component {
     this.state = {profileImage: {}};
   }
 
-  changeImage = () => {
+  uploadImage = async (uri) => {
+    const response = await fetch(uri);
+    const blob = await response.blob();
+    const fileName = 'profileImage.jpeg';
+    await Storage.put(fileName, blob, {
+      contentType: 'image/jpeg',
+      level: 'public'
+    }).then(data => console.log(data))
+      .catch(err => console.log(err))
+  }
+
+  changeImage = async () => {
     const options = {
       title: 'Select a profile picture',
       storageOptions: {
@@ -44,6 +57,7 @@ class LeftNav extends React.Component {
           type: response.type,
           name: 'profileImage.jpg',
         };
+        this.uploadImage(response.uri);
         this.setState({profileImage: profileImage});
       }
     });
