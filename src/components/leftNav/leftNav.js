@@ -1,8 +1,9 @@
 import React from 'react';
-import {StyleSheet, ScrollView, Text, View} from 'react-native';
+import {StyleSheet, ScrollView, Text, View, NavigationEvents} from 'react-native';
 import PropTypes from 'prop-types';
 import {NavigationActions} from 'react-navigation';
 import ImagePicker from 'react-native-image-picker';
+import { Auth } from 'aws-amplify';
 
 import {
   faHome,
@@ -19,7 +20,16 @@ import ProfileImage from '../general/ProfileImage';
 class LeftNav extends React.Component {
   constructor(props) {
     super(props);
-    this.state = {profileImage: {}};
+    this.state = { 
+      profileImage: {},
+      name: ""
+    }
+  }
+
+  async componentDidMount()  {
+    const user = await Auth.currentUserInfo();
+    const userName = user.attributes.name + " " + user.attributes.family_name;
+    this.setState({name: userName})
   }
 
   changeImage = () => {
@@ -62,7 +72,7 @@ class LeftNav extends React.Component {
       <View style={styles.container}>
         <ScrollView>
           <View style={styles.navHeader}>
-            <Text style={{textAlign: 'center', fontSize: 24}}>Alex Tan</Text>
+            <Text style={{textAlign: 'center', fontSize: 24}}>{this.state.name}</Text>
             <View style={{marginTop: 20}}>
               <ProfileImage
                 borderWidth={1}

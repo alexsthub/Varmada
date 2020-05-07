@@ -15,6 +15,7 @@ import CustomButton from '../components/general/CustomButton';
 import Header from '../components/general/Header';
 import {formatPhoneNumber} from '../helpers/InputHelpers';
 
+
 // TODO: Handle errors
 // TODO: Implement my own error handling. (Start with first name and last name)
 
@@ -53,7 +54,7 @@ export default class SignupScreen extends React.Component {
     }
   };
 
-  handleSignup = () => {
+  handleSignup = async () => {
     const phoneNumber = '+1' + this.state.phone.replace(/[(\-) ]/g, '');
     this.checkFieldErrors();
     Auth.signUp({

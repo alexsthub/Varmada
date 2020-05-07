@@ -8,12 +8,49 @@ import {
 } from 'react-native';
 import CustomButton from '../components/general/CustomButton';
 import LeftNavButton from '../components/leftNav/leftNavButton';
+import {NavigationEvents} from 'react-navigation';
 
 import Header from '../components/general/Header';
+
+import { Auth } from 'aws-amplify';
+import { DataStore } from '@aws-amplify/datastore';
+import { Package } from '../../amplify-datastore/src/models';
+import moment from 'moment';
 
 export default class MainScreen extends React.Component {
   constructor(props) {
     super(props);
+    this.state = {
+      recentRequest: null,
+      name: ""
+    };
+  }
+
+
+  getNameAndRecentPackage = async () => {
+    const user = await Auth.currentUserInfo();
+    const userName = user.attributes.name;
+    this.setState({name: userName});
+
+    //await DataStore.delete(Package, c => c.phoneNumber("eq", user.attributes.phone_number));
+    const requests = await DataStore.query(Package, p => p.phoneNumber("eq", user.attributes.phone_number));
+    const datetimes = [];
+    for (let i = 0; i < requests.length; i++) {
+      let date = requests[i].date;
+      let dashIndex = requests[i].time.indexOf("-")
+      let time = requests[i].time.substring(0, dashIndex).trim();
+      let stringDateTime = date + " " + time;
+      let dateTime = moment(stringDateTime, "LLLL");
+      datetimes.push(dateTime);
+    }
+
+    if (datetimes.length > 0) {
+      let earliestDate = moment.min(datetimes);
+      let index = datetimes.indexOf(earliestDate);
+      this.setState({recentRequest: requests[index]});
+    }
+    
+
   }
 
   handlePress = () => {
@@ -24,8 +61,42 @@ export default class MainScreen extends React.Component {
   };
 
   render() {
+    const subHeaderText = this.state.recentRequest ? ("Here's your upcoming pickup:") : ("You have no scheduled pickup");
+
+    const request = this.state.recentRequest ? (
+      <View style={{marginHorizontal: 40, marginTop: 20}}>
+        <View style={{flexDirection: 'row'}}>
+          <Image style={{width: 80, height: 80, backgroundColor: 'gray'}} />
+          <View
+            style={{
+              flexDirection: 'column',
+              justifyContent: 'center',
+              paddingLeft: 15,
+            }}>
+            <Text style={{fontWeight: 'bold', fontSize: 20}}>
+              {this.state.recentRequest.itemName}
+            </Text>
+            <Text style={{fontSize: 16}}>
+              {"Date: " + this.state.recentRequest.date}
+              {"\n"}
+              {"Time: " + this.state.recentRequest.time}
+              {"\n"}
+              {"From: " + this.state.recentRequest.Address}
+              {"\n"}
+              {"To: " + this.state.recentRequest.carrier}
+            </Text>
+            <Text
+              style={{fontSize: 16, fontWeight: 'bold', color: 'darkgray'}}>
+              In Progress
+            </Text>
+          </View>
+        </View>
+      </View>
+    ) : null;
+
     return (
       <View style={{flex: 1}}>
+        <NavigationEvents onWillFocus={this.getNameAndRecentPackage} />
         <View style={{flex: 6, backgroundColor: 'lightgray'}}>
           <Image
             source={{
@@ -50,33 +121,12 @@ export default class MainScreen extends React.Component {
         </View>
         <View style={{flex: 5, elevation: 10}}>
           <Header
-            headerText={'Hello Alex,'}
-            subHeaderText={"Here's your most recent pickup:"}
+            headerText={"Hello " + this.state.name + ","}
+            subHeaderText={subHeaderText}
             containerStyle={{marginTop: 20, paddingLeft: 20}}
             headerStyle={{fontSize: 18}}
           />
-          <View style={{marginHorizontal: 40, marginTop: 20}}>
-            <View style={{flexDirection: 'row'}}>
-              <Image style={{width: 80, height: 80, backgroundColor: 'gray'}} />
-              <View
-                style={{
-                  flexDirection: 'column',
-                  justifyContent: 'center',
-                  paddingLeft: 15,
-                }}>
-                <Text style={{fontWeight: 'bold', fontSize: 20}}>
-                  Laptop Charger
-                </Text>
-                <Text style={{fontSize: 16}}>
-                  Sent on January 13, 2020 to Fedex
-                </Text>
-                <Text
-                  style={{fontSize: 16, fontWeight: 'bold', color: 'darkgray'}}>
-                  In Progress
-                </Text>
-              </View>
-            </View>
-          </View>
+          {request}
           <View style={{flex: 1, flexDirection: 'column-reverse'}}>
             <CustomButton
               text={'Request a pickup'}

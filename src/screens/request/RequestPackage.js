@@ -17,11 +17,14 @@ import {TabView, TabBar} from 'react-native-tab-view';
 
 import Header from '../../components/general/Header';
 
+import { DataStore } from '@aws-amplify/datastore';
+import { Cart } from '../../../amplify-datastore/src/models';
+
 const mailerList = [
   {
     name: 'Bubble Mailer - Size 0',
     dimensions: '6" x 9"',
-    price: 1.5,
+    price: 1.50,
     id: 1,
     type: 'mailer',
   },
@@ -35,7 +38,7 @@ const mailerList = [
   {
     name: 'Bubble Mailer - Size 2',
     dimensions: '8 1/2" x 11 1/8"',
-    price: 2.0,
+    price: 2.00,
     id: 3,
     type: 'mailer',
   },
@@ -49,7 +52,7 @@ const mailerList = [
   {
     name: 'Bubble Mailer - Size 4',
     dimensions: '9 1/2" x 14 1/2"',
-    price: 2.5,
+    price: 2.50,
     id: 5,
     type: 'mailer',
   },
@@ -73,7 +76,7 @@ const boxList = [
   {
     name: 'Cardboard Box',
     dimensions: '10" x 8" x 6"',
-    price: 2.0,
+    price: 2.00,
     id: 11,
     type: 'box',
   },

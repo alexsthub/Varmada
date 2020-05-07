@@ -16,6 +16,9 @@ import {NavigationEvents} from 'react-navigation';
 
 import Header from '../../components/general/Header';
 
+import { DataStore } from '@aws-amplify/datastore';
+import { Cart } from '../../../amplify-datastore/src/models';
+
 const carriers = [
   {
     name: 'USPS',
@@ -106,6 +109,7 @@ export default class RequestCarrier extends React.Component {
       name: carrierName,
       id: this.state.selectedCarrierID,
     };
+
     const objString = JSON.stringify(this.requestObject);
     try {
       await AsyncStorage.setItem('request', objString);

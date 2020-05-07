@@ -2,39 +2,69 @@ import React from 'react';
 import { StyleSheet, View, Text, TouchableOpacity } from 'react-native';
 import NavScreenHeader from '../../components/general/NavScreenHeader';
 
+import { Auth } from 'aws-amplify';
+import { DataStore } from '@aws-amplify/datastore';
+import { Package } from '../../../amplify-datastore/src/models';
+
 export default class PickupDetailsScreen extends React.Component {
   constructor(props) {
     super(props);
+    // this.state = {
+    //   requests: []
+    // };
   }
 
+  // async componentDidMount() {
+  //   const pickupObject = this.props.navigation.getParam('pickupObject', 'some default value');
+
+  // }
+
   render() {
-    const { params } = this.props.navigation.state;
-    const pickup = params ? params.pickup : null;
+    const request = this.props.navigation.getParam('pickupObject', 'some default value');
+    const printing = request.printingCost != 0 ? (
+        <View style={styles.lineContainer}>
+          <Text>Printing:</Text>
+          <Text>$0.50</Text>
+        </View>
+      ) : null; 
+    const packagingPrice =
+      request.packageCost != 0 ? (
+        <View style={styles.lineContainer}>
+          <Text>Packaging:</Text>
+          <Text>${request.packageCost}</Text>
+        </View>
+      ) : null;
+    const packageType = 
+      request.packageType ? (
+        <Text style={styles.summary}>Requested package type: {request.packageType}</Text>
+      ) : null;
     return (
       <View>
         <View style={styles.container}>
-          <Text style={styles.title}>{pickup.key}</Text>
-          <Text style={styles.summary}>Your pickup is scheduled for {pickup.date}. We'll let you know when the driver is within a 30 minute proximity.</Text>
+          <Text style={styles.title}>{request.itemName}</Text>
+          <Text style={styles.summary}>Your pickup is scheduled on {request.date + " between " + request.time}.
+                                       We'll let you know when the driver is within a 30 minute proximity.</Text>
+          {packageType}
+          <Text>Pickup location: {request.Address}{'\n'}</Text>
+          <Text>Dropoff location: {request.carrier}{'\n'}</Text>
           <View style={styles.orderDetails}>
             <View style={styles.lineContainer}>
-              <Text>Items (1):</Text>
-              <Text>${pickup.price.toFixed(2).toString()}</Text>
+              <Text>Item:</Text>
+              <Text>${request.itemCost.toFixed(2)}</Text>
             </View>
             <View style={styles.lineContainer}>
               <Text>Delivery Fee:</Text>
-              <Text>${pickup.delivery.toFixed(2).toString()}</Text>
+              <Text>${request.deliveryCost}</Text>
             </View>
-            <View style={styles.lineContainer}>
-              <Text>Printing:</Text>
-              <Text>${pickup.printing.toFixed(2).toString()}</Text>
-            </View>
+            {printing}
+            {packagingPrice}
             <View style={styles.lineContainer}>
               <Text>Sales Tax:</Text>
-              <Text>${pickup.tax.toFixed(2).toString()}</Text>
+              <Text>${request.salesTax}</Text>
             </View>
             <View style={styles.lineContainer}>
               <Text style={styles.orderTotal}>Order Total:</Text>
-              <Text style={[styles.orderTotal, styles.price]}>${(pickup.price + pickup.delivery + pickup.printing + pickup.tax).toFixed(2).toString()}</Text>
+              <Text style={[styles.orderTotal, styles.price]}>${request.total}</Text>
             </View>
           </View>
           <View style={styles.lineContainer}>

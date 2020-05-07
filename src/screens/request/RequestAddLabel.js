@@ -6,6 +6,7 @@ import {
   TouchableNativeFeedback,
   Image,
   KeyboardAvoidingView,
+  AsyncStorage
 } from 'react-native';
 
 import ImagePicker from 'react-native-image-picker';
@@ -40,11 +41,25 @@ export default class RequestAddLabel extends React.Component {
     });
   };
 
-  handleContinue = () => {
+  handleContinue = async () => {
     const {image} = this.state;
+    const requestString = await AsyncStorage.getItem('request');
+    this.requestObject = JSON.parse(requestString);
+    if (image !== null) {
+      this.requestObject.label = true;
+    } else {
+      this.requestObject.label = false;
+    }
+    const objString = JSON.stringify(this.requestObject);
+ 
+    try {
+      await AsyncStorage.setItem('request', objString);
+      this.props.navigation.navigate('Services');
+    } catch (error) {
+      console.log('oh fuck what do i do now.');
+    }
     // TODO: Send to some database or some shit
     // TODO: handle if it does not exist
-    this.props.navigation.navigate('Services');
   };
   changePage = () => {
       
@@ -78,6 +93,7 @@ export default class RequestAddLabel extends React.Component {
 
     return (
       <View style={{marginHorizontal: 40}}>
+
         <Header
           headerText={'Request a label Printing'}
           subHeaderText={'Upload a shipping label'}

@@ -14,6 +14,7 @@ import FeatherIcon from 'react-native-vector-icons/Feather';
 
 import Header from '../../components/general/Header';
 
+
 // TODO: Set request to state
 export default class RequestImage extends React.Component {
   constructor(props) {
@@ -61,6 +62,8 @@ export default class RequestImage extends React.Component {
 
   // Save entire request to async storage and navigate to next screen
   handleContinue = async () => {
+    // Save image in datastore? (s3)
+
     const {request} = this.state;
     const objString = JSON.stringify(request);
     try {

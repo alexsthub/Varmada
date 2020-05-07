@@ -27,7 +27,7 @@ export default class RequestTime extends React.Component {
       selectedDate: moment(),
       modalVisible: false,
       times: [],
-      selectedTimeIndex: null,
+      selectedTimeIndex: null
     };
   }
 
@@ -38,15 +38,16 @@ export default class RequestTime extends React.Component {
       this.handleBackButtonClick,
     );
     const shit = [
-      {startTime: 6, endTime: 8, price: 4.0},
-      {startTime: 8, endTime: 10, price: 4.0},
-      {startTime: 10, endTime: 12, price: 4.0},
-      {startTime: 12, endTime: 14, price: 4.0},
-      {startTime: 14, endTime: 16, price: 4.0},
-      {startTime: 16, endTime: 18, price: 4.0},
-      {startTime: 18, endTime: 20, price: 5.0},
+      {startTime: 6, endTime: 8, price: 3.00},
+      {startTime: 8, endTime: 10, price: 3.00},
+      {startTime: 10, endTime: 12, price: 2.00},
+      {startTime: 12, endTime: 14, price: 1.00},
+      {startTime: 14, endTime: 16, price: 1.00},
+      {startTime: 16, endTime: 18, price: 3.00},
+      {startTime: 18, endTime: 20, price: 2.00},
     ];
-    this.setState({times: shit});
+
+    this.setState({times: shit}); 
   };
 
   // Remove back button listener
@@ -99,14 +100,21 @@ export default class RequestTime extends React.Component {
     } catch (error) {
       console.log(error);
     }
+
+    let latestTimeToRequestPickup = moment('18:00:00', 'hh:mm:ss');
+    if (moment().isAfter(latestTimeToRequestPickup)) { // If after 6pm, show the next day since user cannot make pickup today
+      console.log("after 6!")
+      this.setState({selectedDate: moment().add(1,'days')});
+    }
   };
 
   // Get selected date and time and save to async storage. Go to next screen
   handleContinue = async () => {
     const date = this.state.selectedDate;
     const time = this.state.times[this.state.selectedTimeIndex];
-    this.requestObject.date = date;
-    this.requestObject.time = time;
+    this.requestObject.date = date.format('dddd, MMMM Do YYYY');
+    this.requestObject.deliveryPrice = time.price;
+    this.requestObject.time = this.getTime();
     const objString = JSON.stringify(this.requestObject);
     try {
       await AsyncStorage.setItem('request', objString);
@@ -124,11 +132,17 @@ export default class RequestTime extends React.Component {
   datepickerSelect = date => {
     const d = moment(date);
     this.setState({modalVisible: false, selectedDate: d});
+    if (d.isSame(moment(), "day")) { // If today is picked, filter out times that have already passed
+      this.filterTimes();
+    }
   };
 
   carouselSelect = date => {
     const d = moment(date);
     this.setState({selectedDate: d});
+    if (d.isSame(moment(), "day")) {
+      this.filterTimes();
+    }
   };
 
   handleChangeTime = index => {
@@ -136,6 +150,14 @@ export default class RequestTime extends React.Component {
       this.handleTimeScroll(index);
     });
   };
+
+  filterTimes = () => {
+    const availableTimes = this.state.times.filter(object => {
+      let startTime = moment(object.startTime, "H HH");
+      return moment().isBefore(startTime);
+    });
+    this.setState({times: availableTimes}); // current time has to be before startTime to request pickup at that startTime
+  }  
 
   handleTimeScroll = index => {
     const options = {
@@ -172,6 +194,7 @@ export default class RequestTime extends React.Component {
   };
 
   render() {
+
     return (
       <View style={{flex: 1}}>
         <NavigationEvents onWillFocus={this.getRequestFromStorage} />
@@ -193,7 +216,7 @@ export default class RequestTime extends React.Component {
           </TouchableOpacity>
         </View>
         <DateCarousel
-          // lastDate={'2019-07-20'}
+          //firstDate={this.state.selectedDate}
           selectedDate={this.state.selectedDate}
           numberOfDays={30}
           paginate
@@ -203,7 +226,7 @@ export default class RequestTime extends React.Component {
         <DateTimePickerModal
           isVisible={this.state.modalVisible}
           mode="date"
-          minimumDate={new Date()}
+          minimumDate={this.state.selectedDate.toDate()}
           date={this.state.selectedDate.toDate()}
           onConfirm={this.datepickerSelect}
           onCancel={() => this.setState({modalVisible: false})}

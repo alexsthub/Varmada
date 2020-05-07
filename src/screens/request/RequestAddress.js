@@ -22,27 +22,31 @@ import {GooglePlacesAutocomplete} from 'react-native-google-places-autocomplete'
 
 import FeatherIcon from 'react-native-vector-icons/Feather';
 
+import { Auth } from 'aws-amplify';
+import { DataStore } from '@aws-amplify/datastore';
+import { Address } from '../../../amplify-datastore/src/models';
+
 // Test input
-const shit = [
-  {
-    address: '1785 53rd Loop Southeast',
-    city: 'Tumwater',
-    countryCode: ' USA',
-    name: '1785 53rd Loop Southeast',
-    placeID: 'ChIJiWjxpoZzkVQRPnjEE6oZ90k',
-    state: 'WA',
-    zip: '98501',
-  },
-  {
-    address: '4105 Brooklyn Ave NE',
-    city: 'Seattle',
-    countryCode: ' USA',
-    name: 'Levere Apartments',
-    placeID: 'ChIJyZCbd_MUkFQRXA53DSuvSns',
-    state: 'WA',
-    zip: '98105',
-  },
-];
+// const shit = [
+//   {
+//     address: '1785 53rd Loop Southeast',
+//     city: 'Tumwater',
+//     countryCode: ' USA',
+//     name: '1785 53rd Loop Southeast',
+//     placeID: 'ChIJiWjxpoZzkVQRPnjEE6oZ90k',
+//     state: 'WA',
+//     zip: '98501',
+//   },
+//   {
+//     address: '4105 Brooklyn Ave NE',
+//     city: 'Seattle',
+//     countryCode: ' USA',
+//     name: 'Levere Apartments',
+//     placeID: 'ChIJyZCbd_MUkFQRXA53DSuvSns',
+//     state: 'WA',
+//     zip: '98105',
+//   },
+// ];
 
 const {height} = Dimensions.get('window');
 // TODO: Doesn't go over the back arrow :/ when the view is up
@@ -66,13 +70,18 @@ export default class RequestAddress extends React.Component {
       'hardwareBackPress',
       this.handleBackButtonClick,
     );
+    //Get all addresses of user to display
+    const userInfo = await Auth.currentUserInfo();
+    const userAddresses = await DataStore.query(Address, a => a.phoneNumber("eq", userInfo.attributes.phone_number));
+    this.setState({addresses: userAddresses});
+
     try {
       const requestString = await AsyncStorage.getItem('request');
       if (requestString !== null) {
         this.requestObject = JSON.parse(requestString);
         if (this.requestObject.address) {
           const id = this.requestObject.address.placeID;
-          const index = shit.findIndex(ele => ele.placeID === id);
+          const index = userAddresses.findIndex(ele => ele.placeID === id);
           if (index !== -1) {
             this.setState({selectedAddressIndex: index});
           }
@@ -82,7 +91,6 @@ export default class RequestAddress extends React.Component {
       console.log('oh no...');
     }
     console.log(this.requestObject);
-    this.setState({addresses: shit});
   };
 
   // Handles when button animation should happen
@@ -142,7 +150,7 @@ export default class RequestAddress extends React.Component {
     this.addressList.scrollToIndex(options);
   };
 
-  // Get address object and save to async storage. Continue to next screen.
+  //Get address object and save to async storage. Continue to next screen.
   handleContinue = async () => {
     const selectedAddress = this.state.addresses[
       this.state.selectedAddressIndex
@@ -163,9 +171,7 @@ export default class RequestAddress extends React.Component {
   };
 
   // TODO: Parser doesn't work for all inputs.
-  handleAutocompletePress = (data, details = null) => {
-    // console.log(data);
-    // console.log(details);
+  handleAutocompletePress = async (data, details = null) => {
     const formattedAddress = details.formatted_address.split(',');
     const address = {
       name: data.structured_formatting.main_text
@@ -184,7 +190,7 @@ export default class RequestAddress extends React.Component {
         .trim(),
       countryCode: formattedAddress[3],
     };
-    // console.log(address);
+
     const savedAddresses = this.state.addresses;
     const existingAddressIndex = savedAddresses.findIndex(
       ele => ele.placeID === address.placeID,
@@ -201,6 +207,20 @@ export default class RequestAddress extends React.Component {
         },
       );
     } else {
+      // Save address into database
+      const userInfo = await Auth.currentUserInfo();
+      await DataStore.save(
+        new Address({
+          phoneNumber: userInfo.attributes.phone_number, 
+          name: address.name,
+          placeID: address.placeID,
+          address: address.address,
+          city: address.city,
+          state: address.state,
+          zip: address.zip,
+          countryCode: address.countryCode
+        })
+      );
       savedAddresses.unshift(address);
       this.setState(
         {
@@ -383,7 +403,7 @@ export default class RequestAddress extends React.Component {
                 onPress={this.handleAutocompletePress}
                 query={{
                   // TODO: Remove this key when you push. Probably use secrets manager later.
-                  key: '',
+                  key: 'AIzaSyB56fe3z7BP7gLLai0mObrGbTbgxDBqG8U',
                   language: 'en',
                 }}
                 styles={autocompleteStyle}
