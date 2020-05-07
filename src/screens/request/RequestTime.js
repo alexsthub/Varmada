@@ -21,6 +21,7 @@ import TimeRange from '../../components/general/TimeRange';
 
 // TODO: When getRequestFromStorage is fired, the date carousel animation is shitty.
 export default class RequestTime extends React.Component {
+  
   constructor(props) {
     super(props);
     this.state = {
@@ -29,7 +30,17 @@ export default class RequestTime extends React.Component {
       times: [],
       selectedTimeIndex: null
     };
+    this.shit = [
+          {startTime: 6, endTime: 8, price: 3.00},
+          {startTime: 8, endTime: 10, price: 3.00},
+          {startTime: 10, endTime: 12, price: 2.00},
+          {startTime: 12, endTime: 14, price: 1.00},
+          {startTime: 14, endTime: 16, price: 1.00},
+          {startTime: 16, endTime: 18, price: 3.00},
+          {startTime: 18, endTime: 20, price: 2.00},
+    ];
   }
+
 
   // Android back button listener
   componentDidMount = async () => {
@@ -37,17 +48,17 @@ export default class RequestTime extends React.Component {
       'hardwareBackPress',
       this.handleBackButtonClick,
     );
-    const shit = [
-      {startTime: 6, endTime: 8, price: 3.00},
-      {startTime: 8, endTime: 10, price: 3.00},
-      {startTime: 10, endTime: 12, price: 2.00},
-      {startTime: 12, endTime: 14, price: 1.00},
-      {startTime: 14, endTime: 16, price: 1.00},
-      {startTime: 16, endTime: 18, price: 3.00},
-      {startTime: 18, endTime: 20, price: 2.00},
-    ];
+    // const shit = [
+    //   {startTime: 6, endTime: 8, price: 3.00},
+    //   {startTime: 8, endTime: 10, price: 3.00},
+    //   {startTime: 10, endTime: 12, price: 2.00},
+    //   {startTime: 12, endTime: 14, price: 1.00},
+    //   {startTime: 14, endTime: 16, price: 1.00},
+    //   {startTime: 16, endTime: 18, price: 3.00},
+    //   {startTime: 18, endTime: 20, price: 2.00},
+    // ];
 
-    this.setState({times: shit}); 
+    // this.setState({times: shit}); 
   };
 
   // Remove back button listener
@@ -100,12 +111,12 @@ export default class RequestTime extends React.Component {
     } catch (error) {
       console.log(error);
     }
-
-    let latestTimeToRequestPickup = moment('18:00:00', 'hh:mm:ss');
-    if (moment().isAfter(latestTimeToRequestPickup)) { // If after 6pm, show the next day since user cannot make pickup today
-      console.log("after 6!")
-      this.setState({selectedDate: moment().add(1,'days')});
-    }
+    this.filterTimes(moment());
+    // let latestTimeToRequestPickup = moment('18:00:00', 'hh:mm:ss');
+    // if (moment().isAfter(latestTimeToRequestPickup)) { // If after 6pm, show the next day since user cannot make pickup today
+    //   console.log("after 6!")
+    //   this.setState({selectedDate: moment().add(1,'days')});
+    // }
   };
 
   // Get selected date and time and save to async storage. Go to next screen
@@ -131,18 +142,16 @@ export default class RequestTime extends React.Component {
 
   datepickerSelect = date => {
     const d = moment(date);
+    this.setState({selectedTimeIndex: null}); // same indices may have different times since time is updated according to current time
     this.setState({modalVisible: false, selectedDate: d});
-    if (d.isSame(moment(), "day")) { // If today is picked, filter out times that have already passed
-      this.filterTimes();
-    }
+    this.filterTimes(d);
   };
 
   carouselSelect = date => {
     const d = moment(date);
+    this.setState({selectedTimeIndex: null});
     this.setState({selectedDate: d});
-    if (d.isSame(moment(), "day")) {
-      this.filterTimes();
-    }
+    this.filterTimes(d);
   };
 
   handleChangeTime = index => {
@@ -151,12 +160,16 @@ export default class RequestTime extends React.Component {
     });
   };
 
-  filterTimes = () => {
-    const availableTimes = this.state.times.filter(object => {
-      let startTime = moment(object.startTime, "H HH");
-      return moment().isBefore(startTime);
-    });
-    this.setState({times: availableTimes}); // current time has to be before startTime to request pickup at that startTime
+  filterTimes = (d) => {
+    if (d.isSame(moment(), "day")) {  // If today is picked, filter out times that have already passed
+      const availableTimes = this.shit.filter(object => {
+        let startTime = moment(object.startTime, "H HH");
+        return moment().isBefore(startTime);
+      });
+      this.setState({times: availableTimes}); // current time has to be before startTime to request pickup at that startTime
+    } else {
+      this.setState({times: this.shit});
+    }
   }  
 
   handleTimeScroll = index => {
@@ -194,7 +207,9 @@ export default class RequestTime extends React.Component {
   };
 
   render() {
-
+    const noPickupTimes = this.state.times == 0 ? (
+      <Text style={{fontWeight: 'bold', fontSize: 20}}> No available pickup times today, please select a different day </Text>
+    ) : null;
     return (
       <View style={{flex: 1}}>
         <NavigationEvents onWillFocus={this.getRequestFromStorage} />
@@ -235,6 +250,7 @@ export default class RequestTime extends React.Component {
         <View style={{marginTop: 20}} />
 
         <View style={styles.container}>
+          {noPickupTimes}
           <FlatList
             ref={timeList => (this.timeList = timeList)}
             data={this.state.times}
@@ -253,6 +269,7 @@ export default class RequestTime extends React.Component {
             showsVerticalScrollIndicator={false}
             // onScrollToIndexFailed={() => {}}
           />
+          
 
           <View style={styles.datetimeDisplay}>
             <View style={styles.datetimeInnerContainer}>
