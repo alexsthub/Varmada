@@ -9,15 +9,9 @@ import { Package } from '../../../amplify-datastore/src/models';
 export default class PickupDetailsScreen extends React.Component {
   constructor(props) {
     super(props);
-    // this.state = {
-    //   requests: []
-    // };
   }
 
-  // async componentDidMount() {
-  //   const pickupObject = this.props.navigation.getParam('pickupObject', 'some default value');
 
-  // }
 
   render() {
     const request = this.props.navigation.getParam('pickupObject', 'some default value');
