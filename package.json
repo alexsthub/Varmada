@@ -24,7 +24,7 @@
     "moment": "^2.24.0",
     "prop-types": "^15.7.2",
     "react": "16.9.0",
-    "react-native": "0.61.5",
+    "react-native": "^0.62.2",
     "react-native-android-sms-listener": "^0.7.0",
     "react-native-awesome-card-io": "^0.8.2",
     "react-native-document-picker": "^3.3.0",
