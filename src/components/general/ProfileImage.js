@@ -31,16 +31,18 @@ export default class ProfileImage extends React.Component {
             backgroundColor: this.props.backgroundColor,
           }}
         />
-        {this.props.showIcon && <View
-          style={{
-            position: 'absolute',
-            right: 0,
-            bottom: 0,
-            backgroundColor: '#F8B500',
-            borderRadius: 50,
-          }}>
-          <Icon name={'pluscircleo'} size={addSize} style={{ color: 'black' }} />
-        </View>}
+        {this.props.showIcon &&
+          <View
+            style={{
+              position: 'absolute',
+              right: 0,
+              bottom: 0,
+              backgroundColor: '#F8B500',
+              borderRadius: 50,
+            }}>
+            <Icon name={'pluscircleo'} size={addSize} style={{ color: 'black' }} />
+          </View>
+        }
       </TouchableOpacity>
     );
   }
