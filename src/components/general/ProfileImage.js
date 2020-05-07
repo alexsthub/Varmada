@@ -31,7 +31,7 @@ export default class ProfileImage extends React.Component {
             backgroundColor: this.props.backgroundColor,
           }}
         />
-        <View
+        {this.props.showIcon && <View
           style={{
             position: 'absolute',
             right: 0,
@@ -40,7 +40,7 @@ export default class ProfileImage extends React.Component {
             borderRadius: 50,
           }}>
           <Icon name={'pluscircleo'} size={addSize} style={{ color: 'black' }} />
-        </View>
+        </View>}
       </TouchableOpacity>
     );
   }

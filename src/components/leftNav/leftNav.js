@@ -91,6 +91,7 @@ class LeftNav extends React.Component {
             <View style={{ marginTop: 20 }}>
               <ProfileImage
                 image={this.state.profileImage}
+                showIcon={this.state.profileImage === defaultProfile}
                 borderWidth={1}
                 size={100}
                 backgroundColor={'#F7F7F7'}
