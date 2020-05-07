@@ -1,0 +1,87 @@
+{
+	"providers": {
+		"awscloudformation": {
+			"AuthRoleName": "amplify-varmada-test-150017-authRole",
+			"UnauthRoleArn": "arn:aws:iam::175732317166:role/amplify-varmada-test-150017-unauthRole",
+			"AuthRoleArn": "arn:aws:iam::175732317166:role/amplify-varmada-test-150017-authRole",
+			"Region": "us-west-2",
+			"DeploymentBucketName": "amplify-varmada-test-150017-deployment",
+			"UnauthRoleName": "amplify-varmada-test-150017-unauthRole",
+			"StackName": "amplify-varmada-test-150017",
+			"StackId": "arn:aws:cloudformation:us-west-2:175732317166:stack/amplify-varmada-test-150017/5e4c5960-276a-11ea-814c-061773af76fc",
+			"AmplifyAppId": "dcmzhlmdahbki"
+		},
+		"categories": {
+			"auth": {
+				"varmadacd6012bacd6012ba": {
+					"googleClientId": "986171639393-6iidvl3i49eqijjn6rj9imkhokeq3dbj.apps.googleusercontent.com"
+				}
+			}
+		}
+	},
+	"auth": {
+		"varmadacd6012bacd6012ba": {
+			"service": "Cognito",
+			"providerPlugin": "awscloudformation",
+			"dependsOn": [],
+			"output": {
+				"GoogleWebClient": "986171639393-6iidvl3i49eqijjn6rj9imkhokeq3dbj.apps.googleusercontent.com",
+				"CreatedSNSRole": "arn:aws:iam::175732317166:role/varmadcd6012ba_sns-role-test",
+				"AppClientSecret": "1jguljasral9md4tjato2199jhv78vjsr0bkkkae1jek8jsdo4sr",
+				"UserPoolId": "us-west-2_vpa5731Rm",
+				"AppClientIDWeb": "210lfksnk0c4o6md91qgedq32i",
+				"AppClientID": "21s7pus6f8peol5rn4lrflaknu",
+				"IdentityPoolId": "us-west-2:82641b4a-a07d-4fbb-9505-5e8fea3ff1c8",
+				"IdentityPoolName": "varmadacd6012ba_identitypool_cd6012ba__test",
+				"UserPoolName": "varmadacd6012ba_userpool_cd6012ba"
+			},
+			"lastPushTimeStamp": "2020-04-30T23:30:04.579Z",
+			"providerMetadata": {
+				"s3TemplateURL": "https://s3.amazonaws.com/amplify-varmada-test-150017-deployment/amplify-cfn-templates/auth/varmadacd6012bacd6012ba-cloudformation-template.yml",
+				"logicalId": "authvarmadacd6012bacd6012ba"
+			}
+		}
+	},
+	"api": {
+		"AddressAPI": {
+			"service": "AppSync",
+			"providerPlugin": "awscloudformation",
+			"output": {
+				"authConfig": {
+					"additionalAuthenticationProviders": [],
+					"defaultAuthentication": {
+						"authenticationType": "API_KEY",
+						"apiKeyConfig": {
+							"description": "public",
+							"apiKeyExpirationDays": "7"
+						}
+					}
+				},
+				"GraphQLAPIIdOutput": "uzi4rrqmrvd5dby7k5zb6ymrla",
+				"GraphQLAPIEndpointOutput": "https://de2hbktrmveshpqcgp2g3sq6am.appsync-api.us-west-2.amazonaws.com/graphql",
+				"GraphQLAPIKeyOutput": "da2-y6hskrk4qvgu3aghi5etfyupvq"
+			},
+			"lastPushTimeStamp": "2020-04-30T23:30:04.580Z",
+			"providerMetadata": {
+				"s3TemplateURL": "https://s3.amazonaws.com/amplify-varmada-test-150017-deployment/amplify-cfn-templates/api/cloudformation-template.json",
+				"logicalId": "apiAddressAPI"
+			}
+		}
+	},
+	"storage": {
+		"s38461a956": {
+			"service": "S3",
+			"providerPlugin": "awscloudformation",
+			"providerMetadata": {
+				"s3TemplateURL": "https://s3.amazonaws.com/amplify-varmada-test-150017-deployment/amplify-cfn-templates/storage/s3-cloudformation-template.json",
+				"logicalId": "storages38461a956"
+			},
+			"lastPushTimeStamp": "2020-04-30T23:30:04.583Z",
+			"output": {
+				"BucketName": "varmadaece1bcb9f8464daeb6c15d040040836a150017-test",
+				"Region": "us-west-2"
+			},
+			"lastPushDirHash": "kflStAD6YpOB1xXXe6HxRATXk4U="
+		}
+	}
+}

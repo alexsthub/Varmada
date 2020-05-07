@@ -1,7 +1,8 @@
 import React from 'react';
-import {Image, TouchableOpacity, View} from 'react-native';
+import { Image, TouchableOpacity, View } from 'react-native';
 import PropTypes from 'prop-types';
 import Icon from 'react-native-vector-icons/AntDesign';
+
 
 // TODO: Make this a little less shitty. Add icon is really bad
 export default class ProfileImage extends React.Component {
@@ -16,11 +17,11 @@ export default class ProfileImage extends React.Component {
     }
     return (
       <TouchableOpacity
-        style={{elevation: 10}}
+        style={{ elevation: 10 }}
         onPress={this.props.onPress}
         disabled={this.props.disabled}>
         <Image
-          source={require('../../assets/defaultProfile.png')}
+          source={this.props.image}
           style={{
             height: this.props.size,
             width: this.props.size,
@@ -38,7 +39,7 @@ export default class ProfileImage extends React.Component {
             backgroundColor: '#F8B500',
             borderRadius: 50,
           }}>
-          <Icon name={'pluscircleo'} size={addSize} style={{color: 'black'}} />
+          <Icon name={'pluscircleo'} size={addSize} style={{ color: 'black' }} />
         </View>
       </TouchableOpacity>
     );
@@ -57,6 +58,6 @@ ProfileImage.defaultProps = {
   size: 100,
   borderWidth: 0,
   backgroundColor: 'white',
-  onPress: () => {},
+  onPress: () => { },
   disabled: false
 };

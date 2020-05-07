@@ -1,8 +1,9 @@
 import React from 'react';
-import {StyleSheet, ScrollView, Text, View} from 'react-native';
+import { StyleSheet, ScrollView, Text, View } from 'react-native';
 import PropTypes from 'prop-types';
-import {NavigationActions} from 'react-navigation';
+import { NavigationActions } from 'react-navigation';
 import ImagePicker from 'react-native-image-picker';
+const defaultProfile = require('../../assets/defaultProfile.png');
 
 import {
   faHome,
@@ -12,27 +13,39 @@ import {
   faUserCog,
 } from '@fortawesome/free-solid-svg-icons';
 
-import {Storage} from 'aws-amplify';
+import { Auth, Storage } from 'aws-amplify';
 
 import NavOption from './navOption';
 import ProfileImage from '../general/ProfileImage';
+
 
 // TODO: Make a Header Component that just rests on top
 class LeftNav extends React.Component {
   constructor(props) {
     super(props);
-    this.state = {profileImage: {}};
+    this.state = { profileImage: defaultProfile, id: "" };
   }
 
+  async componentDidMount() {
+    // get user id and get image from S3
+    const info = await Auth.currentUserInfo().catch(error => console.log(error));
+    const userID = info.id;
+    const list = await Storage.list(`profile-image.jpeg`, { level: 'private' }).catch(error => console.log(error));
+    if (list.length > 0) {
+      const profileImage = await Storage.get(`profile-image.jpeg`, { level: 'private' }).catch(error => console.log(error));
+      this.setState({ profileImage: { uri: profileImage }, id: userID });
+    }
+  }
+
+  // upload image to s3 from uri
   uploadImage = async (uri) => {
     const response = await fetch(uri);
     const blob = await response.blob();
-    const fileName = 'profileImage.jpeg';
+    const fileName = `profile-image.jpeg`;
     await Storage.put(fileName, blob, {
       contentType: 'image/jpeg',
-      level: 'public'
-    }).then(data => console.log(data))
-      .catch(err => console.log(err))
+      level: 'private'
+    }).catch(error => console.log(error));
   }
 
   changeImage = async () => {
@@ -44,7 +57,7 @@ class LeftNav extends React.Component {
       },
     };
 
-    ImagePicker.showImagePicker(options, response => {
+    await ImagePicker.showImagePicker(options, async (response) => {
       if (response.didCancel) {
         console.log('User cancelled image picker');
       } else if (response.error) {
@@ -57,8 +70,8 @@ class LeftNav extends React.Component {
           type: response.type,
           name: 'profileImage.jpg',
         };
-        this.uploadImage(response.uri);
-        this.setState({profileImage: profileImage});
+        await this.uploadImage(response.uri).catch(error => console.log(error));
+        this.setState({ profileImage: profileImage });
       }
     });
   };
@@ -76,9 +89,10 @@ class LeftNav extends React.Component {
       <View style={styles.container}>
         <ScrollView>
           <View style={styles.navHeader}>
-            <Text style={{textAlign: 'center', fontSize: 24}}>Alex Tan</Text>
-            <View style={{marginTop: 20}}>
+            <Text style={{ textAlign: 'center', fontSize: 24 }}>Alex Tan</Text>
+            <View style={{ marginTop: 20 }}>
               <ProfileImage
+                image={this.state.profileImage}
                 borderWidth={1}
                 size={100}
                 backgroundColor={'#F7F7F7'}
@@ -87,7 +101,7 @@ class LeftNav extends React.Component {
             </View>
           </View>
 
-          <View style={{marginTop: 10}}>
+          <View style={{ marginTop: 10 }}>
             <NavOption
               containerStyle={styles.sectionHeadingStyle}
               onPress={this.navigateToScreen('Home')}
@@ -128,13 +142,13 @@ class LeftNav extends React.Component {
         <View style={styles.footerContainer}>
           <NavOption
             containerStyle={styles.footerOptions}
-            onPress={() => {}}
+            onPress={() => { }}
             text={'Legal'}
             isFooter={true}
           />
           <NavOption
             containerStyle={styles.footerOptions}
-            onPress={() => {}}
+            onPress={() => { }}
             text={'Support'}
             isFooter={true}
           />
