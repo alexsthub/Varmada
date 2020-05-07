@@ -1,5 +1,5 @@
 import React from 'react';
-import {StyleSheet, View, Text, TouchableOpacity, Platform} from 'react-native';
+import {StyleSheet, View, Text, TouchableOpacity, Platform, KeyboardAvoidingView, TouchableNativeFeedback} from 'react-native';
 
 import Icon from 'react-native-vector-icons/FontAwesome';
 import FeatherIcon from 'react-native-vector-icons/Feather';
@@ -31,15 +31,20 @@ export default class PaymentAddScreen extends React.Component {
   addPayment = () => {
     console.log('Save damnit!');
     console.log(this.state.cardNumber, this.state.expDate, this.state.cvv, this.state.zipCode)
-    console.log(this.state.cardNumber == null)
-    if (this.state.cardNumber != '' && 
-        this.state.expDate != '' &&
-        this.state.cvv != '' &&
-        this.state.zipCode != '') {
+    console.log(this.state.cardNumber.length, this.state.expDate.length, this.state.cvv.length, this.state.zipCode.length)
+    console.log(this.state.cardNumber.length == 19 && this.state.expDate.length == 5)
+    if (this.state.cardNumber.length == 19 && 
+        this.state.expDate.length == 5 &&
+        this.state.cvv.length == 3 &&
+        this.state.zipCode.length == 5) {
           console.log("pass")
-          this.props.navigation.navigate("PaymentMethodScreen")
+          // this.props.parentCallback("Hey Popsie, How’s it going?");
+          this.props.addCard(this.cardNumber);
+          this.props.navigation.goBack();
+          // this.props.addCard("new card")
+          // this.props.navigation.navigate("Payment", {'cardNumber': this.state.cardNumber})
         }
-
+      // this.props.navigation.navigate('PaymentMethodScreen', { /* params go here */ })
   };
 
   scanCard = () => {
@@ -112,6 +117,7 @@ export default class PaymentAddScreen extends React.Component {
   };
 
   render() {
+
     return (
       <View style={styles.container}>
         <Header headerText={'Add Card'} />
@@ -206,7 +212,7 @@ export default class PaymentAddScreen extends React.Component {
                 onChangeText={text => this.setState({zipCode: text})}
                 maxLength={5}
                 keyboardType={'numeric'}
-                onSubmitEditing={this.addPayment}
+                // onSubmitEditing={this.addPayment}
               />
             </View>
           </View>
@@ -225,15 +231,34 @@ export default class PaymentAddScreen extends React.Component {
           </View>
         </View>
 
-        <View style={{alignItems: 'center'}}>
+        {/* <View style={{alignItems: 'center', color: '#F8B500'}}>
           <CustomButton
             text={'Add Payment'}
             onPress={this.addPayment}
-            textStyle={{color: '#000000'}}
-            buttonStyle={{elevation: 10, marginTop: 30}}
+            textStyle={{color: 'black'}}
+            buttonStyle={{elevation: 10, marginTop: 30, color: '#F8B500'}}
             containerStyle={{width: '60%'}}
           />
-        </View>
+        </View> */}
+
+        <KeyboardAvoidingView
+              style={{marginTop: 50, width: '60%', alignSelf: 'center'}}
+              behavior={'position'}>
+              <TouchableNativeFeedback
+                background={TouchableNativeFeedback.Ripple('lightgray')}
+                onPress={this.addPayment}>
+                <View
+                  style={{
+                    backgroundColor: '#F8B500',
+                    elevation: 10,
+                    padding: 20,
+                    justifyContent: 'center',
+                    alignItems: 'center',
+                  }}>
+                  <Text style={{fontWeight: 'bold', fontSize: 20}}>Add Card</Text>
+                </View>
+              </TouchableNativeFeedback>
+            </KeyboardAvoidingView>
 
         <View style={{position: 'absolute', right: 0, left: 0, bottom: 5}}>
           <View
