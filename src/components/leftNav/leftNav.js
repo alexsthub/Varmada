@@ -23,17 +23,15 @@ import ProfileImage from '../general/ProfileImage';
 class LeftNav extends React.Component {
   constructor(props) {
     super(props);
-    this.state = { profileImage: defaultProfile, id: "" };
+    this.state = { profileImage: defaultProfile };
   }
 
   async componentDidMount() {
-    // get user id and get image from S3
-    const info = await Auth.currentUserInfo().catch(error => console.log(error));
-    const userID = info.id;
+    // get image from S3
     const list = await Storage.list(`profile-image.jpeg`, { level: 'private' }).catch(error => console.log(error));
     if (list.length > 0) {
       const profileImage = await Storage.get(`profile-image.jpeg`, { level: 'private' }).catch(error => console.log(error));
-      this.setState({ profileImage: { uri: profileImage }, id: userID });
+      this.setState({ profileImage: { uri: profileImage }});
     }
   }
 
