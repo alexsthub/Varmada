@@ -191,10 +191,15 @@ export default class PaymentMethodScreen extends React.Component {
   render() {
     return (
           <SafeAreaView style={{flex: 1, backgroundColor:'white' }}>
-            <NavScreenHeader
-              navigation={this.props.navigation}
-              title={'Payment Methods'}
-            />
+            {this.state.price == null?
+                <NavScreenHeader
+                navigation={this.props.navigation}
+                title={'Payment Methods'}
+              />
+              :
+              <Text></Text>
+            }
+
               {/* <View style={{marginVertical: 10}}>
                 <FlatList 
                   data={paymentMethods}
