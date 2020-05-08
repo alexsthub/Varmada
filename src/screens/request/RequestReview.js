@@ -60,7 +60,7 @@ export default class RequestReview extends React.Component {
   };
 
   handleConfirm = () => {
-    console.log('confirming...');
+    this.props.navigation.navigate('Payment', {price: 7.25});
   };
 
   render() {
@@ -90,7 +90,7 @@ export default class RequestReview extends React.Component {
             touchPackage={this.editPackage}
           />
 
-          <Text style={{fontWeight: 'bold'}}>Pay With:</Text>
+          {/* <Text style={{fontWeight: 'bold'}}>Pay With:</Text>
           <TouchableNativeFeedback
             background={TouchableNativeFeedback.Ripple('lightgray')}
             onPress={this.choosePayment}>
@@ -104,7 +104,7 @@ export default class RequestReview extends React.Component {
                 <Text style={{fontSize: 18, marginLeft: 15}}>Venmo</Text>
               </View>
             </View>
-          </TouchableNativeFeedback>
+          </TouchableNativeFeedback> */}
 
           <View style={styles.orderDetails}>
             <View style={styles.lineContainer}>
@@ -134,7 +134,7 @@ export default class RequestReview extends React.Component {
             background={TouchableNativeFeedback.Ripple('lightgray')}
             onPress={this.handleConfirm}>
             <View style={styles.continueButton}>
-              <Text style={styles.continueText}>Confirm Request</Text>
+              <Text style={styles.continueText}>Payment</Text>
             </View>
           </TouchableNativeFeedback>
           {/* <Text style={styles.warning}>

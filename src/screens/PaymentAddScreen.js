@@ -19,7 +19,7 @@ import {CardIOModule, CardIOUtilities} from 'react-native-awesome-card-io';
 export default class PaymentAddScreen extends React.Component {
   constructor(props) {
     super(props);
-    this.state = {cardNumber: '', expDate: '', cvv: '', zipCode: ''};
+    this.state = {cardNumber: '', expDate: '', cvv: '', zipCode: '', cardHolder: ''};
   }
 
   componentDidMount() {
@@ -36,10 +36,14 @@ export default class PaymentAddScreen extends React.Component {
     if (this.state.cardNumber.length == 19 && 
         this.state.expDate.length == 5 &&
         this.state.cvv.length == 3 &&
-        this.state.zipCode.length == 5) {
-          console.log("pass")
+        this.state.zipCode.length == 5 &&
+        this.state.cardHolder.length > 0) {
           // this.props.parentCallback("Hey Popsie, How’s it going?");
-          this.props.addCard(this.cardNumber);
+          this.props.navigation.state.params.addCard(this.state.cardNumber,
+                                                    this.state.expDate,
+                                                    this.state.cvv,
+                                                    this.state.zipCode,
+                                                    this.state.cardHolder);
           this.props.navigation.goBack();
           // this.props.addCard("new card")
           // this.props.navigation.navigate("Payment", {'cardNumber': this.state.cardNumber})
@@ -212,6 +216,7 @@ export default class PaymentAddScreen extends React.Component {
                 onChangeText={text => this.setState({zipCode: text})}
                 maxLength={5}
                 keyboardType={'numeric'}
+                returnKeyType={'next'}
                 // onSubmitEditing={this.addPayment}
               />
             </View>
@@ -221,11 +226,13 @@ export default class PaymentAddScreen extends React.Component {
             <TouchableOpacity
               style={{borderBottomWidth: 1, borderColor: 'gray', flex: 1}}>
               <FloatingInput
-                label={'Country'}
+                ref={r => (this.cardHolder = r)}
+                label={'Name'}
                 labelColorBlur={'gray'}
                 rgbaBackgroundColorBlur={'rgba(255,255,255,0.6)'}
                 rgbaBackgroundColorFocus={'rgba(255,255,255,1)'}
-                editable={false}
+                value={this.state.cardHolder}
+                onChangeText={text => this.setState({cardHolder: text})}
               />
             </TouchableOpacity>
           </View>

@@ -20,34 +20,38 @@ export default class PaymentMethodScreen extends React.Component {
   _carousel = React.createRef();
   constructor(props){
     super(props);
-    var addCard  = this.addCard.bind(this);
+    // this.addCard  = this.addCard.bind(this);
     console.log("hello")
-    console.log(this.props.navigation.getParam('cardNumber', ''))
+    // console.log(this.props.navigation.getParam('cardNumber', ''))
     this.state = {
       activeIndex:0,
       carouselItems: [
-      {
+        {
+            type: "card",
+            number:"**** **** **** 1234",
+            expDate: "12/23",
+            name: "Won Barng"
+        },
+        {
           type: "card",
-          number:"**** **** **** 1234",
-          expDate: "12/23",
+          number:"**** **** **** 5678",
+          expDate: "04/20",
           name: "Won Barng"
-      },
-      {
-        type: "card",
-        number:"**** **** **** 5678",
-        expDate: "04/20",
-        name: "Won Barng"
 
-      },
-      {
-          type: "google-pay",
-      },
-      {
-        type:"end"
-      }
-    ]
+        },
+        {
+            type: "google-pay",
+        },
+        {
+          type:"end"
+        }
+      ]
+    }
   }
-}
+
+  componentDidMount() {
+    console.log("comp")
+  }
 
   // onPress = () => {            
   //   console.log(this._carousel.current.currentIndex)
@@ -60,17 +64,21 @@ export default class PaymentMethodScreen extends React.Component {
     Alert.alert("Thank you")
   };
 
-  addPayment = () => {
-    this.props.navigation.navigate('AddPayment', {addCard: this.addCard.bind(this)});
+  addPayment = () => {  
+    this.props.navigation.navigate('AddPayment', {addCard: this.addCard});
   };
 
-  addCard(card) {
+  addCard = (cardNumber, expDate, cvv, zipCode, cardHolder) => {
     console.log("adding card")
-    const cardNumber = "**** **** **** "  + card.substring(-4);
+    console.log(cardNumber)
+    const hideCardNumber = "**** **** **** "  + cardNumber.slice(-4);
+    console.log(hideCardNumber)
     this.setState(state => {
-      const carouselItems = state.carouselItems.concat({type: "card", number: cardNumber, expDate: "04/20",
-      name: "Won Barng" });
-      // const carouselItems = state.carouselItems
+      // const carouselItems = state.carouselItems.concat({type: "card", number: hideCardNumber, expDate: "04/20",
+      // name: "Won Barng" });
+      const carouselItems = state.carouselItems
+      carouselItems.splice(0, 0, {type: "card", number: hideCardNumber, expDate: expDate, name: cardHolder })
+      
       console.log("adada")
       console.log(carouselItems)
       console.log("oasdfnklnkl")
@@ -79,7 +87,6 @@ export default class PaymentMethodScreen extends React.Component {
         carouselItems
       }
     })
-    // console.log(card)
   };
 
   _renderItem({item,index}){
@@ -195,7 +202,7 @@ export default class PaymentMethodScreen extends React.Component {
             </View>
 
             <View style={{paddingLeft:30,paddingTop: 50,flexDirection: 'row'}}> 
-            <Text style={{fontSize: 20, fontWeight: 'bold', paddingRight:50}}>Order Total: <Text style={{color: '#F8B500'}}>$7.25</Text></Text>
+            <Text style={{fontSize: 20, fontWeight: 'bold', paddingRight:50}}>Order Total: <Text style={{color: '#F8B500'}}>${this.props.navigation.state.params.price}</Text></Text>
 
             <KeyboardAvoidingView
               style={{width: '35%', alignSelf: 'center'}}
