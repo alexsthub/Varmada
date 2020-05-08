@@ -57,6 +57,7 @@ export default class FloatingInput extends React.Component {
       Animated.timing(this.state.labelSlideValue, {
         toValue: 150,
         duration: 150,
+        useNativeDriver: false,
       }).start();
     }
   };
@@ -65,6 +66,7 @@ export default class FloatingInput extends React.Component {
     Animated.timing(this.state.labelSlideValue, {
       toValue: 0,
       duration: 150,
+      useNativeDriver: false,
     }).start();
   };
 

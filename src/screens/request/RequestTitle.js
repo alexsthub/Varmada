@@ -112,6 +112,7 @@ export default class RequestTitle extends React.Component {
     Animated.timing(this.state.fadeValue, {
       toValue: toValue,
       duration: 300,
+      useNativeDriver: false,
     }).start();
   };
 

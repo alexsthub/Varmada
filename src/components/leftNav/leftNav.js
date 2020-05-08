@@ -3,6 +3,7 @@ import {StyleSheet, ScrollView, Text, View} from 'react-native';
 import PropTypes from 'prop-types';
 import {NavigationActions} from 'react-navigation';
 import ImagePicker from 'react-native-image-picker';
+const defaultProfile = require('../../assets/defaultProfile.png');
 
 import {
   faHome,
@@ -12,6 +13,8 @@ import {
   faUserCog,
 } from '@fortawesome/free-solid-svg-icons';
 
+import {Auth, Storage} from 'aws-amplify';
+
 import NavOption from './navOption';
 import ProfileImage from '../general/ProfileImage';
 
@@ -19,10 +22,34 @@ import ProfileImage from '../general/ProfileImage';
 class LeftNav extends React.Component {
   constructor(props) {
     super(props);
-    this.state = {profileImage: {}};
+    this.state = {profileImage: defaultProfile};
   }
 
-  changeImage = () => {
+  async componentDidMount() {
+    // get image from S3
+    const list = await Storage.list(`profile-image.jpeg`, {
+      level: 'private',
+    }).catch(error => console.log(error));
+    if (list.length > 0) {
+      const profileImage = await Storage.get(`profile-image.jpeg`, {
+        level: 'private',
+      }).catch(error => console.log(error));
+      this.setState({profileImage: {uri: profileImage}});
+    }
+  }
+
+  // upload image to s3 from uri
+  uploadImage = async uri => {
+    const response = await fetch(uri);
+    const blob = await response.blob();
+    const fileName = `profile-image.jpeg`;
+    await Storage.put(fileName, blob, {
+      contentType: 'image/jpeg',
+      level: 'private',
+    }).catch(error => console.log(error));
+  };
+
+  changeImage = async () => {
     const options = {
       title: 'Select a profile picture',
       storageOptions: {
@@ -31,7 +58,7 @@ class LeftNav extends React.Component {
       },
     };
 
-    ImagePicker.showImagePicker(options, response => {
+    await ImagePicker.showImagePicker(options, async response => {
       if (response.didCancel) {
         console.log('User cancelled image picker');
       } else if (response.error) {
@@ -44,6 +71,7 @@ class LeftNav extends React.Component {
           type: response.type,
           name: 'profileImage.jpg',
         };
+        await this.uploadImage(response.uri).catch(error => console.log(error));
         this.setState({profileImage: profileImage});
       }
     });
@@ -65,6 +93,8 @@ class LeftNav extends React.Component {
             <Text style={{textAlign: 'center', fontSize: 24}}>Alex Tan</Text>
             <View style={{marginTop: 20}}>
               <ProfileImage
+                image={this.state.profileImage}
+                showIcon={this.state.profileImage === defaultProfile}
                 borderWidth={1}
                 size={100}
                 backgroundColor={'#F7F7F7'}
@@ -87,13 +117,6 @@ class LeftNav extends React.Component {
               text={'My Pickups'}
               icon={faArchive}
               active={activeKey === 'Pickups'}
-            />
-            <NavOption
-              containerStyle={styles.sectionHeadingStyle}
-              onPress={this.navigateToScreen('MyAddresses')}
-              text={'My Addresses'}
-              icon={faMapMarkerAlt}
-              active={activeKey === 'MyAddresses'}
             />
             <NavOption
               containerStyle={styles.sectionHeadingStyle}

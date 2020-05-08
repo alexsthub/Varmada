@@ -94,6 +94,7 @@ export default class RequestCarrier extends React.Component {
     Animated.timing(this.state.fadeValue, {
       toValue: toValue,
       duration: 300,
+      useNativeDriver: false,
     }).start();
   };
 
@@ -194,6 +195,7 @@ class CarrierContainer extends React.Component {
     Animated.timing(this.state.fadeValue, {
       toValue: toValue,
       duration: 300,
+      useNativeDriver: false,
     }).start();
   };
 
