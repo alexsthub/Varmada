@@ -19,11 +19,22 @@ export default class PaymentMethodScreen extends React.Component {
 
   _carousel = React.createRef();
   constructor(props){
+    // const price = null
     super(props);
-    // this.addCard  = this.addCard.bind(this);
-    console.log("hello")
-    // console.log(this.props.navigation.getParam('cardNumber', ''))
+    var price = null
+    // console.log(this.props)
+    if (typeof(this.props) !== undefined && 
+        typeof(this.props.navigation.state) !== undefined &&
+        typeof(this.props.navigation.state.params) !== undefined) {
+          const { params } = this.props.navigation.state;
+          price = params ? params.price : null;
+    } else {
+      price = null
+    }
+
+    console.log(price)
     this.state = {
+      price: price,
       activeIndex:0,
       carouselItems: [
         {
@@ -49,9 +60,9 @@ export default class PaymentMethodScreen extends React.Component {
     }
   }
 
-  componentDidMount() {
-    console.log("comp")
-  }
+  // componentDidMount() {
+  //   console.log("comp")
+  // }
 
   // onPress = () => {            
   //   console.log(this._carousel.current.currentIndex)
@@ -68,6 +79,10 @@ export default class PaymentMethodScreen extends React.Component {
     this.props.navigation.navigate('AddPayment', {addCard: this.addCard});
   };
 
+  deleteCard = () => {
+    console.log("heldoasdflj")
+  };
+ 
   addCard = (cardNumber, expDate, cvv, zipCode, cardHolder) => {
     console.log("adding card")
     console.log(cardNumber)
@@ -87,6 +102,7 @@ export default class PaymentMethodScreen extends React.Component {
         carouselItems
       }
     })
+
   };
 
   _renderItem({item,index}){
@@ -175,10 +191,10 @@ export default class PaymentMethodScreen extends React.Component {
   render() {
     return (
           <SafeAreaView style={{flex: 1, backgroundColor:'white' }}>
-            {/* <NavScreenHeader
+            <NavScreenHeader
               navigation={this.props.navigation}
               title={'Payment Methods'}
-            /> */}
+            />
               {/* <View style={{marginVertical: 10}}>
                 <FlatList 
                   data={paymentMethods}
@@ -195,15 +211,22 @@ export default class PaymentMethodScreen extends React.Component {
                   )}
                   keyExtractor={(item) => item.id}
                 /> */}
+            {this.state.price !== null?
             <View style={{paddingLeft:30, paddingTop: 50}}>
                 <Text style={{fontSize: 15, fontWeight: 'bold'}}>Payment</Text>
                 <Text style={{fontSize: 20, fontWeight: 'bold'}}>Select a Payment Method:</Text>
 
             </View>
+            :
+              <Text></Text>
+            }
 
             <View style={{paddingLeft:30,paddingTop: 50,flexDirection: 'row'}}> 
-            <Text style={{fontSize: 20, fontWeight: 'bold', paddingRight:50}}>Order Total: <Text style={{color: '#F8B500'}}>${this.props.navigation.state.params.price}</Text></Text>
-
+            {this.state.price !== null?
+            <Text style={{fontSize: 20, fontWeight: 'bold', paddingRight:50}}>Order Total: <Text style={{color: '#F8B500'}}>${this.state.price}</Text></Text>
+            :
+            <Text></Text>
+            }
             <KeyboardAvoidingView
               style={{width: '35%', alignSelf: 'center'}}
               behavior={'position'}>
@@ -262,7 +285,7 @@ export default class PaymentMethodScreen extends React.Component {
               </View> */}
 
 
-
+            {this.state.price !== null?
             <KeyboardAvoidingView
               style={{marginBottom: 100, width: '60%', alignSelf: 'center'}}
               behavior={'position'}>
@@ -281,7 +304,9 @@ export default class PaymentMethodScreen extends React.Component {
                 </View>
               </TouchableNativeFeedback>
             </KeyboardAvoidingView>
-            
+            :
+            <Text></Text>
+            }
             {/* <View style={{marginTop: 15}}>
               <Text style={{fontSize: 20, fontWeight: 'bold', marginLeft: 15}}>
                 Add a Payment Method
@@ -305,7 +330,7 @@ const styles = StyleSheet.create({
     marginTop: 20,
     marginLeft: 150,
     marginBottom:20,
-    backgroundColor: '#f8b500',
+    backgroundColor: 'white',
     elevation: 10,
     height: 50,
     width: 100,

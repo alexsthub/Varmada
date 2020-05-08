@@ -44,6 +44,7 @@ export default class PaymentAddScreen extends React.Component {
                                                     this.state.cvv,
                                                     this.state.zipCode,
                                                     this.state.cardHolder);
+          // this.props.navigation.navigate("Payment")
           this.props.navigation.goBack();
           // this.props.addCard("new card")
           // this.props.navigation.navigate("Payment", {'cardNumber': this.state.cardNumber})
