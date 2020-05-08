@@ -1,0 +1,11 @@
+type Address @model {
+  id: ID!
+  clientId: String
+  addressTitle: String!
+  street: String!
+  apartment: String
+  city: String!
+  state: String!
+  zipcode: String!
+  isDefault: Boolean!
+}

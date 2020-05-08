@@ -1,0 +1,37 @@
+{
+	"auth": {
+		"varmadacd6012bacd6012ba": {
+			"service": "Cognito",
+			"providerPlugin": "awscloudformation",
+			"dependsOn": []
+		}
+	},
+	"api": {
+		"AddressAPI": {
+			"service": "AppSync",
+			"providerPlugin": "awscloudformation",
+			"output": {
+				"authConfig": {
+					"additionalAuthenticationProviders": [],
+					"defaultAuthentication": {
+						"authenticationType": "API_KEY",
+						"apiKeyConfig": {
+							"description": "public",
+							"apiKeyExpirationDays": "7"
+						}
+					}
+				}
+			}
+		}
+	},
+	"storage": {
+		"db": {
+			"service": "DynamoDB",
+			"providerPlugin": "awscloudformation"
+		},
+		"s38461a956": {
+			"service": "S3",
+			"providerPlugin": "awscloudformation"
+		}
+	}
+}

@@ -101,10 +101,7 @@ export default class RequestPackage extends React.Component {
     super(props);
     this.state = {
       index: 0,
-      routes: [
-        {key: 'Mailer', title: 'Mailers'},
-        {key: 'Box', title: 'Boxes'},
-      ],
+      routes: [{key: 'Mailer', title: 'Mailers'}, {key: 'Box', title: 'Boxes'}],
       selectedPackageID: null,
     };
   }
@@ -381,6 +378,7 @@ class Packaging extends React.Component {
     Animated.timing(this.state.fadeValue, {
       toValue: toValue,
       duration: 300,
+      useNativeDriver: false,
     }).start();
   };
 
