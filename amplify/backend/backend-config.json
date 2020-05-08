@@ -28,6 +28,10 @@
 		"db": {
 			"service": "DynamoDB",
 			"providerPlugin": "awscloudformation"
+		},
+		"s3e71e425d": {
+			"service": "S3",
+			"providerPlugin": "awscloudformation"
 		}
 	}
 }
