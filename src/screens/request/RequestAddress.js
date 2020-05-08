@@ -122,6 +122,7 @@ export default class RequestAddress extends React.Component {
     Animated.timing(this.state.fadeValue, {
       toValue: toValue,
       duration: 300,
+      useNativeDriver: false,
     }).start();
   };
 

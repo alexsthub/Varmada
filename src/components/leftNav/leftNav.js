@@ -1,7 +1,7 @@
 import React from 'react';
-import { StyleSheet, ScrollView, Text, View } from 'react-native';
+import {StyleSheet, ScrollView, Text, View} from 'react-native';
 import PropTypes from 'prop-types';
-import { NavigationActions } from 'react-navigation';
+import {NavigationActions} from 'react-navigation';
 import ImagePicker from 'react-native-image-picker';
 const defaultProfile = require('../../assets/defaultProfile.png');
 
@@ -13,38 +13,41 @@ import {
   faUserCog,
 } from '@fortawesome/free-solid-svg-icons';
 
-import { Auth, Storage } from 'aws-amplify';
+import {Auth, Storage} from 'aws-amplify';
 
 import NavOption from './navOption';
 import ProfileImage from '../general/ProfileImage';
-
 
 // TODO: Make a Header Component that just rests on top
 class LeftNav extends React.Component {
   constructor(props) {
     super(props);
-    this.state = { profileImage: defaultProfile };
+    this.state = {profileImage: defaultProfile};
   }
 
   async componentDidMount() {
     // get image from S3
-    const list = await Storage.list(`profile-image.jpeg`, { level: 'private' }).catch(error => console.log(error));
+    const list = await Storage.list(`profile-image.jpeg`, {
+      level: 'private',
+    }).catch(error => console.log(error));
     if (list.length > 0) {
-      const profileImage = await Storage.get(`profile-image.jpeg`, { level: 'private' }).catch(error => console.log(error));
-      this.setState({ profileImage: { uri: profileImage }});
+      const profileImage = await Storage.get(`profile-image.jpeg`, {
+        level: 'private',
+      }).catch(error => console.log(error));
+      this.setState({profileImage: {uri: profileImage}});
     }
   }
 
   // upload image to s3 from uri
-  uploadImage = async (uri) => {
+  uploadImage = async uri => {
     const response = await fetch(uri);
     const blob = await response.blob();
     const fileName = `profile-image.jpeg`;
     await Storage.put(fileName, blob, {
       contentType: 'image/jpeg',
-      level: 'private'
+      level: 'private',
     }).catch(error => console.log(error));
-  }
+  };
 
   changeImage = async () => {
     const options = {
@@ -55,7 +58,7 @@ class LeftNav extends React.Component {
       },
     };
 
-    await ImagePicker.showImagePicker(options, async (response) => {
+    await ImagePicker.showImagePicker(options, async response => {
       if (response.didCancel) {
         console.log('User cancelled image picker');
       } else if (response.error) {
@@ -69,7 +72,7 @@ class LeftNav extends React.Component {
           name: 'profileImage.jpg',
         };
         await this.uploadImage(response.uri).catch(error => console.log(error));
-        this.setState({ profileImage: profileImage });
+        this.setState({profileImage: profileImage});
       }
     });
   };
@@ -87,8 +90,8 @@ class LeftNav extends React.Component {
       <View style={styles.container}>
         <ScrollView>
           <View style={styles.navHeader}>
-            <Text style={{ textAlign: 'center', fontSize: 24 }}>Alex Tan</Text>
-            <View style={{ marginTop: 20 }}>
+            <Text style={{textAlign: 'center', fontSize: 24}}>Alex Tan</Text>
+            <View style={{marginTop: 20}}>
               <ProfileImage
                 image={this.state.profileImage}
                 showIcon={this.state.profileImage === defaultProfile}
@@ -100,7 +103,7 @@ class LeftNav extends React.Component {
             </View>
           </View>
 
-          <View style={{ marginTop: 10 }}>
+          <View style={{marginTop: 10}}>
             <NavOption
               containerStyle={styles.sectionHeadingStyle}
               onPress={this.navigateToScreen('Home')}
@@ -114,13 +117,6 @@ class LeftNav extends React.Component {
               text={'My Pickups'}
               icon={faArchive}
               active={activeKey === 'Pickups'}
-            />
-            <NavOption
-              containerStyle={styles.sectionHeadingStyle}
-              onPress={this.navigateToScreen('MyAddresses')}
-              text={'My Addresses'}
-              icon={faMapMarkerAlt}
-              active={activeKey === 'MyAddresses'}
             />
             <NavOption
               containerStyle={styles.sectionHeadingStyle}
@@ -141,13 +137,13 @@ class LeftNav extends React.Component {
         <View style={styles.footerContainer}>
           <NavOption
             containerStyle={styles.footerOptions}
-            onPress={() => { }}
+            onPress={() => {}}
             text={'Legal'}
             isFooter={true}
           />
           <NavOption
             containerStyle={styles.footerOptions}
-            onPress={() => { }}
+            onPress={() => {}}
             text={'Support'}
             isFooter={true}
           />

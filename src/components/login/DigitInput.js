@@ -1,15 +1,11 @@
-import React from "react";
-import {
-  StyleSheet,
-  TextInput,
-  Animated
-} from "react-native";
+import React from 'react';
+import {StyleSheet, TextInput, Animated} from 'react-native';
 
 export default class DigitInput extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      fadeValue: new Animated.Value(0)
+      fadeValue: new Animated.Value(0),
     };
   }
 
@@ -18,11 +14,16 @@ export default class DigitInput extends React.Component {
       Animated.timing(this.state.fadeValue, {
         toValue: 150,
         duration: 300,
+        useNativeDriver: false,
       }).start();
-    } else if ((!prevProps.edit && this.props.edit) || (prevProps.value !== '' && this.props.value === '')) {
+    } else if (
+      (!prevProps.edit && this.props.edit) ||
+      (prevProps.value !== '' && this.props.value === '')
+    ) {
       Animated.timing(this.state.fadeValue, {
         toValue: 0,
         duration: 300,
+        useNativeDriver: false,
       }).start();
     }
   }
@@ -38,21 +39,21 @@ export default class DigitInput extends React.Component {
     });
     const background = {backgroundColor: interpolateBackground};
     return (
-      <Animated.View 
+      <Animated.View
         style={[styles.viewStyle, background]}
         pointerEvents={this.props.edit ? 'auto' : 'none'}>
         <TextInput
-          ref='digitInput'
+          ref="digitInput"
           value={this.props.value}
           onChangeText={this.props.onChangeText}
           onKeyPress={this.props.onKeyPress}
           blurOnSubmit={this.props.blurOnSubmit}
           selection={this.props.selection}
           maxLength={1}
-          keyboardType='numeric'
+          keyboardType="numeric"
           style={styles.textInput}
           autoFocus={this.props.autoFocus}
-          />
+        />
       </Animated.View>
     );
   }
@@ -67,6 +68,6 @@ const styles = StyleSheet.create({
   },
   textInput: {
     fontSize: 30,
-    textAlign: 'center'
-  }
-})
+    textAlign: 'center',
+  },
+});

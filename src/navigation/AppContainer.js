@@ -22,7 +22,7 @@ import LeftNav from '../components/leftNav/leftNav';
 // Nav Screens
 import MyPickupScreen from '../screens/navscreens/MyPickupScreen';
 import PickupDetailsScreen from '../screens/navscreens/PickupDetailsScreen';
-import MyAddressScreen from '../screens/navscreens/MyAddressScreen';
+// import MyAddressScreen from '../screens/navscreens/MyAddressScreen';
 import PaymentMethodScreen from '../screens/navscreens/PaymentMethodScreen';
 import PaymentAddScreen from '../screens/PaymentAddScreen';
 import SettingsScreen from '../screens/navscreens/SettingsScreen';
@@ -37,7 +37,6 @@ import RequestCarrier from '../screens/request/RequestCarrier';
 import RequestServices from '../screens/request/RequestServices';
 import RequestPackage from '../screens/request/RequestPackage';
 import RequestAddress from '../screens/request/RequestAddress';
-import RequestAdditional from '../screens/request/RequestAdditional';
 import RequestTime from '../screens/request/RequestTime';
 import RequestReview from '../screens/request/RequestReview';
 import RequestAddLabel from '../screens/request/RequestAddLabel';
@@ -64,9 +63,6 @@ const MainDrawer = createDrawerNavigator(
     },
     Pickups: {
       screen: MyPickupScreen,
-    },
-    MyAddresses: {
-      screen: MyAddressScreen,
     },
     PaymentMethods: {
       screen: PaymentMethodScreen,
@@ -109,10 +105,6 @@ const RequestNavigator = createStackNavigator(
       screen: RequestAddLabel,
       navigationOptions: {headerTransparent: true},
     },
-    Additional: {
-      screen: RequestAdditional,
-      navigationOptions: {headerTransparent: true},
-    },
     Time: {
       screen: RequestTime,
       navigationOptions: {headerTransparent: true},
@@ -128,7 +120,7 @@ const RequestNavigator = createStackNavigator(
     AddPayment: {
       screen: PaymentAddScreen,
       navigationOptions: {headerTransparent: true},
-    }
+    },
   },
   {
     // initialRouteName: 'Review',
@@ -201,7 +193,7 @@ const MainStack = createStackNavigator(
     PickupDetails: {
       screen: PickupDetailsScreen,
       navigationOptions: {title: 'Pickup Details'},
-    }
+    },
   },
   {
     initialRouteName: 'MainDrawer',
