@@ -107,58 +107,56 @@ export default class RequestTime extends React.Component {
 
   // read request from async storage (Got rid of getRequest because time lists and dates are changing based on current time and could lead to error)
 
-  // getRequestFromStorage = async () => {
-  //   try {
-  //     const requestString = await AsyncStorage.getItem('request');
-  //     if (requestString !== null) {
-  //       this.requestObject = JSON.parse(requestString);
-  //       if (
-  //         this.requestObject.date &&
-  //         moment(this.requestObject.date).isSameOrAfter(moment(), 'day')
-  //       ) {
-  //         this.setState({selectedDate: moment(this.requestObject.date)});
-  //         if (this.requestObject.time) {
-  //           const time = this.requestObject.time;
-  //           let selectedIndex;
-  //           for (let i = 0; i < this.state.times.length; i++) {
-  //             if (this.state.times[i].startTime === time.startTime) {
-  //               selectedIndex = i;
-  //               break;
-  //             }
-  //           }
-  //           if (selectedIndex) {
-  //             this.setState({selectedTimeIndex: selectedIndex}, () => {
-  //               setTimeout(() => {
-  //                 this.handleTimeScroll(selectedIndex);
-  //               }, 50);
-  //             });
-  //           }
-  //         }
-  //       }
-  //     } else {
-  //       this.filterTimes(moment());
-  //     }
-  //   } catch (error) {
-  //     console.log(error);
-  //   }
+  getRequestFromStorage = async () => {
+    try {
+      const requestString = await AsyncStorage.getItem('request');
+      if (requestString !== null) {
+        this.requestObject = JSON.parse(requestString);
+        if (
+          this.requestObject.date && 
+          moment(this.requestObject.date, "LLLL").isSameOrAfter(moment().format("LLLL"), 'day')
+        ) {
+          this.setState({selectedDate: moment(this.requestObject.date, "LLLL")});
+          if (this.requestObject.time) {
+            const time = this.requestObject.time;
+            let selectedIndex;
+            for (let i = 0; i < this.state.times.length; i++) {
+              if (this.state.times[i].startTime === time.startTime) {
+                selectedIndex = i;
+                break;
+              }
+            }
+            if (selectedIndex) {
+              this.setState({selectedTimeIndex: selectedIndex}, () => {
+                setTimeout(() => {
+                  this.handleTimeScroll(selectedIndex);
+                }, 50);
+              });
+            }
+          }
+        }
+      } 
+    } catch (error) {
+      console.log(error);
+    }
     
-  //   let latestTimeToRequestPickup = moment('18:00:00', 'hh:mm:ss');
-  //   if (moment().isAfter(latestTimeToRequestPickup)) { // If after 6pm, show the next day since user cannot make pickup today
-  //     console.log("after 6!")
-  //     this.setState({selectedDate: moment().add(1,'days')});
-  //   }
-  // };
+    // let latestTimeToRequestPickup = moment('18:00:00', 'hh:mm:ss');
+    // if (moment().isAfter(latestTimeToRequestPickup)) { // If after 6pm, show the next day since user cannot make pickup today
+    //   console.log("after 6!")
+    //   this.setState({selectedDate: moment().add(1,'days')});
+    // }
+  };
 
   // Get selected date and time and save to async storage. Go to next screen
   handleContinue = async () => {
     const {selectedTimeIndex} = this.state;
     if (selectedTimeIndex == null) return;
 
-    try {
-      const requestString = await AsyncStorage.getItem('request');
-      if (requestString !== null) {
-        this.requestObject = JSON.parse(requestString);
-         const date = this.state.selectedDate;
+    // try {
+    //   const requestString = await AsyncStorage.getItem('request');
+    //   if (requestString !== null) {
+    //     this.requestObject = JSON.parse(requestString);
+        const date = this.state.selectedDate;
         const time = this.state.times[this.state.selectedTimeIndex];
         this.requestObject.date = date.format('dddd, MMMM Do YYYY');
         this.requestObject.deliveryPrice = time.price;
@@ -175,10 +173,10 @@ export default class RequestTime extends React.Component {
         } catch (error) {
           console.log('oh fuck what do i do now.');
         }
-      }
-    } catch (error) {
-      console.log(error);
-    }
+      //}
+    // } catch (error) {
+    //   console.log(error);
+    // }
 
 
    

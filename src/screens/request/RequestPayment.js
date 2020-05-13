@@ -76,6 +76,14 @@ export default class RequestPayment extends React.Component {
     }
   };
 
+  // Removes back button listener when component is unmounted
+  componentWillUnmount() {
+    BackHandler.removeEventListener(
+      'hardwareBackPress',
+      this.handleBackButtonClick,
+    );
+  }
+
   // Helper to render button animation
   renderAnimation = toValue => {
     Animated.timing(this.state.fadeValue, {

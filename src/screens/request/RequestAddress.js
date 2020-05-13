@@ -16,6 +16,7 @@ import {
 
 import Header from '../../components/general/Header';
 import AddressBox from '../../components/general/AddressBox';
+import {NavigationEvents} from 'react-navigation';
 
 import SlidingUpPanel from 'rn-sliding-up-panel';
 import {GooglePlacesAutocomplete} from 'react-native-google-places-autocomplete';
@@ -64,24 +65,17 @@ export default class RequestAddress extends React.Component {
     };
   }
 
-  // Android back button listener and read request from async storage
-  componentDidMount = async () => {
-    BackHandler.addEventListener(
-      'hardwareBackPress',
-      this.handleBackButtonClick,
-    );
+  getRequestFromStorage = async () => {
     //Get all addresses of user to display
     const userInfo = await Auth.currentUserInfo();
     const userAddresses = await DataStore.query(Address, a => a.phoneNumber("eq", userInfo.attributes.phone_number));
     this.setState({addresses: userAddresses});
 
     try {
-      console.log("got hereee")
       const requestString = await AsyncStorage.getItem('request');
       console.log("whats wrong: " + requestString)
       if (requestString !== null) {
         this.requestObject = JSON.parse(requestString);
-        console.log("whats wrong 2: " + this.requestObject)
         if (this.requestObject.address) {
           const id = this.requestObject.address.placeID;
           const index = userAddresses.findIndex(ele => ele.placeID === id);
@@ -94,6 +88,14 @@ export default class RequestAddress extends React.Component {
       console.log('oh no...');
     }
     console.log(this.requestObject);
+  }
+
+  // Android back button listener and read request from async storage
+  componentDidMount = async () => {
+    BackHandler.addEventListener(
+      'hardwareBackPress',
+      this.handleBackButtonClick,
+    );
   };
 
   // Handles when button animation should happen
@@ -308,6 +310,7 @@ export default class RequestAddress extends React.Component {
 
     return (
       <View style={styles.container}>
+        <NavigationEvents onWillFocus={this.getRequestFromStorage} />
         <View
           style={{
             marginHorizontal: 40,

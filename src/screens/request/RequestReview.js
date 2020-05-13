@@ -53,6 +53,7 @@ export default class RequestReview extends React.Component {
           packageType = requestObject.packaging.name + " (" + requestObject.packaging.dimensions + ")";
         }
         total += requestObject.deliveryPrice;
+        console.log("Whats the delivery price: " + JSON.stringify(requestObject))
         let itemCost = 3;
         total += itemCost;
         let tax = 0.065 * total;
@@ -64,12 +65,12 @@ export default class RequestReview extends React.Component {
       }
       
     } catch (error) {
-      console.log('oh no...');
+      console.log(error);
     }
   };
 
   choosePayment = () => {
-    this.props.navigation.navigate('Payment');
+    this.props.navigation.navigate('Payment', {edit: true});
   };
 
   editCarrier = () => {
