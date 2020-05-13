@@ -45,8 +45,8 @@ export default class RequestPayment extends React.Component {
       const requestString = await AsyncStorage.getItem('request');
       if (requestString !== null) {
         this.requestObject = JSON.parse(requestString);
-        if (this.requestObject.paymentIndex) {
-            this.setState({selectedPaymentIndex: this.requestObject.paymentIndex});
+        if (this.requestObject.paymentIndex !== undefined) {
+          this.setState({selectedPaymentIndex: this.requestObject.paymentIndex});
         }
       }
     } catch (error) {
@@ -128,6 +128,17 @@ export default class RequestPayment extends React.Component {
     });
   };
 
+  removeCard = async () => {
+    // if (this.state.selectedPaymentIndex === null) {
+    //   return;
+    // }
+    const user = await Auth.currentUserInfo();
+    let paymentArray = this.state.paymentOptions;
+    await DataStore.delete(Payment, p => p.phoneNumber("eq", user.attributes.phone_number).cardNumber("eq", paymentArray[this.state.selectedPaymentIndex].cardNumber));
+    paymentArray.splice(this.state.selectedPaymentIndex, 1);
+    this.setState({paymentOptions: paymentArray, selectedPaymentIndex: null});
+  }
+
  
   // addCard = (cardNumber, expDate, cvv, zipCode, cardHolder) => {
   //   console.log("adding card")
@@ -169,7 +180,7 @@ export default class RequestPayment extends React.Component {
         />
 
 
-        <View style={{marginTop: 40}}>
+        <View style={{marginTop: 20, maxHeight: 60, flex: 1, flexDirection: 'row', justifyContent: 'space-between'}}>
           <TouchableNativeFeedback
             background={TouchableNativeFeedback.Ripple('lightgray')}
             onPress={this.addPayment}>
@@ -177,14 +188,37 @@ export default class RequestPayment extends React.Component {
               style={{
                 backgroundColor: '#F8B500',
                 elevation: 10,
-                padding: 10,
-                justifyContent: 'center',
-                alignItems: 'center',
+                padding: 20,
+                // justifyContent: 'center',
+                // alignItems: 'center',
+                // alignContent: flex-start 
               }}>
               <Text style={{fontWeight: 'bold', fontSize: 15}}>Add Card</Text>
             </View>
           </TouchableNativeFeedback>
+
+          <TouchableNativeFeedback
+            background={TouchableNativeFeedback.Ripple('lightgray')}
+            onPress={this.removeCard}
+            disabled={this.state.selectedPaymentIndex === null}>
+            <Animated.View
+              style={{
+                backgroundColor: animatedBackground,
+                borderWidth:
+                  this.state.selectedPaymentIndex === null ? 1 : null,
+                borderColor:
+                  this.state.selectedPaymentIndex === null ? '#F8B500' : null,
+                elevation: 10,
+                padding: 20,
+                // justifyContent: 'center',
+                // alignItems: 'center',
+                // alignContent: flex-end
+              }}>
+              <Text style={{fontWeight: 'bold', fontSize: 16}}>Remove Card</Text>
+            </Animated.View>
+          </TouchableNativeFeedback>
         </View>
+
 
         <FlatList
           ref={paymentList => (this.paymentList = paymentList)}
@@ -201,6 +235,7 @@ export default class RequestPayment extends React.Component {
           showsVerticalScrollIndicator={false}
           contentContainerStyle={{marginTop: 20}}
         />
+
 
         <KeyboardAvoidingView
           style={{marginBottom: 20, width: '60%', alignSelf: 'center'}}
@@ -235,7 +270,4 @@ const styles = StyleSheet.create({
     marginHorizontal: 40,
     flex: 1
   },
-  headerContainer: {
-    marginHorizontal: 40,
-  }
 });

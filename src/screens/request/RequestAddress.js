@@ -289,6 +289,17 @@ export default class RequestAddress extends React.Component {
     this.setState({autocompleteText: text});
   };
 
+  deleteAddress = async () => {
+    if (this.state.selectedAddressIndex === null) {
+      return;
+    }
+    const user = await Auth.currentUserInfo();
+    let addressArray = this.state.addresses;
+    await DataStore.delete(Address, a => a.phoneNumber("eq", user.attributes.phone_number).placeID("eq", addressArray[this.state.selectedAddressIndex].placeID));
+    addressArray.splice(this.state.selectedAddressIndex, 1);
+    this.setState({addresses: addressArray, selectedAddressIndex: null});
+  }
+
   render() {
     const draggableRange = {top: height - StatusBar.currentHeight, bottom: 120};
     this.top = draggableRange.top;
@@ -321,6 +332,30 @@ export default class RequestAddress extends React.Component {
             headerText={'Request a pickup'}
             subHeaderText={'Select a pickup address'}
           />
+
+          <KeyboardAvoidingView
+            style={{marginTop: 20, width: '60%', alignSelf: 'center'}}
+            behavior={'position'}>
+            <TouchableNativeFeedback
+              background={TouchableNativeFeedback.Ripple('lightgray')}
+              onPress={this.deleteAddress}
+              disabled={this.state.selectedAddressIndex === null}>
+              <Animated.View
+                style={{
+                  backgroundColor: animatedBackground,
+                  borderWidth:
+                    this.state.selectedAddressIndex === null ? 1 : null,
+                  borderColor:
+                    this.state.selectedAddressIndex === null ? '#F8B500' : null,
+                  elevation: 10,
+                  padding: 20,
+                  justifyContent: 'center',
+                  alignItems: 'center',
+                }}>
+                <Text style={{fontWeight: 'bold', fontSize: 16}}>Remove Address</Text>
+              </Animated.View>
+            </TouchableNativeFeedback>
+          </KeyboardAvoidingView>
 
           <FlatList
             ref={addressList => (this.addressList = addressList)}

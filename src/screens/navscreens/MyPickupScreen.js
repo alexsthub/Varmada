@@ -1,7 +1,7 @@
 import React from 'react';
 import { StyleSheet, View, Text, Image, TouchableNativeFeedback } from 'react-native';
 import NavScreenHeader from '../../components/general/NavScreenHeader';
-import { NavigationActions } from 'react-navigation';
+import { NavigationEvents } from 'react-navigation';
 import { FlatList } from 'react-native-gesture-handler';
 
 import { Auth } from 'aws-amplify';
@@ -61,7 +61,7 @@ export default class MyPickupScreen extends React.Component {
     };
   }
 
-  async componentDidMount() {
+  getPackageRequests = async () => {
     const user = await Auth.currentUserInfo();
     const requests = await DataStore.query(Package, p => p.phoneNumber("eq", user.attributes.phone_number));
     this.setState({requests: requests});
@@ -71,10 +71,12 @@ export default class MyPickupScreen extends React.Component {
   render() {
     return (
       <View>
+        <NavigationEvents onWillFocus={this.getPackageRequests} />
         <NavScreenHeader navigation={this.props.navigation} title={'My Pickups'} />
         <View style={styles.pickupContainer}>
           <FlatList
             data={this.state.requests}
+            contentContainerStyle={{ paddingBottom: 80}}
             renderItem={({ item }) =>
               <View>
                 <TouchableNativeFeedback key={item.id} onPress={() => { this.props.navigation.navigate('PickupDetails', { pickupObject: item }) }}>
