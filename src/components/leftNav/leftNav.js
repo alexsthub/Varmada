@@ -3,11 +3,8 @@ import {StyleSheet, ScrollView, Text, View, NavigationEvents} from 'react-native
 import PropTypes from 'prop-types';
 import {NavigationActions} from 'react-navigation';
 import ImagePicker from 'react-native-image-picker';
-<<<<<<< HEAD
-import { Auth } from 'aws-amplify';
-=======
+
 const defaultProfile = require('../../assets/defaultProfile.png');
->>>>>>> bbfccf9da84fd239f60c8465593bd4f49327d1aa
 
 import {
   faHome,

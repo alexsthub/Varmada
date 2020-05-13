@@ -21,11 +21,8 @@ export declare class Address {
 export declare class Payment {
   readonly id: string;
   readonly phoneNumber: string;
-  readonly cardNumber: number;
-  readonly expirationDate: number;
-  readonly CVV: number;
-  readonly zipCode: number;
-  readonly country: string;
+  readonly cardNumber: string;
+  readonly expirationDate: string;
   constructor(init: ModelInit<Payment>);
   static copyOf(source: Payment, mutator: (draft: MutableModel<Payment>) => MutableModel<Payment> | void): Payment;
 }
@@ -45,6 +42,7 @@ export declare class Package {
   readonly packageType?: string;
   readonly salesTax: string;
   readonly total: number;
+  readonly cardNumber: string;
   constructor(init: ModelInit<Package>);
   static copyOf(source: Package, mutator: (draft: MutableModel<Package>) => MutableModel<Package> | void): Package;
 }

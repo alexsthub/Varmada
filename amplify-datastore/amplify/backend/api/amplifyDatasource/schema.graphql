@@ -13,11 +13,8 @@ type Address @model {
 type Payment @model {
   id: ID!
   phoneNumber: String!
-  cardNumber: Int!
-  expirationDate: Int!
-  CVV: Int!
-  zipCode: Int!
-  country: String!
+  cardNumber: String!
+  expirationDate: String!
 }
 
 type Package @model {
@@ -35,6 +32,7 @@ type Package @model {
   packageType: String
   salesTax: String!
   total: Float!
+  cardNumber: String!
 }
 
 

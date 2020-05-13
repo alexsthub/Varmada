@@ -75,10 +75,10 @@ export default class RequestAddLabel extends React.Component {
 
 
   handleContinue = async () => {
-    const {image} = this.state;
+    const {file} = this.state;
     const requestString = await AsyncStorage.getItem('request');
     this.requestObject = JSON.parse(requestString);
-    if (image !== null) {
+    if (file !== null) {
       this.requestObject.label = true;
     } else {
       this.requestObject.label = false;
@@ -99,7 +99,7 @@ export default class RequestAddLabel extends React.Component {
     const imageContent = !this.state.file ? (
     <View>
       <View style={styles.imageContainer}>
-        <Text style={{fontWeight: 'bold', fontSize: 16}}>UPLAOD FILE</Text>
+        <Text style={{fontWeight: 'bold', fontSize: 16}}>Upload File</Text>
       </View>
       <Text style={{marginTop:10}}>No File Chosen</Text>
       </View>
@@ -117,7 +117,7 @@ export default class RequestAddLabel extends React.Component {
       <View style={{marginHorizontal: 40}}>
 
         <Header
-          headerText={'Request a label Printing'}
+          headerText={'Request a pickup'}
           subHeaderText={'Upload a shipping label'}
         />
 

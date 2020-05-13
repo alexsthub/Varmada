@@ -29,7 +29,8 @@ export default class RequestReview extends React.Component {
       deliveryPrice: 0,
       itemPrice: 3.0,
       salesTax: 0,
-      total: 0
+      total: 0,
+      cardNumber: ''
     };
   }
 
@@ -58,7 +59,7 @@ export default class RequestReview extends React.Component {
         tax = tax.toFixed(2); //toFixed turns tax into a string, have to parseFloat to convert back to float
         let orderTotal = parseFloat(tax) + total;
         // Delivery and package prices will sometimes not show to hundredths place, so apply toFixed(2)
-        this.setState({request: requestObject, salesTax: tax, deliveryPrice: requestObject.deliveryPrice.toFixed(2),
+        this.setState({request: requestObject, cardNumber: requestObject.paymentNumber, salesTax: tax, deliveryPrice: requestObject.deliveryPrice.toFixed(2),
                        packagePrice: packageCost.toFixed(2), packageType: packageType, labelPrice: labelCost, total: orderTotal}); 
       }
       
@@ -116,7 +117,8 @@ export default class RequestReview extends React.Component {
         deliveryCost: this.state.deliveryPrice,
         printingCost: this.state.labelPrice,
         salesTax: this.state.salesTax,
-        total: this.state.total
+        total: this.state.total,
+        cardNumber: this.state.cardNumber
       })
     );
     try {
@@ -163,21 +165,17 @@ export default class RequestReview extends React.Component {
             touchPackage={this.editPackage}
           />
 
-          {/* <Text style={{fontWeight: 'bold'}}>Pay With:</Text>
+          <Text style={{fontWeight: 'bold'}}>Pay With:</Text>
           <TouchableNativeFeedback
             background={TouchableNativeFeedback.Ripple('lightgray')}
             onPress={this.choosePayment}>
             <View style={styles.payContainer}>
               <View style={{flexDirection: 'row', alignItems: 'center'}}>
-                <Image
-                  source={require('../../assets/venmo_icon.png')}
-                  style={{width: 25, height: 25}}
-                  resizeMode={'stretch'}
-                />
-                <Text style={{fontSize: 18, marginLeft: 15}}>Venmo</Text>
+                <Text style={{ color: 'blue', fontWeight: 'bold', backgroundColor: 'white', width: 80, fontSize:20, paddingLeft:15}}>VISA</Text>
+                <Text style={{fontSize: 18, marginLeft: 15}}>{this.state.cardNumber}</Text>
               </View>
             </View>
-          </TouchableNativeFeedback> */}
+          </TouchableNativeFeedback>
 
           <View style={styles.orderDetails}>
             <View style={styles.lineContainer}>
@@ -204,7 +202,7 @@ export default class RequestReview extends React.Component {
             background={TouchableNativeFeedback.Ripple('lightgray')}
             onPress={this.handleConfirm}>
             <View style={styles.continueButton}>
-              <Text style={styles.continueText}>Payment</Text>
+              <Text style={styles.continueText}>Confirm</Text>
             </View>
           </TouchableNativeFeedback>
           {/* <Text style={styles.warning}>

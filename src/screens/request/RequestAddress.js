@@ -76,9 +76,12 @@ export default class RequestAddress extends React.Component {
     this.setState({addresses: userAddresses});
 
     try {
+      console.log("got hereee")
       const requestString = await AsyncStorage.getItem('request');
+      console.log("whats wrong: " + requestString)
       if (requestString !== null) {
         this.requestObject = JSON.parse(requestString);
+        console.log("whats wrong 2: " + this.requestObject)
         if (this.requestObject.address) {
           const id = this.requestObject.address.placeID;
           const index = userAddresses.findIndex(ele => ele.placeID === id);

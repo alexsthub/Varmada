@@ -39,8 +39,18 @@ export default class PickupDetailsScreen extends React.Component {
           <Text style={styles.summary}>Your pickup is scheduled on {request.date + " between " + request.time}.
                                        We'll let you know when the driver is within a 30 minute proximity.</Text>
           {packageType}
+
           <Text>Pickup location: {request.Address}{'\n'}</Text>
           <Text>Dropoff location: {request.carrier}{'\n'}</Text>
+
+          <Text style={{fontWeight: 'bold'}}>Pay With:</Text>
+          <View style={styles.payContainer}>
+            <View style={{flexDirection: 'row', alignItems: 'center'}}>
+              <Text style={{ color: 'blue', fontWeight: 'bold', backgroundColor: 'white', width: 80, fontSize:20, paddingLeft:15}}>VISA</Text>
+              <Text style={{fontSize: 18, marginLeft: 15}}>{request.cardNumber}</Text>
+            </View>
+          </View>
+
           <View style={styles.orderDetails}>
             <View style={styles.lineContainer}>
               <Text>Item:</Text>
@@ -118,5 +128,16 @@ const styles = StyleSheet.create({
     fontSize: 12,
     alignContent: 'center',
     textAlign: 'center'
-  }
+  },
+  payContainer: {
+    flexDirection: 'row',
+    padding: 10,
+    borderWidth: 1,
+    // backgroundColor: '#F7F7F7',
+    // elevation: 10,
+    justifyContent: 'space-between',
+    alignItems: 'center',
+  },
 });
+
+

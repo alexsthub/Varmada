@@ -96,33 +96,12 @@ export const schema = {
                 "cardNumber": {
                     "name": "cardNumber",
                     "isArray": false,
-                    "type": "Int",
+                    "type": "String",
                     "isRequired": true,
                     "attributes": []
                 },
                 "expirationDate": {
                     "name": "expirationDate",
-                    "isArray": false,
-                    "type": "Int",
-                    "isRequired": true,
-                    "attributes": []
-                },
-                "CVV": {
-                    "name": "CVV",
-                    "isArray": false,
-                    "type": "Int",
-                    "isRequired": true,
-                    "attributes": []
-                },
-                "zipCode": {
-                    "name": "zipCode",
-                    "isArray": false,
-                    "type": "Int",
-                    "isRequired": true,
-                    "attributes": []
-                },
-                "country": {
-                    "name": "country",
                     "isArray": false,
                     "type": "String",
                     "isRequired": true,
@@ -238,6 +217,13 @@ export const schema = {
                     "type": "Float",
                     "isRequired": true,
                     "attributes": []
+                },
+                "cardNumber": {
+                    "name": "cardNumber",
+                    "isArray": false,
+                    "type": "String",
+                    "isRequired": true,
+                    "attributes": []
                 }
             },
             "syncable": true,
@@ -252,5 +238,5 @@ export const schema = {
     },
     "enums": {},
     "nonModels": {},
-    "version": "d94496b9b46170c8e5ddbb757372ec7f"
+    "version": "6df34e5ff6d8a6002236a5fa637b7d40"
 };

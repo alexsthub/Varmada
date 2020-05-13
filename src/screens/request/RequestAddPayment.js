@@ -5,11 +5,15 @@ import Icon from 'react-native-vector-icons/FontAwesome';
 import FeatherIcon from 'react-native-vector-icons/Feather';
 import AntIcon from 'react-native-vector-icons/AntDesign';
 
-import Header from '../components/general/Header';
-import CustomButton from '../components/general/CustomButton';
-import FloatingInput from '../components/general/FloatingInput';
+import Header from '../../components/general/Header';
+import CustomButton from '../../components/general/CustomButton';
+import FloatingInput from '../../components/general/FloatingInput';
 
 import {CardIOModule, CardIOUtilities} from 'react-native-awesome-card-io';
+
+import { Auth } from 'aws-amplify';
+import { DataStore } from '@aws-amplify/datastore';
+import { Payment } from '../../../amplify-datastore/src/models';
 
 // TODO: label is too high in comparison to where the underline is
 // TODO: Absolute position bottom text gets caught on some shit when the keyboard is up
@@ -28,7 +32,7 @@ export default class PaymentAddScreen extends React.Component {
     }
   }
 
-  addPayment = () => {
+  addPayment = async () => {
     console.log('Save damnit!');
     console.log(this.state.cardNumber, this.state.expDate, this.state.cvv, this.state.zipCode)
     console.log(this.state.cardNumber.length, this.state.expDate.length, this.state.cvv.length, this.state.zipCode.length)
@@ -38,14 +42,16 @@ export default class PaymentAddScreen extends React.Component {
         this.state.cvv.length == 3 &&
         this.state.zipCode.length == 5 &&
         this.state.cardHolder.length > 0) {
-          // this.props.parentCallback("Hey Popsie, How’s it going?");
-          this.props.navigation.state.params.addCard(this.state.cardNumber,
-                                                    this.state.expDate,
-                                                    this.state.cvv,
-                                                    this.state.zipCode,
-                                                    this.state.cardHolder);
           // this.props.navigation.navigate("Payment")
-          this.props.navigation.goBack();
+          const userInfo = await Auth.currentUserInfo();
+          await DataStore.save(
+            new Payment({
+              phoneNumber: userInfo.attributes.phone_number, 
+              cardNumber: "**** **** **** " + this.state.cardNumber.substring(this.state.cardNumber.length-4, this.state.cardNumber.length),
+              expirationDate: this.state.expDate
+            })
+          );
+          this.props.navigation.navigate('Payment');
           // this.props.addCard("new card")
           // this.props.navigation.navigate("Payment", {'cardNumber': this.state.cardNumber})
         }

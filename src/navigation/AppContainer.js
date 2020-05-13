@@ -23,8 +23,7 @@ import LeftNav from '../components/leftNav/leftNav';
 import MyPickupScreen from '../screens/navscreens/MyPickupScreen';
 import PickupDetailsScreen from '../screens/navscreens/PickupDetailsScreen';
 // import MyAddressScreen from '../screens/navscreens/MyAddressScreen';
-import PaymentMethodScreen from '../screens/navscreens/PaymentMethodScreen';
-import PaymentAddScreen from '../screens/PaymentAddScreen';
+//import PaymentMethodScreen from '../screens/navscreens/PaymentMethodScreen';
 import SettingsScreen from '../screens/navscreens/SettingsScreen';
 import EditAccountScreen from '../screens/navscreens/EditAccountScreen';
 import NotificationSettingsScreen from '../screens/NotificationSettingsScreen';
@@ -40,6 +39,8 @@ import RequestAddress from '../screens/request/RequestAddress';
 import RequestTime from '../screens/request/RequestTime';
 import RequestReview from '../screens/request/RequestReview';
 import RequestAddLabel from '../screens/request/RequestAddLabel';
+import RequestPayment from '../screens/request/RequestPayment';
+import RequestAddPayment from '../screens/request/RequestAddPayment';
 
 import EditNameScreen from '../screens/editfieldscreens/EditNameScreen';
 import EditPhoneScreen from '../screens/editfieldscreens/EditPhoneScreen';
@@ -63,9 +64,6 @@ const MainDrawer = createDrawerNavigator(
     },
     Pickups: {
       screen: MyPickupScreen,
-    },
-    PaymentMethods: {
-      screen: PaymentMethodScreen,
     },
     AccountSettings: {
       screen: SettingsScreen,
@@ -114,11 +112,11 @@ const RequestNavigator = createStackNavigator(
       navigationOptions: {headerTransparent: true},
     },
     Payment: {
-      screen: PaymentMethodScreen,
+      screen: RequestPayment,
       navigationOptions: {headerTransparent: true},
     },
     AddPayment: {
-      screen: PaymentAddScreen,
+      screen: RequestAddPayment,
       navigationOptions: {headerTransparent: true},
     },
   },
@@ -181,10 +179,6 @@ const MainStack = createStackNavigator(
     SecuritySettingsScreen: {
       screen: SecuritySettingsScreen,
       navigationOptions: {title: 'Security'},
-    },
-    PaymentAddScreen: {
-      screen: PaymentAddScreen,
-      navigationOptions: {headerTransparent: true},
     },
     Request: {
       screen: RequestNavigator,
