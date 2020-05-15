@@ -13,12 +13,24 @@ import {NavigationEvents} from 'react-navigation';
 import Header from '../../components/general/Header';
 import ReviewHeader from '../../components/general/ReviewHeader';
 
+import { Auth } from 'aws-amplify';
+import { DataStore } from '@aws-amplify/datastore';
+import { Package, Address } from '../../../amplify-datastore/src/models';
+
 export default class RequestReview extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
       payment: 'Venmo',
       request: null,
+      packagePrice: 0,
+      packageType: null,
+      labelPrice: 0,
+      deliveryPrice: 0,
+      itemPrice: 3.0,
+      salesTax: 0,
+      total: 0,
+      cardNumber: ''
     };
   }
 
@@ -27,15 +39,38 @@ export default class RequestReview extends React.Component {
       const requestString = await AsyncStorage.getItem('request');
       if (requestString !== null) {
         const requestObject = JSON.parse(requestString);
-        this.setState({request: requestObject});
+        let total = 0;
+        let labelCost = 0;
+        if (requestObject.label) {
+          total += .5;
+          labelCost = 0.50;
+        }
+        let packageCost = 0;
+        let packageType = null;
+        if (requestObject.packaging) {
+          total += requestObject.packaging.price;
+          packageCost = requestObject.packaging.price;
+          packageType = requestObject.packaging.name + " (" + requestObject.packaging.dimensions + ")";
+        }
+        total += requestObject.deliveryPrice;
+        console.log("Whats the delivery price: " + JSON.stringify(requestObject))
+        let itemCost = 3;
+        total += itemCost;
+        let tax = 0.065 * total;
+        tax = tax.toFixed(2); //toFixed turns tax into a string, have to parseFloat to convert back to float
+        let orderTotal = parseFloat(tax) + total;
+        // Delivery and package prices will sometimes not show to hundredths place, so apply toFixed(2)
+        this.setState({request: requestObject, cardNumber: requestObject.paymentNumber, salesTax: tax, deliveryPrice: requestObject.deliveryPrice.toFixed(2),
+                       packagePrice: packageCost.toFixed(2), packageType: packageType, labelPrice: labelCost, total: orderTotal}); 
       }
+      
     } catch (error) {
-      console.log('oh no...');
+      console.log(error);
     }
   };
 
   choosePayment = () => {
-    this.props.navigation.navigate('Payment');
+    this.props.navigation.navigate('Payment', {edit: true});
   };
 
   editCarrier = () => {
@@ -59,18 +94,59 @@ export default class RequestReview extends React.Component {
     this.props.navigation.navigate('Package', {edit: true});
   };
 
-  handleConfirm = () => {
-    this.props.navigation.navigate('Payment', {price: 7.25});
-  };
+
+  handleConfirm = async () => {
+    const userInfo = await Auth.currentUserInfo();
+    const requestObject = this.state.request;
+    // Get id of address
+    //const userAddress = await DataStore.query(Address, a => a.phoneNumber("eq", userInfo.attributes.phone_number).placeID("eq", requestObject.address.placeID));
+   
+    //console.log(userInfo.attributes.phone_number + ", " + requestObject.title + ", " + requestObject.carrier.name + ", " + userAddress + ", " + 
+                //packageType + ", " + this.state.packagePrice + ", " + requestObject.date + ", " + requestObject.time + ", " + this.state.deliveryPrice + ", " + this.state.labelPrice + ", " + this.state.salesTax + ", " + this.state.total)
+    // todo: item cost is hardcoded
+    await DataStore.save(
+      new Package({
+        phoneNumber: userInfo.attributes.phone_number, 
+        itemName: requestObject.title,
+        carrier: requestObject.carrier.name,
+        Address: requestObject.address.address + ", " + requestObject.address.city + ", " + requestObject.address.state,
+        packageType: this.state.packageType,
+        packageCost: this.state.packagePrice,
+        date: requestObject.date,
+        time: requestObject.time,
+        itemCost: 3.0, 
+        deliveryCost: this.state.deliveryPrice,
+        printingCost: this.state.labelPrice,
+        salesTax: this.state.salesTax,
+        total: this.state.total,
+        cardNumber: this.state.cardNumber
+      })
+    );
+    try {
+      await AsyncStorage.removeItem('request');
+      this.props.navigation.navigate('Home');
+    } catch (error) {
+      console.log('oh fuck what do i do now.');
+    }
+  }
 
   render() {
     const packagingPrice =
       this.state.request && this.state.request.packaging ? (
         <View style={styles.lineContainer}>
           <Text>Packaging:</Text>
-          <Text>${this.state.request.packaging.price.toFixed(2)}</Text>
+          <Text>${this.state.packagePrice}</Text>
         </View>
       ) : null;
+
+    const labelPrice =
+      this.state.labelPrice != 0 ? (
+        <View style={styles.lineContainer}>
+          <Text>Printing:</Text>
+          <Text>$0.50</Text>
+        </View>
+      ) : null; 
+ 
     return (
       <ScrollView showsVerticalScrollIndicator={false}>
         <View style={{flex: 1, marginHorizontal: 40, paddingBottom: 20}}>
@@ -90,43 +166,36 @@ export default class RequestReview extends React.Component {
             touchPackage={this.editPackage}
           />
 
-          {/* <Text style={{fontWeight: 'bold'}}>Pay With:</Text>
+          <Text style={{fontWeight: 'bold'}}>Pay With:</Text>
           <TouchableNativeFeedback
             background={TouchableNativeFeedback.Ripple('lightgray')}
             onPress={this.choosePayment}>
             <View style={styles.payContainer}>
               <View style={{flexDirection: 'row', alignItems: 'center'}}>
-                <Image
-                  source={require('../../assets/venmo_icon.png')}
-                  style={{width: 25, height: 25}}
-                  resizeMode={'stretch'}
-                />
-                <Text style={{fontSize: 18, marginLeft: 15}}>Venmo</Text>
+                <Text style={{ color: 'blue', fontWeight: 'bold', backgroundColor: 'white', width: 80, fontSize:20, paddingLeft:15}}>VISA</Text>
+                <Text style={{fontSize: 18, marginLeft: 15}}>{this.state.cardNumber}</Text>
               </View>
             </View>
-          </TouchableNativeFeedback> */}
+          </TouchableNativeFeedback>
 
           <View style={styles.orderDetails}>
             <View style={styles.lineContainer}>
-              <Text>Items (1):</Text>
+              <Text>Item:</Text>
               <Text>$3.00</Text>
             </View>
+            {packagingPrice}
+            {labelPrice}
             <View style={styles.lineContainer}>
               <Text>Delivery Fee:</Text>
-              <Text>$1.00</Text>
+              <Text>${this.state.deliveryPrice}</Text>
             </View>
-            <View style={styles.lineContainer}>
-              <Text>Printing:</Text>
-              <Text>$0.50</Text>
-            </View>
-            {packagingPrice}
             <View style={styles.lineContainer}>
               <Text>Sales Tax:</Text>
-              <Text>$0.75</Text>
+              <Text>${this.state.salesTax}</Text>
             </View>
             <View style={styles.lineContainer}>
               <Text style={styles.orderTotal}>Order Total:</Text>
-              <Text style={[styles.orderTotal, styles.price]}>$7.25</Text>
+              <Text style={[styles.orderTotal, styles.price]}>${this.state.total}</Text>
             </View>
           </View>
 
@@ -134,7 +203,7 @@ export default class RequestReview extends React.Component {
             background={TouchableNativeFeedback.Ripple('lightgray')}
             onPress={this.handleConfirm}>
             <View style={styles.continueButton}>
-              <Text style={styles.continueText}>Payment</Text>
+              <Text style={styles.continueText}>Confirm</Text>
             </View>
           </TouchableNativeFeedback>
           {/* <Text style={styles.warning}>

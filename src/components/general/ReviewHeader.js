@@ -42,9 +42,7 @@ export default class ReviewHeader extends React.Component {
       subtitle = `${address.city}, ${address.state}`;
     }
 
-    const dateString = moment(date).format('dddd, MMMM Do');
-    const timeString = this.timesToRange(time.startTime, time.endTime);
-
+    //const timeString = this.timesToRange(time.startTime, time.endTime);
     let packageElementContent;
     if (packaging) {
       packageElementContent = (
@@ -94,7 +92,7 @@ export default class ReviewHeader extends React.Component {
               Pickup:{' '}
             </Text>
             <Text style={styles.pickupText}>
-              {dateString}, {timeString}
+              {date}{"\n"}{time}
             </Text>
           </View>
         </TouchableNativeFeedback>

@@ -11,6 +11,9 @@ import {NavigationEvents} from 'react-navigation';
 
 import Header from '../../components/general/Header';
 
+import { DataStore } from '@aws-amplify/datastore';
+import { Cart } from '../../../amplify-datastore/src/models';
+
 // TODO: Same goes for labels
 export default class RequestServices extends React.Component {
   constructor(props) {

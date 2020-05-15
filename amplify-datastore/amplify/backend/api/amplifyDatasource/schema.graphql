@@ -1,0 +1,38 @@
+type Address @model {
+  id: ID!
+  phoneNumber: String!
+  name: String!
+  placeID: String!
+  address: String!
+  city: String!
+  state: String!
+  zip: String!
+  countryCode: String!
+}
+
+type Payment @model {
+  id: ID!
+  phoneNumber: String!
+  cardNumber: String!
+  expirationDate: String!
+}
+
+type Package @model {
+  id: ID!
+  phoneNumber: String!
+  Address: String! 
+  itemName: String!
+  carrier: String!
+  date: String!
+  time: String!
+  itemCost: Float!
+  deliveryCost: String!
+  printingCost: Float!
+  packageCost: String!
+  packageType: String
+  salesTax: String!
+  total: Float!
+  cardNumber: String!
+}
+
+

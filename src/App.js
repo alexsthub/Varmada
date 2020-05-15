@@ -4,6 +4,7 @@ import {NavigationActions} from 'react-navigation';
 import {StatusBar} from 'react-native';
 import {Auth} from 'aws-amplify';
 
+
 // TODO: Need to do something with refreshing tokens???
 export default class App extends React.Component {
   constructor(props) {

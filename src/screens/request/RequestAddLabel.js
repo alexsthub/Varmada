@@ -6,6 +6,7 @@ import {
   TouchableNativeFeedback,
   Image,
   KeyboardAvoidingView,
+  AsyncStorage
 } from 'react-native';
 
 import ImagePicker from 'react-native-image-picker';
@@ -73,18 +74,32 @@ export default class RequestAddLabel extends React.Component {
   };
 
 
-  handleContinue = () => {
-    const {image} = this.state;
+  handleContinue = async () => {
+    const {file} = this.state;
+    const requestString = await AsyncStorage.getItem('request');
+    this.requestObject = JSON.parse(requestString);
+    if (file !== null) {
+      this.requestObject.label = true;
+    } else {
+      this.requestObject.label = false;
+    }
+    const objString = JSON.stringify(this.requestObject);
+ 
+    try {
+      await AsyncStorage.setItem('request', objString);
+      this.props.navigation.navigate('Services');
+    } catch (error) {
+      console.log('oh fuck what do i do now.');
+    }
     // TODO: Send to some database or some shit
     // TODO: handle if it does not exist
-    this.props.navigation.navigate('Services');
   };
 
   render() {
     const imageContent = !this.state.file ? (
     <View>
       <View style={styles.imageContainer}>
-        <Text style={{fontWeight: 'bold', fontSize: 16}}>UPLAOD FILE</Text>
+        <Text style={{fontWeight: 'bold', fontSize: 16}}>Upload File</Text>
       </View>
       <Text style={{marginTop:10}}>No File Chosen</Text>
       </View>
@@ -100,8 +115,9 @@ export default class RequestAddLabel extends React.Component {
 
     return (
       <View style={{marginHorizontal: 40}}>
+
         <Header
-          headerText={'Request a label Printing'}
+          headerText={'Request a pickup'}
           subHeaderText={'Upload a shipping label'}
         />
 

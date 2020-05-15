@@ -9,6 +9,7 @@ import {
   FlatList,
   AsyncStorage,
   BackHandler,
+  Animated
 } from 'react-native';
 import AntDesignIcon from 'react-native-vector-icons/AntDesign';
 import moment from 'moment';
@@ -21,6 +22,7 @@ import TimeRange from '../../components/general/TimeRange';
 
 // TODO: When getRequestFromStorage is fired, the date carousel animation is shitty.
 export default class RequestTime extends React.Component {
+  
   constructor(props) {
     super(props);
     this.state = {
@@ -28,8 +30,19 @@ export default class RequestTime extends React.Component {
       modalVisible: false,
       times: [],
       selectedTimeIndex: null,
+      fadeValue: new Animated.Value(0),
     };
+    this.shit = [
+          {startTime: 6, endTime: 8, price: 3.00},
+          {startTime: 8, endTime: 10, price: 3.00},
+          {startTime: 10, endTime: 12, price: 2.00},
+          {startTime: 12, endTime: 14, price: 1.00},
+          {startTime: 14, endTime: 16, price: 1.00},
+          {startTime: 16, endTime: 18, price: 3.00},
+          {startTime: 18, endTime: 20, price: 2.00},
+    ];
   }
+
 
   // Android back button listener
   componentDidMount = async () => {
@@ -37,16 +50,42 @@ export default class RequestTime extends React.Component {
       'hardwareBackPress',
       this.handleBackButtonClick,
     );
-    const shit = [
-      {startTime: 6, endTime: 8, price: 4.0},
-      {startTime: 8, endTime: 10, price: 4.0},
-      {startTime: 10, endTime: 12, price: 4.0},
-      {startTime: 12, endTime: 14, price: 4.0},
-      {startTime: 14, endTime: 16, price: 4.0},
-      {startTime: 16, endTime: 18, price: 4.0},
-      {startTime: 18, endTime: 20, price: 5.0},
-    ];
-    this.setState({times: shit});
+    this.filterTimes(moment());
+    // const shit = [
+    //   {startTime: 6, endTime: 8, price: 3.00},
+    //   {startTime: 8, endTime: 10, price: 3.00},
+    //   {startTime: 10, endTime: 12, price: 2.00},
+    //   {startTime: 12, endTime: 14, price: 1.00},
+    //   {startTime: 14, endTime: 16, price: 1.00},
+    //   {startTime: 16, endTime: 18, price: 3.00},
+    //   {startTime: 18, endTime: 20, price: 2.00},
+    // ];
+
+    // this.setState({times: shit}); 
+  };
+
+  // Handles when button animation should happen
+  componentDidUpdate = (prevProps, prevState) => {
+    if (
+      prevState.selectedTimeIndex === null &&
+      this.state.selectedTimeIndex !== null
+    ) {
+      this.renderAnimation(150);
+    } else if (
+      prevState.selectedTimeIndex !== null &&
+      this.state.selectedTimeIndex === null
+    ) {
+      this.renderAnimation(0);
+    }
+  };
+
+  // Helper to render button animation
+  renderAnimation = toValue => {
+    Animated.timing(this.state.fadeValue, {
+      toValue: toValue,
+      duration: 300,
+      useNativeDriver: false,
+    }).start();
   };
 
   // Remove back button listener
@@ -66,17 +105,18 @@ export default class RequestTime extends React.Component {
     }
   };
 
-  // read request from async storage
+  // read request from async storage (Got rid of getRequest because time lists and dates are changing based on current time and could lead to error)
+
   getRequestFromStorage = async () => {
     try {
       const requestString = await AsyncStorage.getItem('request');
       if (requestString !== null) {
         this.requestObject = JSON.parse(requestString);
         if (
-          this.requestObject.date &&
-          moment(this.requestObject.date).isSameOrAfter(moment(), 'day')
+          this.requestObject.date && 
+          moment(this.requestObject.date, "LLLL").isSameOrAfter(moment().format("LLLL"), 'day')
         ) {
-          this.setState({selectedDate: moment(this.requestObject.date)});
+          this.setState({selectedDate: moment(this.requestObject.date, "LLLL")});
           if (this.requestObject.time) {
             const time = this.requestObject.time;
             let selectedIndex;
@@ -95,35 +135,65 @@ export default class RequestTime extends React.Component {
             }
           }
         }
-      }
+      } 
     } catch (error) {
       console.log(error);
     }
+    
+    // let latestTimeToRequestPickup = moment('18:00:00', 'hh:mm:ss');
+    // if (moment().isAfter(latestTimeToRequestPickup)) { // If after 6pm, show the next day since user cannot make pickup today
+    //   console.log("after 6!")
+    //   this.setState({selectedDate: moment().add(1,'days')});
+    // }
   };
 
   // Get selected date and time and save to async storage. Go to next screen
   handleContinue = async () => {
-    const date = this.state.selectedDate;
-    const time = this.state.times[this.state.selectedTimeIndex];
-    this.requestObject.date = date;
-    this.requestObject.time = time;
-    const objString = JSON.stringify(this.requestObject);
-    try {
-      await AsyncStorage.setItem('request', objString);
-      this.props.navigation.navigate('Review');
-    } catch (error) {
-      console.log('oh fuck what do i do now.');
-    }
+    const {selectedTimeIndex} = this.state;
+    if (selectedTimeIndex == null) return;
+
+    // try {
+    //   const requestString = await AsyncStorage.getItem('request');
+    //   if (requestString !== null) {
+    //     this.requestObject = JSON.parse(requestString);
+        const date = this.state.selectedDate;
+        const time = this.state.times[this.state.selectedTimeIndex];
+        this.requestObject.date = date.format('dddd, MMMM Do YYYY');
+        this.requestObject.deliveryPrice = time.price;
+        this.requestObject.time = this.getTime();
+        const objString = JSON.stringify(this.requestObject);
+        try {
+          await AsyncStorage.setItem('request', objString);
+          const navParams = this.props.navigation.state.params;
+          if (navParams && navParams.edit) {
+            this.props.navigation.navigate('Review');
+          } else {
+            this.props.navigation.navigate('Payment');
+          }
+        } catch (error) {
+          console.log('oh fuck what do i do now.');
+        }
+      //}
+    // } catch (error) {
+    //   console.log(error);
+    // }
+
+
+   
   };
 
   datepickerSelect = date => {
     const d = moment(date);
+    this.setState({selectedTimeIndex: null}); // same indices may have different times since time is updated according to current time
     this.setState({modalVisible: false, selectedDate: d});
+    this.filterTimes(d);
   };
 
   carouselSelect = date => {
     const d = moment(date);
+    this.setState({selectedTimeIndex: null});
     this.setState({selectedDate: d});
+    this.filterTimes(d);
   };
 
   handleChangeTime = index => {
@@ -131,6 +201,18 @@ export default class RequestTime extends React.Component {
       this.handleTimeScroll(index);
     });
   };
+
+  filterTimes = (d) => {
+    if (d.isSame(moment(), "day")) {  // If today is picked, filter out times that have already passed
+      const availableTimes = this.shit.filter(object => {
+        let startTime = moment(object.startTime, "H HH");
+        return moment().isBefore(startTime);
+      });
+      this.setState({times: availableTimes}); // current time has to be before startTime to request pickup at that startTime
+    } else {
+      this.setState({times: this.shit});
+    }
+  }  
 
   handleTimeScroll = index => {
     const options = {
@@ -167,6 +249,15 @@ export default class RequestTime extends React.Component {
   };
 
   render() {
+    const noPickupTimes = this.state.times == 0 ? (
+      <Text style={{fontWeight: 'bold', fontSize: 20}}> No available pickup times today, please select a different day </Text>
+    ) : null;
+
+    const animatedBackground = this.state.fadeValue.interpolate({
+      inputRange: [0, 150],
+      outputRange: ['#FFFFFF', '#F8B500'],
+    });
+
     return (
       <View style={{flex: 1}}>
         <NavigationEvents onWillFocus={this.getRequestFromStorage} />
@@ -188,7 +279,7 @@ export default class RequestTime extends React.Component {
           </TouchableOpacity>
         </View>
         <DateCarousel
-          // lastDate={'2019-07-20'}
+          //firstDate={this.state.selectedDate}
           selectedDate={this.state.selectedDate}
           numberOfDays={30}
           paginate
@@ -198,7 +289,7 @@ export default class RequestTime extends React.Component {
         <DateTimePickerModal
           isVisible={this.state.modalVisible}
           mode="date"
-          minimumDate={new Date()}
+          minimumDate={this.state.selectedDate.toDate()}
           date={this.state.selectedDate.toDate()}
           onConfirm={this.datepickerSelect}
           onCancel={() => this.setState({modalVisible: false})}
@@ -207,6 +298,7 @@ export default class RequestTime extends React.Component {
         <View style={{marginTop: 20}} />
 
         <View style={styles.container}>
+          {noPickupTimes}
           <FlatList
             ref={timeList => (this.timeList = timeList)}
             data={this.state.times}
@@ -225,6 +317,7 @@ export default class RequestTime extends React.Component {
             showsVerticalScrollIndicator={false}
             // onScrollToIndexFailed={() => {}}
           />
+          
 
           <View style={styles.datetimeDisplay}>
             <View style={styles.datetimeInnerContainer}>
@@ -245,17 +338,22 @@ export default class RequestTime extends React.Component {
           behavior={'position'}>
           <TouchableNativeFeedback
             background={TouchableNativeFeedback.Ripple('lightgray')}
-            onPress={this.handleContinue}>
-            <View
+            onPress={this.handleContinue}
+            disabled={this.state.selectedTimeIndex === null}>
+            <Animated.View
               style={{
-                backgroundColor: '#F8B500',
+                backgroundColor: animatedBackground,
+                borderWidth:
+                  this.state.selectedTimeIndex === null ? 1 : null,
+                borderColor:
+                  this.state.selectedTimeIndex === null ? '#F8B500' : null,
                 elevation: 10,
                 padding: 20,
                 justifyContent: 'center',
                 alignItems: 'center',
               }}>
               <Text style={{fontWeight: 'bold', fontSize: 16}}>Continue</Text>
-            </View>
+            </Animated.View>
           </TouchableNativeFeedback>
         </KeyboardAvoidingView>
       </View>

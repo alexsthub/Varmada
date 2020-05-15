@@ -16,33 +16,38 @@ import {
 
 import Header from '../../components/general/Header';
 import AddressBox from '../../components/general/AddressBox';
+import {NavigationEvents} from 'react-navigation';
 
 import SlidingUpPanel from 'rn-sliding-up-panel';
 import {GooglePlacesAutocomplete} from 'react-native-google-places-autocomplete';
 
 import FeatherIcon from 'react-native-vector-icons/Feather';
 
+import { Auth } from 'aws-amplify';
+import { DataStore } from '@aws-amplify/datastore';
+import { Address } from '../../../amplify-datastore/src/models';
+
 // Test input
-const shit = [
-  {
-    address: '1785 53rd Loop Southeast',
-    city: 'Tumwater',
-    countryCode: ' USA',
-    name: '1785 53rd Loop Southeast',
-    placeID: 'ChIJiWjxpoZzkVQRPnjEE6oZ90k',
-    state: 'WA',
-    zip: '98501',
-  },
-  {
-    address: '4105 Brooklyn Ave NE',
-    city: 'Seattle',
-    countryCode: ' USA',
-    name: 'Levere Apartments',
-    placeID: 'ChIJyZCbd_MUkFQRXA53DSuvSns',
-    state: 'WA',
-    zip: '98105',
-  },
-];
+// const shit = [
+//   {
+//     address: '1785 53rd Loop Southeast',
+//     city: 'Tumwater',
+//     countryCode: ' USA',
+//     name: '1785 53rd Loop Southeast',
+//     placeID: 'ChIJiWjxpoZzkVQRPnjEE6oZ90k',
+//     state: 'WA',
+//     zip: '98501',
+//   },
+//   {
+//     address: '4105 Brooklyn Ave NE',
+//     city: 'Seattle',
+//     countryCode: ' USA',
+//     name: 'Levere Apartments',
+//     placeID: 'ChIJyZCbd_MUkFQRXA53DSuvSns',
+//     state: 'WA',
+//     zip: '98105',
+//   },
+// ];
 
 const {height} = Dimensions.get('window');
 // TODO: Doesn't go over the back arrow :/ when the view is up
@@ -60,19 +65,20 @@ export default class RequestAddress extends React.Component {
     };
   }
 
-  // Android back button listener and read request from async storage
-  componentDidMount = async () => {
-    BackHandler.addEventListener(
-      'hardwareBackPress',
-      this.handleBackButtonClick,
-    );
+  getRequestFromStorage = async () => {
+    //Get all addresses of user to display
+    const userInfo = await Auth.currentUserInfo();
+    const userAddresses = await DataStore.query(Address, a => a.phoneNumber("eq", userInfo.attributes.phone_number));
+    this.setState({addresses: userAddresses});
+
     try {
       const requestString = await AsyncStorage.getItem('request');
+      console.log("whats wrong: " + requestString)
       if (requestString !== null) {
         this.requestObject = JSON.parse(requestString);
         if (this.requestObject.address) {
           const id = this.requestObject.address.placeID;
-          const index = shit.findIndex(ele => ele.placeID === id);
+          const index = userAddresses.findIndex(ele => ele.placeID === id);
           if (index !== -1) {
             this.setState({selectedAddressIndex: index});
           }
@@ -82,7 +88,14 @@ export default class RequestAddress extends React.Component {
       console.log('oh no...');
     }
     console.log(this.requestObject);
-    this.setState({addresses: shit});
+  }
+
+  // Android back button listener and read request from async storage
+  componentDidMount = async () => {
+    BackHandler.addEventListener(
+      'hardwareBackPress',
+      this.handleBackButtonClick,
+    );
   };
 
   // Handles when button animation should happen
@@ -143,7 +156,7 @@ export default class RequestAddress extends React.Component {
     this.addressList.scrollToIndex(options);
   };
 
-  // Get address object and save to async storage. Continue to next screen.
+  //Get address object and save to async storage. Continue to next screen.
   handleContinue = async () => {
     const selectedAddress = this.state.addresses[
       this.state.selectedAddressIndex
@@ -164,9 +177,7 @@ export default class RequestAddress extends React.Component {
   };
 
   // TODO: Parser doesn't work for all inputs.
-  handleAutocompletePress = (data, details = null) => {
-    // console.log(data);
-    // console.log(details);
+  handleAutocompletePress = async (data, details = null) => {
     const formattedAddress = details.formatted_address.split(',');
     const address = {
       name: data.structured_formatting.main_text
@@ -185,7 +196,7 @@ export default class RequestAddress extends React.Component {
         .trim(),
       countryCode: formattedAddress[3],
     };
-    // console.log(address);
+
     const savedAddresses = this.state.addresses;
     const existingAddressIndex = savedAddresses.findIndex(
       ele => ele.placeID === address.placeID,
@@ -202,6 +213,20 @@ export default class RequestAddress extends React.Component {
         },
       );
     } else {
+      // Save address into database
+      const userInfo = await Auth.currentUserInfo();
+      await DataStore.save(
+        new Address({
+          phoneNumber: userInfo.attributes.phone_number, 
+          name: address.name,
+          placeID: address.placeID,
+          address: address.address,
+          city: address.city,
+          state: address.state,
+          zip: address.zip,
+          countryCode: address.countryCode
+        })
+      );
       savedAddresses.unshift(address);
       this.setState(
         {
@@ -264,6 +289,17 @@ export default class RequestAddress extends React.Component {
     this.setState({autocompleteText: text});
   };
 
+  deleteAddress = async () => {
+    if (this.state.selectedAddressIndex === null) {
+      return;
+    }
+    const user = await Auth.currentUserInfo();
+    let addressArray = this.state.addresses;
+    await DataStore.delete(Address, a => a.phoneNumber("eq", user.attributes.phone_number).placeID("eq", addressArray[this.state.selectedAddressIndex].placeID));
+    addressArray.splice(this.state.selectedAddressIndex, 1);
+    this.setState({addresses: addressArray, selectedAddressIndex: null});
+  }
+
   render() {
     const draggableRange = {top: height - StatusBar.currentHeight, bottom: 120};
     this.top = draggableRange.top;
@@ -285,6 +321,7 @@ export default class RequestAddress extends React.Component {
 
     return (
       <View style={styles.container}>
+        <NavigationEvents onWillFocus={this.getRequestFromStorage} />
         <View
           style={{
             marginHorizontal: 40,
@@ -295,6 +332,30 @@ export default class RequestAddress extends React.Component {
             headerText={'Request a pickup'}
             subHeaderText={'Select a pickup address'}
           />
+
+          <KeyboardAvoidingView
+            style={{marginTop: 20, width: '60%', alignSelf: 'center'}}
+            behavior={'position'}>
+            <TouchableNativeFeedback
+              background={TouchableNativeFeedback.Ripple('lightgray')}
+              onPress={this.deleteAddress}
+              disabled={this.state.selectedAddressIndex === null}>
+              <Animated.View
+                style={{
+                  backgroundColor: animatedBackground,
+                  borderWidth:
+                    this.state.selectedAddressIndex === null ? 1 : null,
+                  borderColor:
+                    this.state.selectedAddressIndex === null ? '#F8B500' : null,
+                  elevation: 10,
+                  padding: 20,
+                  justifyContent: 'center',
+                  alignItems: 'center',
+                }}>
+                <Text style={{fontWeight: 'bold', fontSize: 16}}>Remove Address</Text>
+              </Animated.View>
+            </TouchableNativeFeedback>
+          </KeyboardAvoidingView>
 
           <FlatList
             ref={addressList => (this.addressList = addressList)}
