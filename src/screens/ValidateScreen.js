@@ -1,6 +1,5 @@
 import React from 'react';
 import {
-  ImageBackground,
   View,
   Text,
   ScrollView,
@@ -76,15 +75,21 @@ export default class ValidateScreen extends React.Component {
     if (verificationCode.length < this.number_cells) {
       const customError = {
         title: 'Invalid Code Length',
-        message: `Verification code needs to be ${this.number_cells} digits. Please try again.`,
+        message: `Verification code needs to be ${
+          this.number_cells
+        } digits. Please try again.`,
       };
       this.setState({error: customError});
     } else {
+      console.log('HELLO');
       Auth.confirmSignUp(username, verificationCode)
         .then(() => {
+          console.log('SHOULD BE NAVIGATING');
           this.props.navigation.navigate('MainDrawer');
         })
         .catch(error => {
+          console.log('ERROR');
+          console.log(error);
           if (error.code === 'CodeMismatchException') {
             const customError = {
               title: 'Invalid Code',
@@ -233,9 +238,7 @@ export default class ValidateScreen extends React.Component {
       );
     }
     return (
-      <ImageBackground
-        source={require('../assets/loginGradient.jpg')}
-        style={styles.background}>
+      <View style={{flex: 1, backgroundColor: '#F8B500'}}>
         <ErrorModal
           showModal={!isEmpty(this.state.error)}
           title={this.state.error.title}
@@ -274,8 +277,8 @@ export default class ValidateScreen extends React.Component {
               <CustomButton
                 text={'Sign Up'}
                 onPress={this.completeSignup}
-                textStyle={{color: '#000000'}}
-                buttonStyle={{elevation: 10}}
+                textStyle={{color: '#FFFFFF'}}
+                buttonStyle={{elevation: 10, backgroundColor: '#000000'}}
               />
             </View>
           </View>
@@ -288,7 +291,7 @@ export default class ValidateScreen extends React.Component {
             Didn't Get Your Code? Click Here To Resend
           </Text>
         </TouchableOpacity>
-      </ImageBackground>
+      </View>
     );
   }
 }

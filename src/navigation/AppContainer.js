@@ -52,6 +52,7 @@ const WIDTH = Dimensions.get('window').width;
 
 const DrawerConfig = {
   drawerWidth: WIDTH * 0.5,
+  initialRouteName: 'Home',
   contentComponent: props => {
     return <LeftNav {...props} />;
   },

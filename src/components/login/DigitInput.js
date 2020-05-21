@@ -35,7 +35,7 @@ export default class DigitInput extends React.Component {
   render() {
     const interpolateBackground = this.state.fadeValue.interpolate({
       inputRange: [0, 150],
-      outputRange: ['rgba(200,200,200, 0.6)', 'rgba(200,200,200, 0.05)'],
+      outputRange: ['rgba(57, 62, 70, 0.6)', 'rgba(57, 62, 70, .05)'],
     });
     const background = {backgroundColor: interpolateBackground};
     return (
